@@ -1,4 +1,4 @@
-from utils import cartesian, all_equal
+from utils import all_equal
 
 dia_semana = [
     "SEG",
@@ -26,8 +26,6 @@ horarios_composto = [
     "13:00-15:00,13:00-15:00,8:00-10:00" # ALA
 ]
 
-# v = cartesian([dia_semana+dia_semana_composto, horarios+horarios_composto])
-# print(v)
 
 disciplinas = {
     # "ICP131_A": ["ICP131", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
@@ -36,28 +34,6 @@ disciplinas = {
     "ICP102": ["ICP102", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4],
     "ICP142": ["ICP142", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4]
 }
-
-# disciplinas_dias = set([x[0] for _,detalhe in disciplinas.items() for x in detalhe[1]])
-# disciplinas_horarios = set([x[1] for _,detalhe in disciplinas.items() for x in detalhe[1]])
-
-
-
-# def get_dia_horario_from_disciplina(d): # recebe disciplina
-#     # for d in disciplinas.keys():
-#     dias = []
-#     horarios = []
-#     for x in disciplinas[d][1]:
-#         dias.append(x[0])
-
-#     for x in disciplinas[d][1]:
-#         horarios.append(x[1])
-    
-#     dia = ','.join(dias)
-#     hora = ','.join(horarios)
-
-#     result = dia,hora
-
-#     return result
 
 disciplinas_dias = []
 disciplinas_horarios = []
@@ -80,8 +56,6 @@ for _,detalhe in disciplinas.items():
     hora = ','.join(horarios)
     disciplinas_dias.append(dia)
     disciplinas_horarios.append(hora)
-
-# disciplinas.keys()
 
 areas_conhecimento = {
     'HUMANAS': [
@@ -223,13 +197,3 @@ professores_area_conhecimento = {
     'Valéria Bastos': ['SISTEMAS_DE_COMPUTACAO_E_COMUNICACAO'],
     'Vinícius Gusmão': ['TEORIA_DA_COMPUTACAO'],
     'Vivian Santos': ['ENGENHARIA_DE_DADOS']}
-
-# areas_professor = professores_area_conhecimento['Vivian Santos']
-# for area in areas_professor:
-#     b = areas_conhecimento[area]
-#     print(b)
-
-# for d in disciplinas.items():
-#     print(d)
-
-
