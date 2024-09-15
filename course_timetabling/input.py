@@ -1,3 +1,5 @@
+from utils import cartesian, all_equal
+
 dia_semana = [
     "SEG",
     "TER",
@@ -6,25 +8,79 @@ dia_semana = [
     "SEX"
 ]
 
+dia_semana_composto = [
+    "SEG,QUA",
+    "SEG,QUA,SEX",
+    "TER,QUI",
+    "QUA,SEX"
+]
+
 horarios = [
-    "8:00-10:00",
-    "10:00-12:00",
-    "13:00-15:00",
-    "15:00-17:00",
     "8:00-10:00",
     "10:00-12:00",
     "13:00-15:00",
     "15:00-17:00"
 ]
 
+horarios_composto = [
+    "13:00-15:00,13:00-15:00,8:00-10:00" # ALA
+]
+
+# v = cartesian([dia_semana+dia_semana_composto, horarios+horarios_composto])
+# print(v)
+
 disciplinas = {
     # "ICP131_A": ["ICP131", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
-    # "ICP370": ["ICP370", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4]
+    "ICP370": ["ICP370", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4],
     "ICP489": ["ICP489", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
     "ICP102": ["ICP102", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4]
 }
 
-disciplinas.keys()
+# disciplinas_dias = set([x[0] for _,detalhe in disciplinas.items() for x in detalhe[1]])
+# disciplinas_horarios = set([x[1] for _,detalhe in disciplinas.items() for x in detalhe[1]])
+
+
+
+# def get_dia_horario_from_disciplina(d): # recebe disciplina
+#     # for d in disciplinas.keys():
+#     dias = []
+#     horarios = []
+#     for x in disciplinas[d][1]:
+#         dias.append(x[0])
+
+#     for x in disciplinas[d][1]:
+#         horarios.append(x[1])
+    
+#     dia = ','.join(dias)
+#     hora = ','.join(horarios)
+
+#     result = dia,hora
+
+#     return result
+
+disciplinas_dias = []
+disciplinas_horarios = []
+
+for _,detalhe in disciplinas.items():
+    dias = []
+    horarios = []
+    for x in detalhe[1]:
+        dias.append(x[0])
+
+    for x in detalhe[1]:
+        horarios.append(x[1])
+
+    if all_equal(dias):
+        dias = [dias[0]]
+    if all_equal(horarios):
+        horarios = [horarios[0]]
+
+    dia = ','.join(dias)
+    hora = ','.join(horarios)
+    disciplinas_dias.append(dia)
+    disciplinas_horarios.append(hora)
+
+# disciplinas.keys()
 
 areas_conhecimento = {
     'HUMANAS': [

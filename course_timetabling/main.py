@@ -1,22 +1,41 @@
 import gurobipy as gp
 from gurobipy import GRB
 
+from utils import all_equal
 import input
-
 
 m = gp.Model("CourseTimetabling")
 
-
 P = input.professores
 D = input.disciplinas
-S = input.dia_semana
-H = input.horarios
+DISCIPLINA_DIAS = input.disciplinas_dias
+DISCILINA_HORARIOS = input.disciplinas_horarios
+# S = input
+# S = input.dia_semana
+# H = input.horarios
 PROFESSOR_APTO = input.professores_area_conhecimento
 AREAS_CONHECIMENTO = input.areas_conhecimento
-HORARIOS = input.horarios
+# HORARIOS = input.horarios
 
-def get_carga_horaria():
-    pass
+def get_carga_horaria(disciplina):
+    # Retorna um horário se todos forem iguais
+    carga_horaria = D[disciplina][1]
+
+    dias = []
+    horas = []
+
+    for ch in carga_horaria:
+        dias.append(ch[0])
+        horas.append(ch[1])
+
+    if all_equal(dias):
+        dias = [dias[0]]
+    if all_equal(horas):
+        horas = [horas[0]]
+    
+    dia = ','.join(dias)
+    hora = ','.join(horas)
+    return dia,hora
 
 
 f = {} # Coeficientes
@@ -32,33 +51,34 @@ for p in P:
         f[p][d] = {}
         X[p][d] = {}
 
-        for CH in D[d][1]: # pega carga horária
-            f[p][d][CH[0]] = {}
-            f[p][d][CH[0]][CH[1]] = {}
+        CH = get_carga_horaria(d)
+        # for CH in D[d][1]: # pega carga horária
+        f[p][d][CH[0]] = {}
+        f[p][d][CH[0]][CH[1]] = {}
 
-            # {'Adriana Vivacqua': {'ICP131_A': {...}}}
-            # {'SEG': {'8:00-10:00': 0}, 'QUA': {'8:00-10:00': 0}}
+        # {'Adriana Vivacqua': {'ICP131_A': {...}}}
+        # {'SEG': {'8:00-10:00': 0}, 'QUA': {'8:00-10:00': 0}}
 
-            # Verificação se o professor está apto a ministrar a disciplina
-            try:
-                areas_professor = PROFESSOR_APTO[p]
-            except KeyError:
-                print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
-            disciplinas_aptas = []
-            for area in areas_professor:
-                disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
+        # Verificação se o professor está apto a ministrar a disciplina
+        try:
+            areas_professor = PROFESSOR_APTO[p]
+        except KeyError:
+            print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
+        disciplinas_aptas = []
+        for area in areas_professor:
+            disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
 
-            if D[d][0] in disciplinas_aptas:
-                a = 1 
-            else:
-                a = 0
+        if D[d][0] in disciplinas_aptas:
+            a = 1 
+        else:
+            a = 0
 
-            f[p][d][CH[0]][CH[1]] = a
+        f[p][d][CH[0]][CH[1]] = a
 
-            # Variavel
-            X[p][d][CH[0]] = {}
-            X[p][d][CH[0]][CH[1]] = {}
-            X[p][d][CH[0]][CH[1]] = m.addVar(vtype=GRB.BINARY, name=f"{p}_{d}_{CH[0]}_{CH[1]}")
+        # Variavel
+        X[p][d][CH[0]] = {}
+        X[p][d][CH[0]][CH[1]] = {}
+        X[p][d][CH[0]][CH[1]] = m.addVar(vtype=GRB.BINARY, name=f"{p}_{d}_{CH[0]}_{CH[1]}")
 
 
 # Restrições
@@ -67,17 +87,19 @@ def get_disciplinas_a_partir_de_um_horario(disciplinas: dict, horario:str):
     keys = []
     for disciplina,detalhe in disciplinas.items():
          for carga_horaria in detalhe[1]:
-            if carga_horaria[1] == horario:
+            if carga_horaria[1] in horario:
                 keys.append(disciplina)
-    return set(keys)
+    result = set(keys)
+    return result
 
 def get_disciplinas_a_partir_de_um_dia(disciplinas: dict, dia:str):
     keys = []
     for disciplina,detalhe in disciplinas.items():
         for carga_horaria in detalhe[1]:
-            if carga_horaria[0] == dia:
+            if carga_horaria[0] in dia:
                 keys.append(disciplina)
-    return set(keys)
+    result = set(keys)
+    return result
 
 # def get_professores_a_partir_de_uma_disciplina(professores: dict, disciplina:str):
 #     keys = []
@@ -105,10 +127,11 @@ def get_disciplinas_a_partir_de_um_dia(disciplinas: dict, dia:str):
 for d in D.keys():
     # for s in S:
     #     for h in H:
+    CH = get_carga_horaria(d)
     # for CH in D[d][1]:
         # A = get_professores_a_partir_de_uma_disciplina(D, CH[0])
         # C = A.intersection(B)
-    m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P for CH in D[d][1]]) == 1)
+    m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P]) == 1)
     # for CH in D[d][1]: # pega carga horária
     # dia_fixo = D[d][1][0][0]
     # hora_fixa = D[d][1][0][1]
@@ -117,12 +140,31 @@ for d in D.keys():
 # Fixado um professor, esse só pode dar aula em um único dia e horário
 
 for p in P:
-    for s in S:
-        A = get_disciplinas_a_partir_de_um_dia(D, s)
-        for h in H:
-            B = get_disciplinas_a_partir_de_um_horario(D, h)
-            C = A.intersection(B)
-            m.addConstr(gp.quicksum([X[p][d][s][h] for d in C]) <= 1)
+    print(DISCIPLINA_DIAS)
+    print(DISCILINA_HORARIOS)
+    for i in range(len(DISCIPLINA_DIAS)):
+        A = get_disciplinas_a_partir_de_um_dia(D,DISCIPLINA_DIAS[i])            
+        B = get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
+        C = A.intersection(B)
+        print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
+        print(A,B,C)
+
+        dias = DISCIPLINA_DIAS[i].split(",")
+        m.addConstr(gp.quicksum([X[p][d][get_carga_horaria(d)[0]][get_carga_horaria(d)[1]] for d in C]) <= 1)
+        # m.addConstr(gp.quicksum([X[p][d][DISCIPLINA_DIAS[i]][DISCILINA_HORARIOS[i]] for d in C for dia in dias if dia in DISCIPLINA_DIAS[i]]) <= 1)
+    # for s in DISCIPLINA_DIAS: #FIXME: adicionar aqui possibilidades de combinacoes de dia da semana
+    #     print(DISCIPLINA_DIAS)
+    #     A = get_disciplinas_a_partir_de_um_dia(D, s)
+    #     for h in DISCILINA_HORARIOS: #FIXME: adicionar aqui possibilidades de combinacoes de hora
+    #         print(DISCILINA_HORARIOS)
+    #         B = get_disciplinas_a_partir_de_um_horario(D, h)
+    #         C = A.intersection(B)
+    #         print(s,h)
+    #         print(A,B,C)
+    #         # m.addConstr(gp.quicksum([X[p][d][s][h] for d in C if s in X[p][d] and h in X[p][d][s]]) <= 1)
+    #         m.addConstr(gp.quicksum([X[p][d][s][h] for d in C]) <= 1)
+
+# TODO: não deixar que um professor sem ser de uma área ministre uma disciplina. Ex.: Daniel Sadoc_ICP370_TER,QUI_8:00-10:00 1
 
 # Restrições de créditos por professor
 # for p in P:
@@ -137,7 +179,7 @@ for p in P:
 
 # Função objetivo
 
-m.setObjective(gp.quicksum((X[p][d][CH[0]][CH[1]] * f[p][d][CH[0]][CH[1]]) for p in P for d in D.keys() for CH in D[d][1]), GRB.MAXIMIZE)
+m.setObjective(gp.quicksum((X[p][d][CH[0]][CH[1]] * f[p][d][CH[0]][CH[1]]) for p in P for d in D.keys() for CH in [get_carga_horaria(d)]), GRB.MAXIMIZE)
 
 m.update()
 m.optimize()
