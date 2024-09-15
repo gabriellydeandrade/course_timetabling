@@ -18,7 +18,7 @@ def professor_apto(p):
     result = set(disciplinas_aptas)
     return result
 
-def get_disciplinas_dias_horarios(disciplinas: dict): 
+def get_disciplinas_dias_horarios(disciplinas: dict):
     disciplinas_dias = []
     disciplinas_horarios = []
 
@@ -61,6 +61,24 @@ def get_carga_horaria(D, disciplina):
     dia = ','.join(dias)
     hora = ','.join(horas)
     return dia,hora
+
+def get_disciplinas_a_partir_de_um_horario(disciplinas: dict, horario:str):
+    keys = []
+    for disciplina,detalhe in disciplinas.items():
+         for carga_horaria in detalhe[1]:
+            if carga_horaria[1] in horario:
+                keys.append(disciplina)
+    result = set(keys)
+    return result
+
+def get_disciplinas_a_partir_de_um_dia(disciplinas: dict, dia:str):
+    keys = []
+    for disciplina,detalhe in disciplinas.items():
+        for carga_horaria in detalhe[1]:
+            if carga_horaria[0] in dia:
+                keys.append(disciplina)
+    result = set(keys)
+    return result
 
 def take(n, iterable):
     "Return first n items of the iterable as a list."
