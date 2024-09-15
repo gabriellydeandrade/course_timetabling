@@ -93,7 +93,7 @@ professores = [
     # "Claudson Bornstein",
     # "Daniel Bastos",
     # "Daniel Alfaro",
-    # "Daniel Sadoc",
+    "Daniel Sadoc",
     # "Eldânae Teixeira",
     # "Gabriel Pereira",
     # "Giseli Lopes",
