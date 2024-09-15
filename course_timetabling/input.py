@@ -1,4 +1,3 @@
-from utils import all_equal
 
 dia_semana = [
     "SEG",
@@ -34,28 +33,6 @@ disciplinas = {
     "ICP102": ["ICP102", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4],
     "ICP142": ["ICP142", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4]
 }
-
-disciplinas_dias = []
-disciplinas_horarios = []
-
-for _,detalhe in disciplinas.items():
-    dias = []
-    horarios = []
-    for x in detalhe[1]:
-        dias.append(x[0])
-
-    for x in detalhe[1]:
-        horarios.append(x[1])
-
-    if all_equal(dias):
-        dias = [dias[0]]
-    if all_equal(horarios):
-        horarios = [horarios[0]]
-
-    dia = ','.join(dias)
-    hora = ','.join(horarios)
-    disciplinas_dias.append(dia)
-    disciplinas_horarios.append(hora)
 
 areas_conhecimento = {
     'HUMANAS': [
