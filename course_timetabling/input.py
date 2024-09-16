@@ -31,7 +31,8 @@ disciplinas = {
     "ICP370": ["ICP370", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4],
     "ICP489": ["ICP489", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
     "ICP102": ["ICP102", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4],
-    "ICP142": ["ICP142", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4]
+    "ICP142": ["ICP142", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4],
+    "ICP133": ["ICP133", [('TER', '13:00-15:00'), ('QUI', '13:00-15:00')], 4]
 }
 
 areas_conhecimento = {
@@ -91,6 +92,7 @@ areas_conhecimento = {
 }
 
 professores = [
+    "DUMMY",
     "Adriana Vivacqua",
     # "Aloisio Pina",
     # "Amaury Cruz",
@@ -128,6 +130,7 @@ professores = [
 ]
 
 professores_area_conhecimento = {
+    "DUMMY": ["*"],
     'Adriana Vivacqua': ['ENGENHARIA_DE_DADOS',
                          'ENGENHARIA_DE_SOFTWARE',
                          'HUMANAS'],

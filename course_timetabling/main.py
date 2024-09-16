@@ -1,7 +1,7 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-from utils import get_disciplinas_dias_horarios, professor_apto, get_carga_horaria, get_disciplinas_a_partir_de_um_dia, get_disciplinas_a_partir_de_um_horario
+from utils import *
 import input
 
 m = gp.Model("CourseTimetabling")
@@ -37,7 +37,10 @@ for p in P:
         # {'SEG': {'8:00-10:00': 0}, 'QUA': {'8:00-10:00': 0}}
 
         if D[d][0] in disciplinas_aptas:
-            a = 1 
+            if p == "DUMMY":
+                a = 0.0001
+            else:
+                a = 1 
         else:
             a = 0
 
@@ -63,6 +66,8 @@ m.setObjective(gp.quicksum((X[p][d][CH[0]][CH[1]] * f[p][d][CH[0]][CH[1]]) for p
 
 # Restrições de créditos por professor
 for p in P:
+    if p == "DUMMY":
+        continue
     # RH1: Regime de trabalho (quantidade de horas) - quantidade de créditos mínimo
     m.addConstr(gp.quicksum([X[p][d][get_carga_horaria(D,d)[0]][get_carga_horaria(D,d)[1]] * D[d][2] for d in D.keys()]) >= 8)
 
@@ -79,21 +84,33 @@ for d in D.keys():
 # RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
 
 for p in P:
-    print(DISCIPLINA_DIAS)
-    print(DISCILINA_HORARIOS)
+    if p == "DUMMY":
+        continue
+    # print(DISCIPLINA_DIAS)
+    # print(DISCILINA_HORARIOS)
     for i in range(len(DISCIPLINA_DIAS)):
         A = get_disciplinas_a_partir_de_um_dia(D,DISCIPLINA_DIAS[i])            
         B = get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
         C = A.intersection(B)
-        print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
-        print(A,B,C)
+        # print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
+        # print(A,B,C)
 
         dias = DISCIPLINA_DIAS[i].split(",")
         m.addConstr(gp.quicksum([X[p][d][get_carga_horaria(D,d)[0]][get_carga_horaria(D,d)[1]] for d in C]) <= 1)
 
-# TODO: não deixar que um professor sem ser de uma área ministre uma disciplina. Ex.: Daniel Sadoc_ICP370_TER,QUI_8:00-10:00 1
-# TODO: adicionar professor dummy para que ele seja alocado caso não tenha professor disponível
 
+# RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+
+for p in P:
+    todas_disciplinas = get_codigo_disciplinas(D)
+    disciplinas_aptas = professor_apto(p)
+
+    disciplinas_nao_aptas = todas_disciplinas.difference(disciplinas_aptas)
+    
+    # for i in range(len(DISCIPLINA_DIAS)):
+
+
+    m.addConstr(gp.quicksum([X[p][d][get_carga_horaria(D,d)[0]][get_carga_horaria(D,d)[1]] for d in disciplinas_nao_aptas]) == 0)
 
 
 m.update()

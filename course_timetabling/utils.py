@@ -7,13 +7,20 @@ AREAS_CONHECIMENTO = input.areas_conhecimento
 
 def professor_apto(p):
     # Verificação se o professor está apto a ministrar a disciplina
-    try:
-        areas_professor = PROFESSOR_AREA_APTO[p]
-    except KeyError:
-        print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
     disciplinas_aptas = []
-    for area in areas_professor:
-        disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
+
+    if p == "DUMMY":
+        # No caso de um professor DUMMY, ele pode lecionar qualquer disciplina de todas as áreas
+        for area in AREAS_CONHECIMENTO:
+            disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
+    else:
+        try:
+            areas_professor = PROFESSOR_AREA_APTO[p]
+        except KeyError:
+            print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
+        
+        for area in areas_professor:
+            disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
 
     result = set(disciplinas_aptas)
     return result
@@ -41,6 +48,10 @@ def get_disciplinas_dias_horarios(disciplinas: dict):
         disciplinas_dias.append(dia)
         disciplinas_horarios.append(hora)
     return disciplinas_dias, disciplinas_horarios
+
+def get_codigo_disciplinas(D):
+    result = set([d for d in D])
+    return result
 
 def get_carga_horaria(D, disciplina):
     # Retorna um horário se todos forem iguais
