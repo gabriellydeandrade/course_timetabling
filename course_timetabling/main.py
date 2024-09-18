@@ -107,9 +107,6 @@ for p in P:
 
     disciplinas_nao_aptas = todas_disciplinas.difference(disciplinas_aptas)
     
-    # for i in range(len(DISCIPLINA_DIAS)):
-
-
     m.addConstr(gp.quicksum([X[p][d][get_carga_horaria(D,d)[0]][get_carga_horaria(D,d)[1]] for d in disciplinas_nao_aptas]) == 0)
 
 
