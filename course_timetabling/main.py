@@ -7,6 +7,8 @@ import input
 m = gp.Model("CourseTimetabling")
 
 P = input.professores
+PP = input.professores_permanentes
+PS = input.professores_substitutos
 D = input.disciplinas
 DISCIPLINA_DIAS, DISCILINA_HORARIOS = get_disciplinas_dias_horarios(D)
 
@@ -54,6 +56,32 @@ for p in P:
         )
     pass
 
+PNC = {} # Variável de folga que indica quantos créditos o professor está abaixo do ideal pela coordenação
+for p in PP:
+    PNC[p] = {}
+    PNC[p] = m.addVar(vtype=GRB.INTEGER, name=f"PNC_{p}")
+
+# ===================================
+#   RESTRIÇÕES FRACAS
+# ===================================
+
+Wf = 1000
+FALpp = 8 # Quantidade mínima de créditos a serem alcançadas pelo professor
+
+# RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido. 
+
+for p in PP:
+    m.addConstr(
+        gp.quicksum(
+            [
+                X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
+                * D[d][2]
+                for d in D.keys()
+            ]
+        )
+        == FALpp - PNC[p]
+    )
+
 
 # ===================================
 #   FUNÇÃO OBJETIVO
@@ -65,8 +93,10 @@ m.setObjective(
         for p in P
         for d in D.keys()
         for CH in [get_carga_horaria(D, d)]
-    ),
-    GRB.MAXIMIZE,
+    )
+    - 
+    gp.quicksum(Wf * PNC[pp] for pp in PP),
+    GRB.MAXIMIZE
 )
 
 
@@ -74,23 +104,11 @@ m.setObjective(
 #   RESTRIÇÕES
 # ===================================
 
-# Restrições de créditos por professor
-for p in P:
-    if p == "DUMMY":
-        continue
-    # RH1: Regime de trabalho (quantidade de horas) - quantidade de créditos mínimo
-    m.addConstr(
-        gp.quicksum(
-            [
-                X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
-                * D[d][2]
-                for d in D.keys()
-            ]
-        )
-        >= 8
-    )
 
-    # RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo
+# RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+
+FALps = 12 # Quantidade máxima de créditos a serem alcançadas pelo professor substituto
+for p in PS:
     m.addConstr(
         gp.quicksum(
             [
@@ -99,11 +117,10 @@ for p in P:
                 for d in D.keys()
             ]
         )
-        <= 8
+        <= FALps
     )
 
 # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
-# TODO: avaliar se é o caso de somente disciplinas obrigatórias
 for d in D.keys():
     CH = get_carga_horaria(D, d)
     m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P]) == 1)
@@ -157,7 +174,12 @@ for p in P:
 m.update()
 m.optimize()
 
+print("========= RESULT ==========")
+
 for v in m.getVars():
-    print("%s %g" % (v.VarName, v.X))
+    if v.X > 0:
+        print("%s %g" % (v.VarName, v.X))
+
+print("=============================")
 
 print("Obj: %g" % m.ObjVal)

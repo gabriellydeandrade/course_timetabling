@@ -91,9 +91,9 @@ areas_conhecimento = {
     ]
 }
 
-professores = [
-    "DUMMY",
-    "Adriana Vivacqua",
+
+professores_permanentes = [
+      "Adriana Vivacqua",
     # "Aloisio Pina",
     # "Amaury Cruz",
     # "Anamaria Moreira",
@@ -127,7 +127,15 @@ professores = [
     # "Valéria Bastos",
     # "Vinícius Gusmão",
     # "Vivian Santos"
+
 ]
+
+professores_substitutos = [
+    #"Gaby"
+]
+
+professores = ["DUMMY"] + professores_permanentes + professores_substitutos
+
 
 professores_area_conhecimento = {
     "DUMMY": ["*"],
