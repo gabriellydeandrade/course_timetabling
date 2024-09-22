@@ -26,16 +26,31 @@ horarios_composto = [
 ]
 
 
-disciplinas = {
+disciplinas_cc = {
     # "ICP131_A": ["ICP131", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
-    "ICP370": ["ICP370", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4],
-    "ICP489": ["ICP489", [('SEG', '8:00-10:00'), ('QUA', '8:00-10:00')], 4],
-    "ICP102": ["ICP102", [('QUA', '8:00-10:00'), ('SEX', '8:00-10:00')], 4],
-    "ICP142": ["ICP142", [('TER', '8:00-10:00'), ('QUI', '8:00-10:00')], 4],
-    "ICP133": ["ICP133", [('TER', '13:00-15:00'), ('QUI', '13:00-15:00')], 4]
+    "ICP370": ["ICP370", [('TER', '08:00-10:00'), ('QUI', '08:00-10:00')], 4],
+    "ICP489": ["ICP489", [('SEG', '08:00-10:00'), ('QUA', '08:00-10:00')], 4],
+    "ICP102": ["ICP102", [('QUA', '08:00-10:00'), ('SEX', '08:00-10:00')], 4],
+    # "ICP142": ["ICP142", [('TER', '08:00-10:00'), ('QUI', '08:00-10:00')], 4],
+    "ICP133": ["ICP133", [('TER', '13:00-15:00'), ('QUI', '13:00-15:00')], 4],
+
 }
 
+disciplinas_servico = {
+    "ICP114-EM1": ["ICP114", [('SEG', '10:00-12:00'), ('SEG', '13:00-15:00')], 4],
+    "ICP114-EM2": ["ICP114", [('SEG', '10:00-12:00'), ('SEG', '13:00-15:00')], 4],
+    "ICP114-EC1": ["ICP114", [('SEG', '08:00-10:00'), ('SEG', '13:00-15:00')], 4]
+}
+
+disciplinas = {}
+disciplinas.update(disciplinas_cc)
+disciplinas.update(disciplinas_servico)
+# disciplinas = {**disciplinas_cc, **disciplinas_servico}
+
 areas_conhecimento = {
+    'SERVICO': [
+        "ICP114"
+    ],
     'HUMANAS': [
         "ICP135",
         "ICP145",
@@ -131,13 +146,18 @@ professores_permanentes = [
 ]
 
 professores_substitutos = [
-    #"Gaby"
+    "Raphael Bernardino",
+    "Giomar Oliveira",
+    "Rodrigo Luna"
 ]
 
 professores = ["DUMMY"] + professores_permanentes + professores_substitutos
 
 
 professores_area_conhecimento = {
+    "Raphael Bernardino": ['SERVICO'],
+    "Giomar Oliveira": ['SERVICO'],
+    "Rodrigo Luna": ['SERVICO'],
     "DUMMY": ["*"],
     'Adriana Vivacqua': ['ENGENHARIA_DE_DADOS',
                          'ENGENHARIA_DE_SOFTWARE',

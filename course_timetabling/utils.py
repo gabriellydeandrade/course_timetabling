@@ -1,29 +1,37 @@
 from itertools import groupby, islice, product
 import input
 
-
+D = input.disciplinas
 PROFESSOR_AREA_APTO = input.professores_area_conhecimento
 AREAS_CONHECIMENTO = input.areas_conhecimento
 
 def professor_apto(p):
     # Verificação se o professor está apto a ministrar a disciplina
-    disciplinas_aptas = []
+    # Retorna uma lista com as disciplinas que ele pode ministrar
+    disciplinas_turma_aptas = []
 
     if p == "DUMMY":
         # No caso de um professor DUMMY, ele pode lecionar qualquer disciplina de todas as áreas
-        for area in AREAS_CONHECIMENTO:
-            disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
+        disciplinas_turma_aptas = list(D.keys())
     else:
         try:
             areas_professor = PROFESSOR_AREA_APTO[p]
         except KeyError:
             print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
+
+        disciplinas_aptas = []
         
         for area in areas_professor:
             disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
 
-    result = set(disciplinas_aptas)
+        for d in D.keys():
+            if D[d][0] in disciplinas_aptas:
+                disciplinas_turma_aptas.append(d)
+    
+    result = set(disciplinas_turma_aptas)
     return result
+
+print(professor_apto("Adriana Vivacqua"))
 
 def get_disciplinas_dias_horarios(disciplinas: dict):
     disciplinas_dias = []

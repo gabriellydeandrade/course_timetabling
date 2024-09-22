@@ -38,11 +38,10 @@ for p in P:
         # {'Adriana Vivacqua': {'ICP131_A': {...}}}
         # {'SEG': {'8:00-10:00': 0}, 'QUA': {'8:00-10:00': 0}}
 
-        if D[d][0] in disciplinas_aptas:
-            if p == "DUMMY":
-                a = 0.0001
-            else:
-                a = 1
+        if p == "DUMMY":
+            a = 0.0001
+        elif d in disciplinas_aptas:
+            a = 1
         else:
             a = 0
 
@@ -79,7 +78,7 @@ for p in PP:
                 for d in D.keys()
             ]
         )
-        == FALpp - PNC[p]
+        == FALpp - PNC[p] #TODO: será que aqui eu coloco igual ou >= ? Nesse caso o professor iria assumir mais disciplinas
     )
 
 
@@ -121,6 +120,7 @@ for p in PS:
     )
 
 # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
+
 for d in D.keys():
     CH = get_carga_horaria(D, d)
     m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P]) == 1)
@@ -131,16 +131,13 @@ for d in D.keys():
 for p in P:
     if p == "DUMMY":
         continue
-    # print(DISCIPLINA_DIAS)
-    # print(DISCILINA_HORARIOS)
+
     for i in range(len(DISCIPLINA_DIAS)):
+        print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
         A = get_disciplinas_a_partir_de_um_dia(D, DISCIPLINA_DIAS[i])
         B = get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
         C = A.intersection(B)
-        # print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
-        # print(A,B,C)
 
-        dias = DISCIPLINA_DIAS[i].split(",")
         m.addConstr(
             gp.quicksum(
                 [
