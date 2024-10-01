@@ -1,7 +1,7 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-from utils import *
+import course_timetabling.utils.utils as utils
 import input
 
 m = gp.Model("CourseTimetabling")
@@ -10,12 +10,16 @@ P = input.professores
 PP = input.professores_permanentes
 PS = input.professores_substitutos
 D = input.disciplinas
-DISCIPLINA_DIAS, DISCILINA_HORARIOS = get_disciplinas_dias_horarios(D)
+DISCIPLINA_DIAS, DISCILINA_HORARIOS = utils.get_disciplinas_dias_horarios(D)
+
+DUMMY_PROFESSOR = "DUMMY" 
+DUMMY_COEFFICIENT = 0.0001
 
 
 # ===================================
 #   COEFICIENTES E VARIÁVEIS
 # ===================================
+
 
 f = {}  # Coeficientes
 X = {}  # Variáveis
@@ -24,22 +28,19 @@ for p in P:
 
     f[p] = {}
     X[p] = {}
-    disciplinas_aptas = professor_apto(p)
+    disciplinas_aptas = utils.professor_apto(p)
 
     for d in D.keys():
 
         f[p][d] = {}
         X[p][d] = {}
 
-        CH = get_carga_horaria(D, d)
+        CH = utils.get_carga_horaria(D, d)
         f[p][d][CH[0]] = {}
         f[p][d][CH[0]][CH[1]] = {}
 
-        # {'Adriana Vivacqua': {'ICP131_A': {...}}}
-        # {'SEG': {'8:00-10:00': 0}, 'QUA': {'8:00-10:00': 0}}
-
-        if p == "DUMMY":
-            a = 0.0001
+        if p == DUMMY_PROFESSOR:
+            a = DUMMY_COEFFICIENT
         elif d in disciplinas_aptas:
             a = 1
         else:
@@ -73,7 +74,7 @@ for p in PP:
     m.addConstr(
         gp.quicksum(
             [
-                X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
+                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
                 * D[d][2]
                 for d in D.keys()
             ]
@@ -87,15 +88,15 @@ for p in PP:
 # ===================================
 
 m.setObjective(
-    gp.quicksum(
+    expr=gp.quicksum(
         (X[p][d][CH[0]][CH[1]] * f[p][d][CH[0]][CH[1]])
         for p in P
         for d in D.keys()
-        for CH in [get_carga_horaria(D, d)]
+        for CH in [utils.get_carga_horaria(D, d)]
     )
     - 
     gp.quicksum(Wf * PNC[pp] for pp in PP),
-    GRB.MAXIMIZE
+    sense=GRB.MAXIMIZE
 )
 
 
@@ -111,7 +112,7 @@ for p in PS:
     m.addConstr(
         gp.quicksum(
             [
-                X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
+                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
                 * D[d][2]
                 for d in D.keys()
             ]
@@ -122,26 +123,26 @@ for p in PS:
 # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
 
 for d in D.keys():
-    CH = get_carga_horaria(D, d)
+    CH = utils.get_carga_horaria(D, d)
     m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P]) == 1)
 
 
 # RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
 
 for p in P:
-    if p == "DUMMY":
+    if p == DUMMY_PROFESSOR:
         continue
 
     for i in range(len(DISCIPLINA_DIAS)):
         print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
-        A = get_disciplinas_a_partir_de_um_dia(D, DISCIPLINA_DIAS[i])
-        B = get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
+        A = utils.get_disciplinas_a_partir_de_um_dia(D, DISCIPLINA_DIAS[i])
+        B = utils.get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
         C = A.intersection(B)
 
         m.addConstr(
             gp.quicksum(
                 [
-                    X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
+                    X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
                     for d in C
                 ]
             )
@@ -152,15 +153,15 @@ for p in P:
 # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
 
 for p in P:
-    todas_disciplinas = get_codigo_disciplinas(D)
-    disciplinas_aptas = professor_apto(p)
+    todas_disciplinas = utils.get_codigo_disciplinas(D)
+    disciplinas_aptas = utils.professor_apto(p)
 
     disciplinas_nao_aptas = todas_disciplinas.difference(disciplinas_aptas)
 
     m.addConstr(
         gp.quicksum(
             [
-                X[p][d][get_carga_horaria(D, d)[0]][get_carga_horaria(D, d)[1]]
+                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
                 for d in disciplinas_nao_aptas
             ]
         )
