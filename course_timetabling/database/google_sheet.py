@@ -1,3 +1,5 @@
+# https://developers.google.com/sheets/api/quickstart/python
+
 import os.path
 import pandas as pd
 from google.auth.transport.requests import Request
@@ -10,7 +12,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 SAMPLE_SPREADSHEET_ID = "1MZ_LFco9SZ5FrZFt7CAUCJu4xHov9VtTuil0CyRx9jI"
-SAMPLE_RANGE_NAME = "disciplinas_obrigatorias!A:N"
+
 
 
 def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
@@ -58,6 +60,7 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
         return pd.DataFrame()
 
 
-if __name__ == "__main__":
-    df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME)
-    print(df)
+
+SAMPLE_RANGE_NAME = "professores!A:K"
+df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME)
+print(df)

@@ -1,183 +1,153 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-import course_timetabling.utils.utils as utils
+import utils.utils as utils
 import input
 
-m = gp.Model("CourseTimetabling")
-
-P = input.professores
-PP = input.professores_permanentes
-PS = input.professores_substitutos
-D = input.disciplinas
-DISCIPLINA_DIAS, DISCILINA_HORARIOS = utils.get_disciplinas_dias_horarios(D)
-
-DUMMY_PROFESSOR = "DUMMY" 
+# Constants
+DUMMY_PROFESSOR = "DUMMY"
 DUMMY_COEFFICIENT = 0.0001
+DEFAULT_COEFFICIENT = 1
+ZERO_COEFFICIENT = 0
+WEIGHT_FACTOR = 1000
+MIN_CREDITS_PERMANENT = 8
+MAX_CREDITS_SUBSTITUTE = 12
 
+# Initialize model
+model = gp.Model("CourseTimetabling")
 
-# ===================================
-#   COEFICIENTES E VARIÁVEIS
-# ===================================
+# Input data
+professors = input.professores
+permanent_professors = input.professores_permanentes
+substitute_professors = input.professores_substitutos
+courses = input.disciplinas
+course_days, course_times = utils.get_disciplinas_dias_horarios(courses)
 
+# Coefficients and variables
+coefficients = {}
+variables = {}
 
-f = {}  # Coeficientes
-X = {}  # Variáveis
+def initialize_variables_and_coefficients():
+    for professor in professors:
+        coefficients[professor] = {}
+        variables[professor] = {}
+        qualified_courses = utils.professor_apto(professor)
 
-for p in P:
+        for course in courses.keys():
+            coefficients[professor][course] = {}
+            variables[professor][course] = {}
 
-    f[p] = {}
-    X[p] = {}
-    disciplinas_aptas = utils.professor_apto(p)
+            workload = utils.get_carga_horaria(courses, course)
+            day, time = workload
 
-    for d in D.keys():
-
-        f[p][d] = {}
-        X[p][d] = {}
-
-        CH = utils.get_carga_horaria(D, d)
-        f[p][d][CH[0]] = {}
-        f[p][d][CH[0]][CH[1]] = {}
-
-        if p == DUMMY_PROFESSOR:
-            a = DUMMY_COEFFICIENT
-        elif d in disciplinas_aptas:
-            a = 1
-        else:
-            a = 0
-
-        f[p][d][CH[0]][CH[1]] = a
-
-        # Variavel
-        X[p][d][CH[0]] = {}
-        X[p][d][CH[0]][CH[1]] = {}
-        X[p][d][CH[0]][CH[1]] = m.addVar(
-            vtype=GRB.BINARY, name=f"{p}_{d}_{CH[0]}_{CH[1]}"
-        )
-    pass
-
-PNC = {} # Variável de folga que indica quantos créditos o professor está abaixo do ideal pela coordenação
-for p in PP:
-    PNC[p] = {}
-    PNC[p] = m.addVar(vtype=GRB.INTEGER, name=f"PNC_{p}")
-
-# ===================================
-#   RESTRIÇÕES FRACAS
-# ===================================
-
-Wf = 1000
-FALpp = 8 # Quantidade mínima de créditos a serem alcançadas pelo professor
-
-# RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido. 
-
-for p in PP:
-    m.addConstr(
-        gp.quicksum(
-            [
-                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
-                * D[d][2]
-                for d in D.keys()
-            ]
-        )
-        == FALpp - PNC[p] #TODO: será que aqui eu coloco igual ou >= ? Nesse caso o professor iria assumir mais disciplinas
-    )
-
-
-# ===================================
-#   FUNÇÃO OBJETIVO
-# ===================================
-
-m.setObjective(
-    expr=gp.quicksum(
-        (X[p][d][CH[0]][CH[1]] * f[p][d][CH[0]][CH[1]])
-        for p in P
-        for d in D.keys()
-        for CH in [utils.get_carga_horaria(D, d)]
-    )
-    - 
-    gp.quicksum(Wf * PNC[pp] for pp in PP),
-    sense=GRB.MAXIMIZE
-)
-
-
-# ===================================
-#   RESTRIÇÕES
-# ===================================
-
-
-# RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
-
-FALps = 12 # Quantidade máxima de créditos a serem alcançadas pelo professor substituto
-for p in PS:
-    m.addConstr(
-        gp.quicksum(
-            [
-                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
-                * D[d][2]
-                for d in D.keys()
-            ]
-        )
-        <= FALps
-    )
-
-# RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
-
-for d in D.keys():
-    CH = utils.get_carga_horaria(D, d)
-    m.addConstr(gp.quicksum([X[p][d][CH[0]][CH[1]] for p in P]) == 1)
-
-
-# RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
-
-for p in P:
-    if p == DUMMY_PROFESSOR:
-        continue
-
-    for i in range(len(DISCIPLINA_DIAS)):
-        print(DISCIPLINA_DIAS[i], DISCILINA_HORARIOS[i])
-        A = utils.get_disciplinas_a_partir_de_um_dia(D, DISCIPLINA_DIAS[i])
-        B = utils.get_disciplinas_a_partir_de_um_horario(D, DISCILINA_HORARIOS[i])
-        C = A.intersection(B)
-
-        m.addConstr(
-            gp.quicksum(
-                [
-                    X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
-                    for d in C
-                ]
+            coefficients[professor][course][day] = {}
+            coefficients[professor][course][day][time] = (
+                DUMMY_COEFFICIENT if professor == DUMMY_PROFESSOR else
+                DEFAULT_COEFFICIENT if course in qualified_courses else
+                ZERO_COEFFICIENT
             )
-            <= 1
+
+            variables[professor][course][day] = {}
+            variables[professor][course][day][time] = model.addVar(
+                vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
+            )
+
+def add_credit_slack_variables():
+    # Variável de folga que indica quantos créditos o professor está abaixo do ideal pela coordenação
+    slack_variables = {}
+    for professor in permanent_professors:
+        slack_variables[professor] = model.addVar(vtype=GRB.INTEGER, name=f"PNC_{professor}")
+    return slack_variables
+
+def add_constraints(slack_variables):
+    # Soft constraints
+    # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido. 
+
+    for professor in permanent_professors:
+        model.addConstr(
+            gp.quicksum(
+                variables[professor][course][utils.get_carga_horaria(courses, course)[0]][utils.get_carga_horaria(courses, course)[1]] * courses[course][2]
+                for course in courses.keys()
+            ) == MIN_CREDITS_PERMANENT - slack_variables[professor]
         )
 
+    # Hard constraints
+    # RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
 
-# RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+    for professor in substitute_professors:
+        model.addConstr(
+            gp.quicksum(
+                variables[professor][course][utils.get_carga_horaria(courses, course)[0]][utils.get_carga_horaria(courses, course)[1]] * courses[course][2]
+                for course in courses.keys()
+            ) <= MAX_CREDITS_SUBSTITUTE
+        )
 
-for p in P:
-    todas_disciplinas = utils.get_codigo_disciplinas(D)
-    disciplinas_aptas = utils.professor_apto(p)
+    # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
+    for course in courses.keys():
+        workload = utils.get_carga_horaria(courses, course)
+        day, time = workload
+        model.addConstr(gp.quicksum(variables[professor][course][day][time] for professor in professors) == 1)
 
-    disciplinas_nao_aptas = todas_disciplinas.difference(disciplinas_aptas)
+    # RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
+    for professor in professors:
+        if professor == DUMMY_PROFESSOR:
+            continue
+        for i in range(len(course_days)):
+            day = course_days[i]
+            time = course_times[i]
+            day_courses = utils.get_disciplinas_a_partir_de_um_dia(courses, day)
+            time_courses = utils.get_disciplinas_a_partir_de_um_horario(courses, time)
+            common_courses = day_courses.intersection(time_courses)
+            model.addConstr(
+                gp.quicksum(
+                    variables[professor][course][utils.get_carga_horaria(courses, course)[0]][utils.get_carga_horaria(courses, course)[1]]
+                    for course in common_courses
+                ) <= 1
+            )
 
-    m.addConstr(
+    # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+    for professor in professors:
+        all_courses = utils.get_codigo_disciplinas(courses)
+        qualified_courses = utils.professor_apto(professor)
+        unqualified_courses = all_courses.difference(qualified_courses)
+        model.addConstr(
+            gp.quicksum(
+                variables[professor][course][utils.get_carga_horaria(courses, course)[0]][utils.get_carga_horaria(courses, course)[1]]
+                for course in unqualified_courses
+            ) == 0
+        )
+
+def set_objective(slack_variables):
+    model.setObjective(
         gp.quicksum(
-            [
-                X[p][d][utils.get_carga_horaria(D, d)[0]][utils.get_carga_horaria(D, d)[1]]
-                for d in disciplinas_nao_aptas
-            ]
-        )
-        == 0
+            variables[professor][course][day][time] * coefficients[professor][course][day][time]
+            for professor in professors
+            for course in courses.keys()
+            for day, time in [utils.get_carga_horaria(courses, course)]
+        ) - gp.quicksum(WEIGHT_FACTOR * slack_variables[professor] for professor in permanent_professors),
+        GRB.MAXIMIZE
     )
 
+def init_model():
+    initialize_variables_and_coefficients()
+    slack_variables = add_credit_slack_variables()
+    add_constraints(slack_variables)
+    set_objective(slack_variables)
+    model.update()
+    model.optimize()
 
-m.update()
-m.optimize()
+    professor_timeschedule = []
+    for var in model.getVars():
+        if var.X > 0:
+            professor_timeschedule.append(f"{var.VarName} {var.X}")
 
-print("========= RESULT ==========")
+    model_value = model.ObjVal
+    return professor_timeschedule, model_value
 
-for v in m.getVars():
-    if v.X > 0:
-        print("%s %g" % (v.VarName, v.X))
-
-print("=============================")
-
-print("Obj: %g" % m.ObjVal)
+if __name__ == "__main__":
+    professor_timeschedule, model_value = init_model()
+    print("========= RESULT ==========")
+    for r in professor_timeschedule:
+        print(r)
+    print("=============================")
+    print(f"Obj: {model_value}")
