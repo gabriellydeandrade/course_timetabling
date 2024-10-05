@@ -60,7 +60,22 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
         return pd.DataFrame()
 
 
+def get_courses(page_name: str):
+    pass
 
-SAMPLE_RANGE_NAME = "professores!A:K"
-df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME)
-print(df)
+
+def get_professors():
+    page_name = "professores!A:K"
+    df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
+
+    professors_availables = df.loc[df["Alocar"] == "TRUE"].filter(["Nome curto", "Disciplinas aptas", "Área de conhecimento", "Categoria"])
+    professors_availables.rename(columns={"Nome curto": "professor", "Disciplinas aptas": "qualified_courses", "Área de conhecimento": "expertise", "Categoria": "category"}, inplace=True)
+    professors_availables.set_index("professor", inplace=True)
+    
+    permanent = professors_availables.loc[(~professors_availables["Categoria"].isin(["PS", "EX", "AP"]))]
+    substitute = professors_availables.loc[(professors_availables["Categoria"] == "PS")]
+
+    return permanent, substitute
+
+
+
