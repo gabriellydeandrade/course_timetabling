@@ -60,9 +60,15 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
         return pd.DataFrame()
 
 
-def get_courses(page_name: str):
-    pass
+def get_required_courses():
+    page_name = "disciplinas_obrigatorias!A:O"
+    df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
 
+    courses = df.loc[df["Alocar"] == "TRUE"].filter(["Código único turma", "Código disciplina", "Qtd de créditos", "Dia da semana", "Horário", "Tipo disciplina"])
+    courses.rename(columns={"Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Dia da semana": "day", "Horário": "time", "Tipo disciplina": "type"}, inplace=True)
+    courses.set_index("course_class_id", inplace=True)
+
+    return courses
 
 def get_professors():
     page_name = "professores!A:K"

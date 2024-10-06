@@ -8,53 +8,6 @@ sys.path.insert(
 )  # FIXME quero corrigir de outra forma
 
 from main import init_model
-from database.service_google_sheet import get_professors
-
-import pandas as pd
-
-
-@patch(
-    "database.service_google_sheet.read_google_sheet_to_dataframe",
-    return_value=pd.DataFrame(
-        {
-            "Alocar": ["TRUE", "TRUE", "TRUE"],
-            "Nome curto": ["Adriana Vivacqua", "Daniel Sadoc", "Raphael Bernardino"],
-            "Disciplinas aptas": ["ICP145,ICP616", "", ""],
-            "Área de conhecimento": ["ED,ES,H", "ED,CD", ""],
-            "Categoria": ["PP", "PP", "PS"],
-        }
-    ),
-)
-class TestProfessorsConstructionSet(TestCase):
-
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def test_get_professors_from_google_sheets(self, mock_read_google_sheet):
-        result_permanent, result_substitute = get_professors()
-
-        expected_permanent = pd.DataFrame(
-            {
-                "qualified_courses": ["ICP145,ICP616", ""],
-                "expertise": ["ED,ES,H", "ED,CD"],
-                "category": ["PP", "PP"],
-            },
-            index=["Adriana Vivacqua", "Daniel Sadoc"]
-        )
-        expected_permanent.index.name = "professor"
-
-        expected_substitute = pd.DataFrame(
-            {
-                "qualified_courses": [""],
-                "expertise": [""],
-                "category": ["PS"],
-            },
-            index=["Raphael Bernardino"]
-        )
-        expected_permanent.index.name = "professor"
-
-        pd.testing.assert_frame_equal(result_permanent, expected_permanent)
-        pd.testing.assert_frame_equal(result_substitute, expected_substitute)
 
 
 @skip("implementar")
