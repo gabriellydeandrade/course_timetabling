@@ -72,8 +72,8 @@ def get_professors():
     professors_availables.rename(columns={"Nome curto": "professor", "Disciplinas aptas": "qualified_courses", "Área de conhecimento": "expertise", "Categoria": "category"}, inplace=True)
     professors_availables.set_index("professor", inplace=True)
     
-    permanent = professors_availables.loc[(~professors_availables["Categoria"].isin(["PS", "EX", "AP"]))]
-    substitute = professors_availables.loc[(professors_availables["Categoria"] == "PS")]
+    permanent = professors_availables.loc[(~professors_availables["category"].isin(["PS", "EX", "AP"]))]
+    substitute = professors_availables.loc[(professors_availables["category"] == "PS")]
 
     return permanent, substitute
 

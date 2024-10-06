@@ -16,9 +16,9 @@ def treat_professors_expertise(professors_availables, elective_courses, type="pe
     return professors_availables
 
 
-required_courses = get_courses("disciplinas_obrigatorias!A:O")
-elective_courses = get_courses("disciplinas_eletivas!A:J")
+# required_courses = get_courses("disciplinas_obrigatorias!A:O")
+# elective_courses = get_courses("disciplinas_eletivas!A:J")
 
 permanent, substitute = get_professors()
-permanent_professors = treat_professors_expertise(permanent, elective_courses)
-substitute_professors = treat_professors_expertise(substitute, elective_courses, type="substitute")
+# permanent_professors = treat_professors_expertise(permanent, elective_courses)
+# substitute_professors = treat_professors_expertise(substitute, elective_courses, type="substitute")

@@ -1,0 +1,17 @@
+{
+    "Adriana Vivacqua": {
+        "qualified_courses": ["ICP145","ICP616"],
+        "expertise": ["ED", "ES", "H"],
+        "category": "PP"
+    },
+    "Daniel Sadoc": {
+        "qualified_courses": [],
+        "expertise": ["ED", "CD"],
+        "category": "PP"
+    },
+    "Raphael Bernardino": {
+        "qualified_courses": [],
+        "expertise": [],
+        "category": "PS"
+    }
+}
