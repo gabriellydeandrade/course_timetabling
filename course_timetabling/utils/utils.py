@@ -31,7 +31,7 @@ def professor_apto(p):
     result = set(disciplinas_turma_aptas)
     return result
 
-print(professor_apto("Adriana Vivacqua"))
+# print(professor_apto("Adriana Vivacqua"))
 
 def get_disciplinas_dias_horarios(disciplinas: dict):
     disciplinas_dias = []
@@ -61,25 +61,25 @@ def get_codigo_disciplinas(D):
     result = set([d for d in D])
     return result
 
-def get_carga_horaria(D, disciplina):
-    # Retorna um horário se todos forem iguais
-    carga_horaria = D[disciplina][1]
+# def get_carga_horaria(D, disciplina):
+#     # Retorna um horário se todos forem iguais
+#     carga_horaria = D[disciplina][1]
 
-    dias = []
-    horas = []
+#     dias = []
+#     horas = []
 
-    for ch in carga_horaria:
-        dias.append(ch[0])
-        horas.append(ch[1])
+#     for ch in carga_horaria:
+#         dias.append(ch[0])
+#         horas.append(ch[1])
 
-    if all_equal(dias):
-        dias = [dias[0]]
-    if all_equal(horas):
-        horas = [horas[0]]
+#     if all_equal(dias):
+#         dias = [dias[0]]
+#     if all_equal(horas):
+#         horas = [horas[0]]
     
-    dia = ','.join(dias)
-    hora = ','.join(horas)
-    return dia,hora
+#     dia = ','.join(dias)
+#     hora = ','.join(horas)
+#     return dia,hora
 
 def get_disciplinas_a_partir_de_um_horario(disciplinas: dict, horario:str):
     keys = []

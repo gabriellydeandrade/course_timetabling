@@ -3,7 +3,6 @@ def transform_required_courses_to_dict(courses):
     
     for course in courses:
         courses[course]["credits"] = int(courses[course]["credits"])
-        # get_carga_horaria = ('TER,QUI', '08:00-10:00')
 
     return courses
 

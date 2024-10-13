@@ -9,6 +9,7 @@ sys.path.insert(
 
 from database.service_google_sheet import get_required_courses
 from database.transform_data import transform_required_courses_to_dict
+from database.construct_sets import get_course_schedule
 
 import pandas as pd
 
@@ -55,7 +56,7 @@ class TestGetRequiredCoursesFromGoogleSheets(TestCase):
         pd.testing.assert_frame_equal(result_courses, expected_courses)
 
 
-class TestRequiredCourses(TestCase):
+class TestTransformRequiredCourses(TestCase):
 
     def test_treat_required_courses_with_correct_params(self):
         course = pd.DataFrame(
@@ -93,6 +94,31 @@ class TestRequiredCourses(TestCase):
         }
 
         self.assertDictEqual(result, expected_result)
+
+class TestGetCoursesSet(TestCase):
+
+    def test_get_schedule_from_course(self):
+        mock_get_courses_set = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131,ICP222",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00,08:00-10:00",
+                "type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "type": "SVC",
+            },
+        }
+
+        result = get_course_schedule(courses_set=mock_get_courses_set, course_id="OBG-BCC1-2")
+        expected_result = ("TER,QUI", "15:00-17:00")
+
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":
