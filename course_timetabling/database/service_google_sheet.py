@@ -65,7 +65,17 @@ def get_required_courses():
     df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
 
     courses = df.loc[df["Alocar"] == "TRUE"].filter(["Código único turma", "Código disciplina", "Qtd de créditos", "Dia da semana", "Horário", "Tipo disciplina"])
-    courses.rename(columns={"Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Dia da semana": "day", "Horário": "time", "Tipo disciplina": "type"}, inplace=True)
+    courses.rename(columns={"Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Dia da semana": "day", "Horário": "time", "Tipo disciplina": "course_type"}, inplace=True)
+    courses.set_index("course_class_id", inplace=True)
+
+    return courses
+
+def get_elective_courses():
+    page_name = "disciplinas_eletivas!A:K"
+    df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
+
+    courses = df.loc[df["Alocar"] == "TRUE"].filter(["Código único turma", "Código disciplina", "Qtd de créditos", "Perfil", "Tipo disciplina", "Tipo turma"])
+    courses.rename(columns={"Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Perfil": "knowledge_area", "Tipo disciplina": "course_type", "Tipo turma": "class_type"}, inplace=True)
     courses.set_index("course_class_id", inplace=True)
 
     return courses

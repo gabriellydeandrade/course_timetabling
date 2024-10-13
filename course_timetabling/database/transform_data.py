@@ -1,4 +1,13 @@
-def transform_required_courses_to_dict(courses):
+def transform_courses_to_dict(courses):
+    """
+    Transforms a DataFrame of required courses into a dictionary with course details.
+    Args:
+        courses (pd.DataFrame): A DataFrame containing course information with columns 
+                                such as 'credits' and indexed by course identifiers.
+    Returns:
+        dict: A dictionary where each key is a course identifier and each value is a 
+              dictionary of course details, with the 'credits' field converted to an integer.
+    """
     courses = courses.to_dict("index")
     
     for course in courses:
