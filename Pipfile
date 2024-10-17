@@ -13,6 +13,7 @@ google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
 pandas = "*"
 numpy = "*"
+pandera = "*"
 
 [dev-packages]
 ipykernel = "*"

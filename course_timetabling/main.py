@@ -2,8 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 
 import utils.utils as utils
-import input
-from database.input_global_sets import courses_set
+from database.input_global_sets import courses_set, professors_set, professors_permanent_set, professors_substitute_set
 from database.construct_sets import get_course_schedule
 
 # Constants
@@ -19,9 +18,10 @@ MAX_CREDITS_SUBSTITUTE = 12
 model = gp.Model("CourseTimetabling")
 
 # Input data
-professors = input.professores
-permanent_professors = input.professores_permanentes
-substitute_professors = input.professores_substitutos
+PROFESSORS = professors_set
+PERMANENT_PROFESSORS = professors_permanent_set
+SUBSTITUTE_PROFESSORS = professors_substitute_set
+
 COURSES = courses_set
 course_days, course_times = utils.get_disciplinas_dias_horarios(COURSES)
 
@@ -31,7 +31,7 @@ variables = {}
 
 
 def initialize_variables_and_coefficients():
-    for professor in professors:
+    for professor in PROFESSORS:
         coefficients[professor] = {}
         variables[professor] = {}
         qualified_courses = utils.professor_apto(professor)
@@ -63,7 +63,7 @@ def initialize_variables_and_coefficients():
 def add_credit_slack_variables():
     # Variável de folga que indica quantos créditos o professor está abaixo do ideal pela coordenação
     slack_variables = {}
-    for professor in permanent_professors:
+    for professor in PERMANENT_PROFESSORS:
         slack_variables[professor] = model.addVar(
             vtype=GRB.INTEGER, name=f"PNC_{professor}"
         )
@@ -74,7 +74,7 @@ def add_constraints(slack_variables):
     # Soft constraints
     # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido.
 
-    for professor in permanent_professors:
+    for professor in PERMANENT_PROFESSORS:
         model.addConstr(
             gp.quicksum(
                 variables[professor][course][get_course_schedule(COURSES, course)[0]][
@@ -89,7 +89,7 @@ def add_constraints(slack_variables):
     # Hard constraints
     # RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
 
-    for professor in substitute_professors:
+    for professor in SUBSTITUTE_PROFESSORS:
         model.addConstr(
             gp.quicksum(
                 variables[professor][course][get_course_schedule(COURSES, course)[0]][
@@ -107,13 +107,13 @@ def add_constraints(slack_variables):
         day, time = workload
         model.addConstr(
             gp.quicksum(
-                variables[professor][course][day][time] for professor in professors
+                variables[professor][course][day][time] for professor in PROFESSORS
             )
             == 1
         )
 
     # RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
-    for professor in professors:
+    for professor in PROFESSORS:
         if professor == DUMMY_PROFESSOR:
             continue
         for i in range(len(course_days)):
@@ -133,7 +133,7 @@ def add_constraints(slack_variables):
             )
 
     # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
-    for professor in professors:
+    for professor in PROFESSORS:
         all_courses = utils.get_codigo_disciplinas(COURSES)
         qualified_courses = utils.professor_apto(professor)
         unqualified_courses = all_courses.difference(qualified_courses)
@@ -153,13 +153,13 @@ def set_objective(slack_variables):
         gp.quicksum(
             variables[professor][course][day][time]
             * coefficients[professor][course][day][time]
-            for professor in professors
+            for professor in PROFESSORS
             for course in COURSES.keys()
             for day, time in [get_course_schedule(COURSES, course)]
         )
         - gp.quicksum(
             WEIGHT_FACTOR * slack_variables[professor]
-            for professor in permanent_professors
+            for professor in PERMANENT_PROFESSORS
         ),
         GRB.MAXIMIZE,
     )

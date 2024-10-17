@@ -9,7 +9,7 @@ sys.path.insert(
 
 from database.service_google_sheet import get_required_courses, get_elective_courses
 from database.transform_data import transform_courses_to_dict
-from database.construct_sets import get_course_schedule
+from database.construct_sets import get_course_schedule, get_courses_set
 
 import pandas as pd
 
@@ -96,6 +96,46 @@ class TestTransformRequiredCourses(TestCase):
         self.assertDictEqual(result, expected_result)
 
 class TestGetCoursesSet(TestCase):
+
+    @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
+    def test_get_courses_set_correctly(self, mock_read_google_sheet):
+        mock_read_google_sheet.return_value = pd.DataFrame(
+            {
+                "Alocar": ["TRUE", "TRUE"],
+                "Código único turma": [
+                    "OBG-BCC1-1",
+                    "OBG-BCC1-2",
+                ],
+                "Código disciplina": ["ICP131", "ICP123"],
+                "Nome disciplinas": ["Programação de Computadores I", "Prog II"],
+                "Qtd de créditos": ["4", "4"],
+                "Dia da semana": ["SEG,QUA", "TER,QUI"],
+                "Horário": ["13:00-15:00,08:00-10:00", "15:00-17:00"],
+                "Tipo disciplina": ["OBG", "SVC"],
+            }
+        )
+
+        result = get_courses_set()
+
+        expected_result = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00,08:00-10:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        self.assertDictEqual(result, expected_result)
+
 
     def test_get_schedule_from_course(self):
         mock_get_courses_set = {

@@ -7,7 +7,7 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
 
-from main import init_model
+from database.construct_sets import get_professors_set
 from database.service_google_sheet import get_professors
 from database.transform_data import transform_professors_to_dict, treat_professors_expertise
 
@@ -153,7 +153,52 @@ class TestTransformProfessors(TestCase):
 
         expected_result = {}
 
-        self.assertDictEqual(result, expected_result)        
+        self.assertDictEqual(result, expected_result)   
+
+class TestGetProfessorsSet(TestCase):
+
+    @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
+    def test_get_professors_set_correctly(self, mock_read_google_sheet):
+        mock_read_google_sheet.return_value = pd.DataFrame(
+            {
+                "Alocar": ["TRUE", "TRUE", "TRUE"],
+                "Nome curto": [
+                    "Adriana Vivacqua",
+                    "Daniel Sadoc",
+                    "Raphael Bernardino",
+                ],
+                "Disciplinas aptas": ["ICP145,ICP616", "", ""],
+                "Área de conhecimento": ["ED,ES,H", "ED,CD", ""],
+                "Categoria": ["PP", "PP", "PS"],
+            }
+        )     
+    
+        result = get_professors_set()
+
+        expected_substitute = {
+            "Raphael Bernardino": {
+                "qualified_courses": [],
+                "expertise": [],
+                "category": "PS",
+            }
+        }
+
+        expected_permanent = {
+            "Adriana Vivacqua": {
+                "qualified_courses": ["ICP145", "ICP616"],
+                "expertise": ["ED", "ES", "H"],
+                "category": "PP",
+            },
+            "Daniel Sadoc": {
+                "qualified_courses": [],
+                "expertise": ["ED", "CD"],
+                "category": "PP",
+            }
+        }
+
+        expected_result = (expected_permanent, expected_substitute)
+
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":

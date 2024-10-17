@@ -1,4 +1,9 @@
-def transform_courses_to_dict(courses):
+from typing import Dict
+from pandera.typing import DataFrame
+
+
+
+def transform_courses_to_dict(courses: DataFrame) -> Dict[str, dict]:
     """
     Transforms a DataFrame of required courses into a dictionary with course details.
     Args:
@@ -16,7 +21,7 @@ def transform_courses_to_dict(courses):
     return courses
 
 
-def transform_professors_to_dict(professors_availables):
+def transform_professors_to_dict(professors_availables: DataFrame) -> Dict[str, dict]:
     professors_availables = professors_availables.to_dict("index")
     
     for professor in professors_availables:

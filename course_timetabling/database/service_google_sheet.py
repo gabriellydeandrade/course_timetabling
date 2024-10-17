@@ -61,7 +61,7 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
 
 
 def get_required_courses():
-    page_name = "disciplinas_obrigatorias!A:O"
+    page_name = "disciplinas_obrigatorias!A:Q"
     df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
 
     courses = df.loc[df["Alocar"] == "TRUE"].filter(["Código único turma", "Código disciplina", "Qtd de créditos", "Dia da semana", "Horário", "Tipo disciplina"])
