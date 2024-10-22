@@ -74,24 +74,6 @@ def get_all_course_class_id(courses: dict) -> set:
     result = set([d for d in courses.keys()])
     return result
 
-def get_disciplinas_a_partir_de_um_horario(disciplinas: dict, horario:str):
-    keys = []
-    for disciplina,detalhe in disciplinas.items():
-         for carga_horaria in detalhe[1]:
-            if carga_horaria[1] in horario:
-                keys.append(disciplina)
-    result = set(keys)
-    return result
-
-def get_disciplinas_a_partir_de_um_dia(disciplinas: dict, dia:str):
-    keys = []
-    for disciplina,detalhe in disciplinas.items():
-        for carga_horaria in detalhe[1]:
-            if carga_horaria[0] in dia:
-                keys.append(disciplina)
-    result = set(keys)
-    return result
-
 
 def get_courses_by_time(courses: dict, time: str) -> set:
     """

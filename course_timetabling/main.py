@@ -72,7 +72,7 @@ def add_constraints(slack_variables):
                 variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
                     utils.get_course_schedule(COURSES, course)[1]
                 ]
-                * COURSES[course][2]
+                * COURSES[course]['credits']
                 for course in COURSES.keys()
             )
             == MIN_CREDITS_PERMANENT - slack_variables[professor]
@@ -87,7 +87,7 @@ def add_constraints(slack_variables):
                 variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
                     utils.get_course_schedule(COURSES, course)[1]
                 ]
-                * COURSES[course][2]
+                * COURSES[course]['credits']
                 for course in COURSES.keys()
             )
             <= MAX_CREDITS_SUBSTITUTE
@@ -111,8 +111,8 @@ def add_constraints(slack_variables):
         for i in range(len(course_days)):
             day = course_days[i]
             time = course_times[i]
-            day_courses = utils.get_disciplinas_a_partir_de_um_dia(COURSES, day)
-            time_courses = utils.get_disciplinas_a_partir_de_um_horario(COURSES, time)
+            day_courses = utils.get_courses_by_day(COURSES, day)
+            time_courses = utils.get_courses_by_time(COURSES, time)
             common_courses = day_courses.intersection(time_courses)
             model.addConstr(
                 gp.quicksum(

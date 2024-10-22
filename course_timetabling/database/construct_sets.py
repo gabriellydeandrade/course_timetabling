@@ -47,6 +47,8 @@ def get_professors_set() -> tuple[dict, dict]:
     professors_permanent_set = transform_professors_to_dict(permanent)
     professors_substitute_set = transform_professors_to_dict(substitute)
 
+    #TODO acrescentar professor dummy novamente
+
     # TODO adiciona expertise dos professores e serviço com a chamada treat_professors_expertise
 
     return professors_permanent_set, professors_substitute_set
