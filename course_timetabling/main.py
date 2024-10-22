@@ -1,9 +1,9 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-import utils.utils as utils
-from database.input_global_sets import courses_set, professors_set, professors_permanent_set, professors_substitute_set
-from database.construct_sets import get_course_schedule
+from utils import utils
+from database.construct_sets import get_courses_set, get_professors_set
+
 
 # Constants
 DUMMY_PROFESSOR = "DUMMY"
@@ -17,14 +17,6 @@ MAX_CREDITS_SUBSTITUTE = 12
 # Initialize model
 model = gp.Model("CourseTimetabling")
 
-# Input data
-PROFESSORS = professors_set
-PERMANENT_PROFESSORS = professors_permanent_set
-SUBSTITUTE_PROFESSORS = professors_substitute_set
-
-COURSES = courses_set
-course_days, course_times = utils.get_disciplinas_dias_horarios(COURSES)
-
 # Coefficients and variables
 coefficients = {}
 variables = {}
@@ -34,13 +26,13 @@ def initialize_variables_and_coefficients():
     for professor in PROFESSORS:
         coefficients[professor] = {}
         variables[professor] = {}
-        qualified_courses = utils.professor_apto(professor)
+        qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
 
         for course in COURSES.keys():
             coefficients[professor][course] = {}
             variables[professor][course] = {}
 
-            workload = get_course_schedule(COURSES, course)
+            workload = utils.get_course_schedule(COURSES, course)
             day, time = workload
 
             coefficients[professor][course][day] = {}
@@ -77,8 +69,8 @@ def add_constraints(slack_variables):
     for professor in PERMANENT_PROFESSORS:
         model.addConstr(
             gp.quicksum(
-                variables[professor][course][get_course_schedule(COURSES, course)[0]][
-                    get_course_schedule(COURSES, course)[1]
+                variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
+                    utils.get_course_schedule(COURSES, course)[1]
                 ]
                 * COURSES[course][2]
                 for course in COURSES.keys()
@@ -92,8 +84,8 @@ def add_constraints(slack_variables):
     for professor in SUBSTITUTE_PROFESSORS:
         model.addConstr(
             gp.quicksum(
-                variables[professor][course][get_course_schedule(COURSES, course)[0]][
-                    get_course_schedule(COURSES, course)[1]
+                variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
+                    utils.get_course_schedule(COURSES, course)[1]
                 ]
                 * COURSES[course][2]
                 for course in COURSES.keys()
@@ -103,7 +95,7 @@ def add_constraints(slack_variables):
 
     # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
     for course in COURSES.keys():
-        workload = get_course_schedule(COURSES, course)
+        workload = utils.get_course_schedule(COURSES, course)
         day, time = workload
         model.addConstr(
             gp.quicksum(
@@ -125,8 +117,8 @@ def add_constraints(slack_variables):
             model.addConstr(
                 gp.quicksum(
                     variables[professor][course][
-                        get_course_schedule(COURSES, course)[0]
-                    ][get_course_schedule(COURSES, course)[1]]
+                        utils.get_course_schedule(COURSES, course)[0]
+                    ][utils.get_course_schedule(COURSES, course)[1]]
                     for course in common_courses
                 )
                 <= 1
@@ -134,13 +126,13 @@ def add_constraints(slack_variables):
 
     # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
     for professor in PROFESSORS:
-        all_courses = utils.get_codigo_disciplinas(COURSES)
-        qualified_courses = utils.professor_apto(professor)
+        all_courses = utils.get_all_course_class_id(COURSES)
+        qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
         unqualified_courses = all_courses.difference(qualified_courses)
         model.addConstr(
             gp.quicksum(
-                variables[professor][course][get_course_schedule(COURSES, course)[0]][
-                    get_course_schedule(COURSES, course)[1]
+                variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
+                    utils.get_course_schedule(COURSES, course)[1]
                 ]
                 for course in unqualified_courses
             )
@@ -155,7 +147,7 @@ def set_objective(slack_variables):
             * coefficients[professor][course][day][time]
             for professor in PROFESSORS
             for course in COURSES.keys()
-            for day, time in [get_course_schedule(COURSES, course)]
+            for day, time in [utils.get_course_schedule(COURSES, course)]
         )
         - gp.quicksum(
             WEIGHT_FACTOR * slack_variables[professor]
@@ -183,6 +175,15 @@ def init_model():
 
 
 if __name__ == "__main__":
+    COURSES = get_courses_set()
+    course_days, course_times = utils.get_possible_schedules(COURSES)
+
+    professors_permanent_set, professors_substitute_set = get_professors_set()
+    professors_set = professors_permanent_set | professors_substitute_set
+    PROFESSORS = professors_set
+    PERMANENT_PROFESSORS = professors_permanent_set
+    SUBSTITUTE_PROFESSORS = professors_substitute_set
+
     professor_timeschedule, model_value = init_model()
     print("========= RESULT ==========")
     for r in professor_timeschedule:

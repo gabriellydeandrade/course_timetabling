@@ -1,9 +1,8 @@
 from typing import Dict
-from pandera.typing import DataFrame
+import pandas as pd
 
 
-
-def transform_courses_to_dict(courses: DataFrame) -> Dict[str, dict]:
+def transform_courses_to_dict(courses: pd.DataFrame) -> Dict:
     """
     Transforms a DataFrame of required courses into a dictionary with course details.
     Args:
@@ -13,22 +12,22 @@ def transform_courses_to_dict(courses: DataFrame) -> Dict[str, dict]:
         dict: A dictionary where each key is a course identifier and each value is a 
               dictionary of course details, with the 'credits' field converted to an integer.
     """
-    courses = courses.to_dict("index")
+    courses_transformed = courses.to_dict("index")
     
-    for course in courses:
-        courses[course]["credits"] = int(courses[course]["credits"])
+    for course in courses_transformed:
+        courses_transformed[course]["credits"] = int(courses_transformed[course]["credits"])
 
-    return courses
+    return courses_transformed
 
 
-def transform_professors_to_dict(professors_availables: DataFrame) -> Dict[str, dict]:
-    professors_availables = professors_availables.to_dict("index")
+def transform_professors_to_dict(professors_availables: pd.DataFrame) -> Dict:
+    professors_availables_transformed = professors_availables.to_dict("index")
     
-    for professor in professors_availables:
-        professors_availables[professor]["qualified_courses"] = professors_availables[professor]["qualified_courses"].split(",") if professors_availables[professor]["qualified_courses"] else []
-        professors_availables[professor]["expertise"] = professors_availables[professor]["expertise"].split(",") if professors_availables[professor]["expertise"] else []
+    for professor in professors_availables_transformed:
+        professors_availables_transformed[professor]["qualified_courses"] = professors_availables_transformed[professor]["qualified_courses"].split(",") if professors_availables_transformed[professor]["qualified_courses"] else []
+        professors_availables_transformed[professor]["expertise"] = professors_availables_transformed[professor]["expertise"].split(",") if professors_availables_transformed[professor]["expertise"] else []
 
-    return professors_availables
+    return professors_availables_transformed
 
 def treat_professors_expertise(professors_availables, elective_courses, type="permanent"):
 

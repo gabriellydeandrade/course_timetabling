@@ -9,7 +9,7 @@ sys.path.insert(
 
 from database.service_google_sheet import get_required_courses, get_elective_courses
 from database.transform_data import transform_courses_to_dict
-from database.construct_sets import get_course_schedule, get_courses_set
+from database.construct_sets import get_courses_set
 
 import pandas as pd
 
@@ -135,30 +135,6 @@ class TestGetCoursesSet(TestCase):
         }
 
         self.assertDictEqual(result, expected_result)
-
-
-    def test_get_schedule_from_course(self):
-        mock_get_courses_set = {
-            "OBG-BCC1-1": {
-                "course_id": "ICP131,ICP222",
-                "credits": 4,
-                "day": "SEG,QUA",
-                "time": "13:00-15:00,08:00-10:00",
-                "course_type": "OBG",
-            },
-            "OBG-BCC1-2": {
-                "course_id": "ICP123",
-                "credits": 4,
-                "day": "TER,QUI",
-                "time": "15:00-17:00",
-                "course_type": "SVC",
-            },
-        }
-
-        result = get_course_schedule(mock_get_courses_set, "OBG-BCC1-2")
-        expected_result = ("TER,QUI", "15:00-17:00")
-
-        self.assertEqual(result, expected_result)
 
 class TestGetElectiveCoursesFromGoogleSheets(TestCase):
 

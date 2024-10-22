@@ -1,85 +1,78 @@
-from itertools import groupby, islice, product
-import input
+from typing import Tuple
 
-D = input.disciplinas
-PROFESSOR_AREA_APTO = input.professores_area_conhecimento
-AREAS_CONHECIMENTO = input.areas_conhecimento
+def get_qualified_courses_for_professor(courses_set: dict, professors_set: dict, professor: str) -> set:
+    """
+    Verifies if the professor is qualified to teach the discipline.
+    Returns a set with the disciplines they can teach.
 
-def professor_apto(p):
-    # Verificação se o professor está apto a ministrar a disciplina
-    # Retorna uma lista com as disciplinas que ele pode ministrar
-    disciplinas_turma_aptas = []
+    Args:
+        professors_set (dict): A dictionary containing professor information.
+        professor (str): The name or identifier of the professor.
 
-    if p == "DUMMY":
-        # No caso de um professor DUMMY, ele pode lecionar qualquer disciplina de todas as áreas
-        disciplinas_turma_aptas = list(D.keys())
+    Returns:
+        set: A set of disciplines the professor is qualified to teach.
+    """
+    qualified_course_class_id = []
+
+    if professor == "DUMMY":
+        # In the case of a DUMMY professor, they can teach any discipline from all areas
+        qualified_course_class_id = list(courses_set.keys())
     else:
         try:
-            areas_professor = PROFESSOR_AREA_APTO[p]
+            qualified_courses = professors_set[professor]["qualified_courses"]
         except KeyError:
-            print(f"====Professor {p} não encontrado na lista de perfil de disciplinas")
-
-        disciplinas_aptas = []
+            print(f"====Professor {professor} not found in the list of discipline profiles")
+            return set()
         
-        for area in areas_professor:
-            disciplinas_aptas = disciplinas_aptas + AREAS_CONHECIMENTO[area]
-
-        for d in D.keys():
-            if D[d][0] in disciplinas_aptas:
-                disciplinas_turma_aptas.append(d)
+        for course_class_id in courses_set.keys():
+            if courses_set[course_class_id]["course_id"] in qualified_courses:
+                qualified_course_class_id.append(course_class_id)
     
-    result = set(disciplinas_turma_aptas)
-    return result
+    return set(qualified_course_class_id)
 
-# print(professor_apto("Adriana Vivacqua"))
 
-def get_disciplinas_dias_horarios(disciplinas: dict):
-    disciplinas_dias = []
-    disciplinas_horarios = []
+def get_possible_schedules(courses: dict) -> Tuple[list,list]:
+    """
+    Extracts and returns the unique days and times from a dictionary of courses.
+    Args:
+        courses (dict): A dictionary where the keys are course identifiers and the values are dictionaries 
+                        containing course details, specifically 'day' and 'time'.
+    Returns:
+        tuple: A tuple containing two lists:
+            - days (list): A list of unique days on which the courses are scheduled.
+            - time (list): A list of unique times at which the courses are scheduled.
+    """
+    days = []
+    times = []
 
-    for _,detalhe in disciplinas.items():
-        dias = []
-        horarios = []
-        for x in detalhe[1]:
-            dias.append(x[0])
+    for _, course_details in courses.items():
+        day = course_details['day']
+        time = course_details['time']
 
-        for x in detalhe[1]:
-            horarios.append(x[1])
-
-        if all_equal(dias):
-            dias = [dias[0]]
-        if all_equal(horarios):
-            horarios = [horarios[0]]
-
-        dia = ','.join(dias)
-        hora = ','.join(horarios)
-        disciplinas_dias.append(dia)
-        disciplinas_horarios.append(hora)
-    return disciplinas_dias, disciplinas_horarios
-
-def get_codigo_disciplinas(D):
-    result = set([d for d in D])
-    return result
-
-# def get_carga_horaria(D, disciplina):
-#     # Retorna um horário se todos forem iguais
-#     carga_horaria = D[disciplina][1]
-
-#     dias = []
-#     horas = []
-
-#     for ch in carga_horaria:
-#         dias.append(ch[0])
-#         horas.append(ch[1])
-
-#     if all_equal(dias):
-#         dias = [dias[0]]
-#     if all_equal(horas):
-#         horas = [horas[0]]
+        days.append(day)
+        times.append(time)
     
-#     dia = ','.join(dias)
-#     hora = ','.join(horas)
-#     return dia,hora
+    days = list(set(days))
+    times = list(set(times))
+
+    return days, times
+
+def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, str]:
+    """
+    Retrieve the schedule for a specific course class.
+
+    Args:
+        courses_set (dict): A dictionary containing course information.
+        course_class_id (str): The ID of the course class to retrieve the schedule for.
+
+    Returns:
+        tuple: A tuple containing the day and time of the course class.
+    """
+    return courses_set[course_class_id]["day"], courses_set[course_class_id]["time"]
+
+def get_all_course_class_id(courses: dict) -> set:
+    result = set([d for d in courses.keys()])
+    return result
 
 def get_disciplinas_a_partir_de_um_horario(disciplinas: dict, horario:str):
     keys = []
@@ -99,21 +92,41 @@ def get_disciplinas_a_partir_de_um_dia(disciplinas: dict, dia:str):
     result = set(keys)
     return result
 
-def take(n, iterable):
-    "Return first n items of the iterable as a list."
-    return list(islice(iterable, n))
 
-def all_equal(iterable, key=None):
-    "Returns True if all the elements are equal to each other."
-    return len(take(2, groupby(iterable, key))) <= 1
+def get_courses_by_time(courses: dict, time: str) -> set:
+    """
+    Returns a set of courses that have classes at the specified time.
 
-# print(all_equal([1,2]))
+    Args:
+        courses (dict): Dictionary containing course details.
+        time (str): The time to filter courses by.
 
-def cartesian(iterable):
-    elements = []
-    for elem in product(*iterable):
-        if len(elem[0].split(",")) < len(elem[1].split(",")):
-            continue
-        elements.append(elem)
-    return elements
+    Returns:
+        set: A set of courses that have classes at the specified time.
+    """
+    return {
+        course_id
+        for course_id, details in courses.items()
+        for course_time in details["time"].split(",")
+        if course_time == time
+    }
 
+def get_courses_by_day(courses: dict, day: str) -> set:
+    """
+    Returns a set of courses that have classes on the specified day.
+
+    Args:
+        courses (dict): Dictionary containing course details.
+        day (str): The day to filter courses by.
+
+    Returns:
+        set: A set of courses that have classes on the specified day.
+    """
+    result = []
+
+    for course_id, details in courses.items():
+        for course_day in details["day"].split(","):
+            if course_day == day:
+                result.append(course_id)
+
+    return set(result)

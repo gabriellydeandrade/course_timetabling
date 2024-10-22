@@ -22,20 +22,6 @@ def get_courses_set() -> dict[str, dict]:
     return courses_set
 
 
-def get_course_schedule(courses_set, course_class_id: str):
-    """
-    Retrieve the schedule for a specific course class.
-
-    Args:
-        courses_set (dict): A dictionary containing course information.
-        course_class_id (str): The ID of the course class to retrieve the schedule for.
-
-    Returns:
-        tuple: A tuple containing the day and time of the course class.
-    """
-    return courses_set[course_class_id]["day"], courses_set[course_class_id]["time"]
-
-
 def get_elective_courses_set():
     """
     Retrieves a set of elective courses and transforms them into a dictionary format.

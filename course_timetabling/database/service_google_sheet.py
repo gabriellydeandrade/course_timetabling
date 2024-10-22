@@ -8,6 +8,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
@@ -60,7 +61,7 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
         return pd.DataFrame()
 
 
-def get_required_courses():
+def get_required_courses() -> pd.DataFrame:
     page_name = "disciplinas_obrigatorias!A:Q"
     df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
 
