@@ -94,5 +94,16 @@ def get_professors():
 
     return permanent, substitute
 
+def get_manual_allocation():
+    page_name = "alocacao_manual!A:H"
+
+    df = read_google_sheet_to_dataframe(SAMPLE_SPREADSHEET_ID, page_name)
+
+    manual_allocation = df.filter(["Nome curto professor", "Código único turma", "Código disciplina", "Qtd de créditos", "Dia da semana", "Horário"])
+    manual_allocation.rename(columns={"Nome curto professor": "professor", "Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Dia da semana": "day", "Horário": "time"}, inplace=True)
+    manual_allocation.set_index("professor", inplace=True)
+
+    return manual_allocation 
+
 
 

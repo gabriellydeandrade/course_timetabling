@@ -7,7 +7,11 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
 
-from database.service_google_sheet import get_required_courses, get_elective_courses
+from database.service_google_sheet import (
+    get_manual_allocation,
+    get_required_courses,
+    get_elective_courses,
+)
 from database.transform_data import transform_courses_to_dict
 from database.construct_sets import get_courses_set
 
@@ -95,6 +99,7 @@ class TestTransformRequiredCourses(TestCase):
 
         self.assertDictEqual(result, expected_result)
 
+
 class TestGetCoursesSet(TestCase):
 
     @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
@@ -136,6 +141,7 @@ class TestGetCoursesSet(TestCase):
 
         self.assertDictEqual(result, expected_result)
 
+
 class TestGetElectiveCoursesFromGoogleSheets(TestCase):
 
     def setUp(self) -> None:
@@ -155,7 +161,7 @@ class TestGetElectiveCoursesFromGoogleSheets(TestCase):
                 "Nome disciplinas": ["Dados em vetor", "Prog III"],
                 "Qtd de créditos": ["4", "4"],
                 "Tipo disciplina": ["OPT", "OPT"],
-                "Tipo turma": ["Gradução", "Mestrado"]
+                "Tipo turma": ["Gradução", "Mestrado"],
             }
         )
         result_courses = get_elective_courses()
@@ -166,7 +172,7 @@ class TestGetElectiveCoursesFromGoogleSheets(TestCase):
                 "credits": ["4", "4"],
                 "knowledge_area": ["CD,ED", "CC"],
                 "course_type": ["OPT", "OPT"],
-                "class_type": ["Gradução", "Mestrado"]
+                "class_type": ["Gradução", "Mestrado"],
             },
             index=[
                 "OPT-BCC1-1",
@@ -176,6 +182,40 @@ class TestGetElectiveCoursesFromGoogleSheets(TestCase):
         expected_courses.index.name = "course_class_id"
 
         pd.testing.assert_frame_equal(result_courses, expected_courses)
+
+
+class TestGetManuelAllocationFromGoogleSheets(TestCase):
+    @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
+    def test_get_manual_allocation(self, mock_read_google_sheet):
+        mock_data = pd.DataFrame(
+            {
+                "Nome curto professor": ["Prof1", "Prof2"],
+                "Código único turma": ["Class1", "Class2"],
+                "Código disciplina": ["Course1", "Course2"],
+                "Qtd de créditos": [4, 2],
+                "Dia da semana": ["SEG,QUA", "TER"],
+                "Horário": ["08:00-10:00", "10:00-12:00"],
+            }
+        )
+
+        mock_read_google_sheet.return_value = mock_data
+
+        result = get_manual_allocation()
+
+        expected_data = pd.DataFrame(
+            {
+                "course_class_id": ["Class1", "Class2"],
+                "course_id": ["Course1", "Course2"],
+                "credits": [4, 2],
+                "day": ["SEG,QUA", "TER"],
+                "time": ["08:00-10:00", "10:00-12:00"],
+            },
+            index=["Prof1", "Prof2"],
+        )
+        expected_data.index.name = "professor"
+
+
+        pd.testing.assert_frame_equal(result, expected_data)
 
 
 if __name__ == "__main__":
