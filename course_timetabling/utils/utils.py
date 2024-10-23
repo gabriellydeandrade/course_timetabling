@@ -21,7 +21,7 @@ def get_qualified_courses_for_professor(courses_set: dict, professors_set: dict,
         try:
             qualified_courses = professors_set[professor]["qualified_courses"]
         except KeyError:
-            print(f"====Professor {professor} not found in the list of discipline profiles")
+            print(f"Professor {professor} not found in the list of discipline profiles")
             return set()
         
         for course_class_id in courses_set.keys():

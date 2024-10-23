@@ -9,7 +9,10 @@ sys.path.insert(
 
 from database.construct_sets import get_professors_set
 from database.service_google_sheet import get_professors
-from database.transform_data import transform_professors_to_dict, treat_professors_expertise
+from database.transform_data import (
+    transform_professors_to_dict,
+    treat_professors_expertise,
+)
 
 import pandas as pd
 
@@ -147,13 +150,14 @@ class TestTransformProfessors(TestCase):
             },
             index=["Adriana Vivacqua", "Daniel Sadoc"],
         )
-        permanent_professors.index.name = "professor" 
+        permanent_professors.index.name = "professor"
 
         result = treat_professors_expertise(permanent_professors, [], "permanent")
 
         expected_result = {}
 
-        self.assertDictEqual(result, expected_result)   
+        self.assertDictEqual(result, expected_result)
+
 
 class TestGetProfessorsSet(TestCase):
 
@@ -171,8 +175,8 @@ class TestGetProfessorsSet(TestCase):
                 "Área de conhecimento": ["ED,ES,H", "ED,CD", ""],
                 "Categoria": ["PP", "PP", "PS"],
             }
-        )     
-    
+        )
+
         result = get_professors_set()
 
         expected_substitute = {
@@ -193,10 +197,18 @@ class TestGetProfessorsSet(TestCase):
                 "qualified_courses": [],
                 "expertise": ["ED", "CD"],
                 "category": "PP",
+            },
+        }
+
+        professor_dummy = {
+            "DUMMY": {
+                "qualified_courses": ["*"],
+                "expertise": ["*"],
+                "category": "DUMMY",
             }
         }
 
-        expected_result = (expected_permanent, expected_substitute)
+        expected_result = (expected_permanent, expected_substitute, professor_dummy)
 
         self.assertEqual(result, expected_result)
 

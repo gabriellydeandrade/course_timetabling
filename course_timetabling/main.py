@@ -178,8 +178,8 @@ if __name__ == "__main__":
     COURSES = get_courses_set()
     course_days, course_times = utils.get_possible_schedules(COURSES)
 
-    professors_permanent_set, professors_substitute_set = get_professors_set()
-    professors_set = professors_permanent_set | professors_substitute_set
+    professors_permanent_set, professors_substitute_set, professor_dummy = get_professors_set()
+    professors_set = professors_permanent_set | professors_substitute_set | professor_dummy
     PROFESSORS = professors_set
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set

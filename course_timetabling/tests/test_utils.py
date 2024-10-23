@@ -7,7 +7,7 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
 
-from utils.utils import get_course_schedule, get_courses_by_time, get_courses_by_day, get_possible_schedules
+from utils.utils import get_course_schedule, get_courses_by_time, get_courses_by_day, get_possible_schedules, get_qualified_courses_for_professor
 
 
 class TestUtils(TestCase):
@@ -166,6 +166,129 @@ class TestGetPossibleSchedules(TestCase):
 
         self.assertEqual(result[0], expected_days)
         self.assertEqual(result[1], expected_times)
+
+class TestGetQualifiedCoursesForProfessor(TestCase):
+    def test_professor_with_qualified_courses(self):
+        mock_courses_set = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        mock_professors_set = {
+            "ProfA": {
+                "qualified_courses": ["ICP131"]
+            },
+            "ProfB": {
+                "qualified_courses": ["ICP123"]
+            }
+        }
+
+        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfA")
+        expected_result = {"OBG-BCC1-1"}
+
+        self.assertEqual(result, expected_result)
+
+        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfB")
+        expected_result = {"OBG-BCC1-2"}
+
+        self.assertEqual(result, expected_result)
+
+    def test_professor_with_no_qualified_courses(self):
+        mock_courses_set = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        mock_professors_set = {
+            "ProfA": {
+                "qualified_courses": ["ICP999"]
+            }
+        }
+
+        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfA")
+        expected_result = set()
+
+        self.assertEqual(result, expected_result)
+
+    def test_dummy_professor(self):
+        mock_courses_set = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        mock_professors_set = {}
+
+        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "DUMMY")
+        expected_result = {"OBG-BCC1-1", "OBG-BCC1-2"}
+
+        self.assertEqual(result, expected_result)
+
+    def test_raises_keyerror_if_professor_not_found(self):
+        mock_courses_set = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        mock_professors_set = {
+            "ProfA": {
+                "qualified_courses": ["ICP131"]
+            }
+        }
+
+        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfB")
+        expected_result = set()
+
+        self.assertEqual(result, expected_result)
+        self.assertRaises(KeyError)
+
 
 
 if __name__ == "__main__":
