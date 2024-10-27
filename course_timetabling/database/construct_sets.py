@@ -38,6 +38,11 @@ def get_elective_courses_set():
     elective_courses = get_elective_courses()
     courses_set = transform_courses_to_dict(elective_courses)
 
+    for course in courses_set:
+        if "day" not in course:
+            courses_set[course]["day"] = "NÃO ESPECIFICADO"
+            courses_set[course]["time"] = "NÃO ESPECIFICADO"
+
     return courses_set
 
 

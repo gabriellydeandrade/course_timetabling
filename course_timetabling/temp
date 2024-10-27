@@ -1,0 +1,119 @@
+ def add_constraints(self):
+        course_days, course_times = utils.get_possible_schedules(self.courses)
+
+        # Manual
+        # RH1: Alocar manualmente os professores
+        for course_class_id in self.manual_allocation.keys():
+            professor = self.manual_allocation[course_class_id]["professor"]
+            day = self.manual_allocation[course_class_id]["day"]
+            time = self.manual_allocation[course_class_id]["time"]
+
+            self.model.addConstr(
+                self.variables[professor][course_class_id][day][time] == 1
+            )
+
+        # Soft constraints
+        # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido.
+        for professor in self.permanent_professors:
+            self.model.addConstr(
+                gp.quicksum(
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
+                    for course in self.courses.keys()
+                    if course in self.variables[professor]
+                )
+                == MIN_CREDITS_PERMANENT - self.slack_variables[professor]
+            )
+
+        # Hard constraints
+        # RH2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+        for professor in self.substitute_professors:
+            self.model.addConstr(
+                gp.quicksum(
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
+                    for course in self.courses.keys()
+                )
+                <= MAX_CREDITS_SUBSTITUTE
+            )
+
+        # RH3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
+        for course in self.courses.keys():
+            workload = utils.get_course_schedule(self.courses, course)
+            day, time = workload
+            self.model.addConstr(
+                gp.quicksum(
+                    self.variables[professor][course][day][time]
+                    for professor in self.professors
+                    if course in self.variables[professor]
+                )
+                == 1
+            )
+
+        # RH4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
+        for professor in self.professors:
+            if professor == DUMMY_PROFESSOR:
+                continue
+            for i in range(len(course_days)):
+                day = course_days[i]
+                time = course_times[i]
+
+                if day or time == "NÃO ESPECIFICADO":
+                    continue
+
+                day_courses = utils.get_courses_by_day(self.courses, day)
+                time_courses = utils.get_courses_by_time(self.courses, time)
+                common_courses = day_courses.intersection(time_courses)
+                self.model.addConstr(
+                    gp.quicksum(
+                        self.variables[professor][course][
+                            utils.get_course_schedule(self.courses, course)[0]
+                        ][utils.get_course_schedule(self.courses, course)[1]]
+                        for course in common_courses
+                    )
+                    <= 1
+                )
+
+        # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+        # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
+        for professor in self.professors:
+            all_courses = utils.get_all_course_class_id(self.courses)
+            courses_available = utils.remove_manual_allocation_courses(
+                all_courses, self.manual_allocation
+            )
+
+            qualified_courses = utils.get_qualified_courses_for_professor(
+                self.courses, self.professors, professor
+            )
+            unqualified_courses = courses_available.difference(qualified_courses)
+            self.model.addConstr(
+                gp.quicksum(
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    for course in unqualified_courses
+                    if course in self.variables[professor]
+                )
+                == 0
+            )
+
+    def set_objective(self):
+        self.model.setObjective(
+            gp.quicksum(
+                self.variables[professor][course][day][time]
+                * self.coefficients[professor][course][day][time]
+                for professor in self.professors
+                for course in self.courses.keys()
+                for day, time in [utils.get_course_schedule(self.courses, course)]
+                if course in self.variables[professor]
+            )
+            - gp.quicksum(
+                WEIGHT_FACTOR * self.slack_variables[professor]
+                for professor in self.permanent_professors
+            ),
+            GRB.MAXIMIZE,
+        )

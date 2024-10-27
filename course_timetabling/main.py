@@ -2,7 +2,12 @@ import gurobipy as gp
 from gurobipy import GRB
 
 from utils import utils
-from database.construct_sets import get_courses_set, get_elective_courses_set, get_manual_allocation_set, get_professors_set
+from database.construct_sets import (
+    get_courses_set,
+    get_elective_courses_set,
+    get_manual_allocation_set,
+    get_professors_set,
+)
 
 
 # Constants
@@ -14,8 +19,16 @@ WEIGHT_FACTOR = 1000
 MIN_CREDITS_PERMANENT = 8
 MAX_CREDITS_SUBSTITUTE = 12
 
+
 class CourseTimetabling:
-    def __init__(self, professors, permanent_professors, substitute_professors, courses, manual_allocation):
+    def __init__(
+        self,
+        professors,
+        permanent_professors,
+        substitute_professors,
+        courses,
+        manual_allocation,
+    ):
         self.professors = professors
         self.permanent_professors = permanent_professors
         self.substitute_professors = substitute_professors
@@ -49,9 +62,13 @@ class CourseTimetabling:
         for professor in self.professors:
             self.coefficients[professor] = {}
             self.variables[professor] = {}
-            qualified_courses = utils.get_qualified_courses_for_professor(self.courses, self.professors, professor)
-            
-            qualified_courses_available = utils.add_manual_allocation_courses(professor, qualified_courses, self.manual_allocation)
+            qualified_courses = utils.get_qualified_courses_for_professor(
+                self.courses, self.professors, professor
+            )
+
+            qualified_courses_available = utils.add_manual_allocation_courses(
+                professor, qualified_courses, self.manual_allocation
+            )
 
             for course in self.courses.keys():
                 self.coefficients[professor][course] = {}
@@ -80,9 +97,9 @@ class CourseTimetabling:
         """
         Adds slack variables for credit allocation to the model.
 
-        This method creates a slack variable for each permanent professor, indicating 
-        how many credits the permanent professor is below the ideal number set by the coordination. 
-        The slack variables are added to the model and stored in the `slack_variables` 
+        This method creates a slack variable for each permanent professor, indicating
+        how many credits the permanent professor is below the ideal number set by the coordination.
+        The slack variables are added to the model and stored in the `slack_variables`
         dictionary with the professor as the key.
 
         Attributes:
@@ -99,7 +116,7 @@ class CourseTimetabling:
         course_days, course_times = utils.get_possible_schedules(self.courses)
 
         # Manual
-        # RH1: Alocar manualmente os professores    
+        # RH1: Alocar manualmente os professores
         for course_class_id in self.manual_allocation.keys():
             professor = self.manual_allocation[course_class_id]["professor"]
             day = self.manual_allocation[course_class_id]["day"]
@@ -107,17 +124,17 @@ class CourseTimetabling:
 
             self.model.addConstr(
                 self.variables[professor][course_class_id][day][time] == 1
-            )       
+            )
 
         # Soft constraints
         # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido.
         for professor in self.permanent_professors:
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][utils.get_course_schedule(self.courses, course)[0]][
-                        utils.get_course_schedule(self.courses, course)[1]
-                    ]
-                    * self.courses[course]['credits']
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
                 == MIN_CREDITS_PERMANENT - self.slack_variables[professor]
@@ -128,10 +145,10 @@ class CourseTimetabling:
         for professor in self.substitute_professors:
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][utils.get_course_schedule(self.courses, course)[0]][
-                        utils.get_course_schedule(self.courses, course)[1]
-                    ]
-                    * self.courses[course]['credits']
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
                 <= MAX_CREDITS_SUBSTITUTE
@@ -143,7 +160,8 @@ class CourseTimetabling:
             day, time = workload
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][day][time] for professor in self.professors
+                    self.variables[professor][course][day][time]
+                    for professor in self.professors
                 )
                 == 1
             )
@@ -155,6 +173,10 @@ class CourseTimetabling:
             for i in range(len(course_days)):
                 day = course_days[i]
                 time = course_times[i]
+
+                if day or time == "NÃO ESPECIFICADO":
+                    continue
+
                 day_courses = utils.get_courses_by_day(self.courses, day)
                 time_courses = utils.get_courses_by_time(self.courses, time)
                 common_courses = day_courses.intersection(time_courses)
@@ -172,15 +194,19 @@ class CourseTimetabling:
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
         for professor in self.professors:
             all_courses = utils.get_all_course_class_id(self.courses)
-            courses_available = utils.remove_manual_allocation_courses(all_courses, self.manual_allocation)
+            courses_available = utils.remove_manual_allocation_courses(
+                all_courses, self.manual_allocation
+            )
 
-            qualified_courses = utils.get_qualified_courses_for_professor(self.courses, self.professors, professor)
+            qualified_courses = utils.get_qualified_courses_for_professor(
+                self.courses, self.professors, professor
+            )
             unqualified_courses = courses_available.difference(qualified_courses)
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][utils.get_course_schedule(self.courses, course)[0]][
-                        utils.get_course_schedule(self.courses, course)[1]
-                    ]
+                    self.variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
                     for course in unqualified_courses
                 )
                 == 0
@@ -219,9 +245,9 @@ class CourseTimetabling:
                     pnc_professors.append(timeschedule)
 
         if pnc_professors:
-             # TODO adicionar eletivas caso nao atinja o horário
-             self.allocate_ellective_courses(pnc_professors)
-             print("PNC")
+            # TODO adicionar eletivas caso nao atinja o horário
+            self.allocate_ellective_courses(pnc_professors)
+            print("PNC")
 
         model_value = self.model.ObjVal
         print("========= RESULT ==========")
@@ -230,46 +256,83 @@ class CourseTimetabling:
         print("=============================")
         print(f"Obj: {model_value}")
         return professor_timeschedule, model_value
-    
+
     def allocate_ellective_courses(self, pnc_professors):
         elective_courses = get_elective_courses_set()
         self.set_courses(elective_courses)
 
-        for professor in self.permanent_professors:
-            if professor in pnc_professors:
-                qualified_courses = utils.get_qualified_courses_for_professor(self.courses, self.professors, professor)
+        for professor in self.professors:
+            for pnc_professor in pnc_professors:
+                if professor in pnc_professor or professor == DUMMY_PROFESSOR:
+                    qualified_courses = utils.get_qualified_courses_for_professor(
+                        self.courses, self.professors, professor
+                    )
 
-                for course in self.courses.keys():
-                    if course in qualified_courses:
-
+                    for course in self.courses.keys():
+                        self.coefficients[professor][course] = {}
                         self.variables[professor][course] = {}
 
                         workload = utils.get_course_schedule(self.courses, course)
                         day, time = workload
 
-                        self.coefficients[professor][course][day][time] = DEFAULT_COEFFICIENT
+                        self.coefficients[professor][course][day] = {}
+
+                        if professor == DUMMY_PROFESSOR:
+                            self.coefficients[professor][course][day][
+                                    time
+                                ] = DUMMY_COEFFICIENT
+                        else:
+                            if course in qualified_courses:
+                                
+                                self.coefficients[professor][course][day][
+                                    time
+                                ] = DEFAULT_COEFFICIENT
+                            else:
+                                self.coefficients[professor][course][day][
+                                    time
+                                ] = ZERO_COEFFICIENT
+
                         self.variables[professor][course][day] = {}
-                        self.variables[professor][course][day][time] = self.model.addVar(
-                            vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
+                        self.variables[professor][course][day][time] = (
+                            self.model.addVar(
+                                vtype=GRB.BINARY,
+                                name=f"{professor}_{course}_{day}_{time}",
+                            )
                         )
+        self.add_constraints()
+        self.set_objective()
+        self.optimize()
+        self.generate_results()
+
 
 def main():
     MANUAL_ALLOCATION = get_manual_allocation_set()
     COURSES = get_courses_set(MANUAL_ALLOCATION)
 
-    professors_permanent_set, professors_substitute_set, professor_dummy = get_professors_set()
-    professors_set = professors_permanent_set | professors_substitute_set | professor_dummy
+    professors_permanent_set, professors_substitute_set, professor_dummy = (
+        get_professors_set()
+    )
+    professors_set = (
+        professors_permanent_set | professors_substitute_set | professor_dummy
+    )
     PROFESSORS = professors_set
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
 
-    timetabling = CourseTimetabling(PROFESSORS, PERMANENT_PROFESSORS, SUBSTITUTE_PROFESSORS, COURSES, MANUAL_ALLOCATION)
+    timetabling = CourseTimetabling(
+        PROFESSORS,
+        PERMANENT_PROFESSORS,
+        SUBSTITUTE_PROFESSORS,
+        COURSES,
+        MANUAL_ALLOCATION,
+    )
     timetabling.initialize_variables_and_coefficients()
     timetabling.add_credit_slack_variables()
     timetabling.add_constraints()
     timetabling.set_objective()
     timetabling.optimize()
     timetabling.generate_results()
+
 
 if __name__ == "__main__":
     main()
