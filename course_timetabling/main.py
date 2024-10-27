@@ -204,10 +204,20 @@ class CourseTimetabling:
         self.model.optimize()
 
     def generate_results(self):
+
         professor_timeschedule = []
+        pnc_professors = []
         for var in self.model.getVars():
             if var.X > 0:
-                professor_timeschedule.append(f"{var.VarName} {var.X}")
+                timeschedule = f"{var.VarName} {var.X}"
+                professor_timeschedule.append(timeschedule)
+
+                if "PNC" in timeschedule:
+                    pnc_professors.append(timeschedule)
+
+        if pnc_professors:
+             # TODO adicionar eletivas caso nao atinja o horário
+             print("PNC")
 
         model_value = self.model.ObjVal
         print("========= RESULT ==========")

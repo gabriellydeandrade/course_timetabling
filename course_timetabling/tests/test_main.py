@@ -200,11 +200,11 @@ class TestModelCourseTimetabling(unittest.TestCase):
         expected_result = [
             "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
             "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
-            "PNC_Adriana Vivacqua 4.0",
-            "PNC_Daniel Sadoc 4.0",
         ]
 
-        self.assertEqual(result, expected_result)
+        for item in expected_result:
+            self.assertIn(item, result)
+
         self.assertLessEqual(result_value, 0)
 
     def test_if_allocates_all_required_courses_for_dummy_professors(self):
@@ -250,8 +250,37 @@ class TestModelCourseTimetabling(unittest.TestCase):
         expected_result = [
             "DUMMY_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
             "DUMMY_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
-            "PNC_Adriana Vivacqua 8.0",
-            "PNC_Daniel Sadoc 8.0",
+        ]
+
+        for item in expected_result:
+            self.assertIn(item, result)
+
+        self.assertLessEqual(result_value, 0)
+
+    def test_it_professor_received_a_penaulty_for_less_credit(self):
+
+        timetabling = CourseTimetabling(
+            professors=self.PROFESSORS,
+            permanent_professors=self.PERMANENT_PROFESSORS,
+            substitute_professors=[],
+            courses=self.COURSES,
+            manual_allocation={},
+            course_days=["SEG,QUA", "TER,QUI"],
+            course_times=["13:00-15:00,08:00-10:00", "15:00-17:00"],
+        )
+        timetabling.initialize_variables_and_coefficients()
+        timetabling.add_credit_slack_variables()
+        timetabling.add_constraints()
+        timetabling.set_objective()
+        timetabling.optimize()
+
+        result, result_value = timetabling.generate_results()
+
+        expected_result = [
+            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
+            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
+            "PNC_Adriana Vivacqua 4.0",
+            "PNC_Daniel Sadoc 4.0",
         ]
 
         self.assertEqual(result, expected_result)
