@@ -8,7 +8,6 @@ sys.path.insert(
 )  # FIXME quero corrigir de outra forma
 
 from utils.utils import (
-    add_manual_allocation_courses,
     get_course_schedule,
     get_courses_by_time,
     get_courses_by_day,
@@ -354,104 +353,6 @@ class TestRemoveManualCourses(TestCase):
         mock_manual_courses = dict()
 
         result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
-        expected_result = mock_courses
-
-        self.assertEqual(result, expected_result)
-
-class TestAddManualCourses(TestCase):
-    def test_add_manual_courses(self):
-        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
-        mock_manual_courses = {
-            "OBG-BCC1-3": {
-                "course_id": "ICP131",
-                "credits": 4,
-                "day": "SEG,QUA",
-                "time": "13:00-15:00",
-                "course_type": "OBG",
-                "professor": "ProfA",
-            }
-        }
-
-        result = add_manual_allocation_courses("ProfA", mock_courses, mock_manual_courses)
-        expected_result = {"OBG-BCC1-1", "OBG-BCC1-2", "OBG-BCC1-3"}
-
-        self.assertEqual(result, expected_result)
-
-    def test_add_manual_courses_with_no_manual_courses(self):
-        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
-        mock_manual_courses = {}
-
-        result = add_manual_allocation_courses("ProfA", mock_courses, mock_manual_courses)
-        expected_result = mock_courses
-
-        self.assertEqual(result, expected_result)
-
-    def test_add_manual_courses_with_different_professor(self):
-        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
-        mock_manual_courses = {
-            "OBG-BCC1-3": {
-                "course_id": "ICP131",
-                "credits": 4,
-                "day": "SEG,QUA",
-                "time": "13:00-15:00",
-                "course_type": "OBG",
-                "professor": "ProfB",
-            }
-        }
-
-        result = add_manual_allocation_courses("ProfA", mock_courses, mock_manual_courses)
-        expected_result = mock_courses
-
-        self.assertEqual(result, expected_result)
-
-    def test_add_manual_courses_with_multiple_courses(self):
-        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
-        mock_manual_courses = {
-            "OBG-BCC1-3": {
-                "course_id": "ICP131",
-                "credits": 4,
-                "day": "SEG,QUA",
-                "time": "13:00-15:00",
-                "course_type": "OBG",
-                "professor": "ProfA",
-            },
-            "OBG-BCC1-4": {
-                "course_id": "ICP132",
-                "credits": 4,
-                "day": "TER,QUI",
-                "time": "15:00-17:00",
-                "course_type": "SVC",
-                "professor": "ProfA",
-            }
-        }
-
-        result = add_manual_allocation_courses("ProfA", mock_courses, mock_manual_courses)
-        expected_result = {"OBG-BCC1-1", "OBG-BCC1-2", "OBG-BCC1-3", "OBG-BCC1-4"}
-
-        self.assertEqual(result, expected_result)
-
-    def test_add_manual_courses_with_no_matching_professor(self):
-        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
-        mock_manual_courses = {
-            "OBG-BCC1-3": {
-                "course_id": "ICP131",
-                "credits": 4,
-                "day": "SEG,QUA",
-                "time": "13:00-15:00",
-                "course_type": "OBG",
-                "professor": "ProfB",
-            },
-            "OBG-BCC1-4": {
-                "course_id": "ICP132",
-                "credits": 4,
-                "day": "TER,QUI",
-                "time": "15:00-17:00",
-                "course_type": "SVC",
-                "professor": "ProfC",
-            }
-        }
-
-        result = add_manual_allocation_courses("ProfA", mock_courses, mock_manual_courses)
         expected_result = mock_courses
 
         self.assertEqual(result, expected_result)

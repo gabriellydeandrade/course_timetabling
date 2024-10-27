@@ -74,7 +74,7 @@ def get_all_course_class_id(courses: dict) -> set:
     result = set([d for d in courses.keys()])
     return result
 
-def remove_manual_courses(courses: set, manual_courses: dict) -> set:
+def remove_manual_allocation_courses(courses: set, manual_courses: dict) -> set:
     """
     Removes courses that are manually specified from the set of available courses.
 
@@ -92,6 +92,26 @@ def remove_manual_courses(courses: set, manual_courses: dict) -> set:
         courses_available.remove(course_id)
 
     return courses_available  
+
+def add_manual_allocation_courses(professor: str, courses: set, manual_courses: dict) -> set:
+    """
+    Adds courses that are manually specified to the set of available courses.
+
+    Args:
+        courses (set): A set of course IDs representing all available courses.
+        manual_courses (dict): A dictionary where keys are course IDs that should be added to the available courses.
+
+    Returns:
+        set: A set of course IDs representing the available courses after adding the manually specified courses.
+    """
+
+    courses_available = courses.copy()
+
+    for course_id in manual_courses.keys():
+        if professor == manual_courses[course_id]["professor"]:
+            courses_available.add(course_id)
+
+    return courses_available
 
 
 def get_courses_by_time(courses: dict, time: str) -> set:

@@ -27,6 +27,8 @@ def initialize_variables_and_coefficients():
         coefficients[professor] = {}
         variables[professor] = {}
         qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
+        
+        qualified_courses_available = utils.add_manual_allocation_courses(professor, qualified_courses, MANUAL_ALLOCATION)
 
         for course in COURSES.keys():
             coefficients[professor][course] = {}
@@ -41,7 +43,7 @@ def initialize_variables_and_coefficients():
                 if professor == DUMMY_PROFESSOR
                 else (
                     DEFAULT_COEFFICIENT
-                    if course in qualified_courses
+                    if course in qualified_courses_available
                     else ZERO_COEFFICIENT
                 )
             )
@@ -142,7 +144,7 @@ def add_constraints(slack_variables):
     # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
     for professor in PROFESSORS:
         all_courses = utils.get_all_course_class_id(COURSES)
-        courses_available = utils.remove_manual_courses(all_courses, MANUAL_ALLOCATION)
+        courses_available = utils.remove_manual_allocation_courses(all_courses, MANUAL_ALLOCATION)
 
         qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
         unqualified_courses = courses_available.difference(qualified_courses)
