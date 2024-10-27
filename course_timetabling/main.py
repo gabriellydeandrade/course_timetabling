@@ -139,10 +139,11 @@ def add_constraints(slack_variables):
             )
 
     # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+    # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
     for professor in PROFESSORS:
         all_courses = utils.get_all_course_class_id(COURSES)
         courses_available = utils.remove_manual_courses(all_courses, MANUAL_ALLOCATION)
-        
+
         qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
         unqualified_courses = courses_available.difference(qualified_courses)
         model.addConstr(
@@ -191,7 +192,9 @@ def init_model():
 
 
 if __name__ == "__main__":
-    COURSES = get_courses_set()
+    MANUAL_ALLOCATION = get_manual_allocation_set()
+
+    COURSES = get_courses_set(MANUAL_ALLOCATION)
     course_days, course_times = utils.get_possible_schedules(COURSES)
 
     professors_permanent_set, professors_substitute_set, professor_dummy = get_professors_set()
@@ -200,7 +203,6 @@ if __name__ == "__main__":
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
 
-    MANUAL_ALLOCATION = get_manual_allocation_set()
 
     professor_timeschedule, model_value = init_model()
     print("========= RESULT ==========")

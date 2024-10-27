@@ -10,7 +10,7 @@ from database.transform_data import (
 )
 
 
-def get_courses_set() -> dict[str, dict]:
+def get_courses_set(manual_allocation_set: dict) -> dict[str, dict]:
     """
     Retrieves a set of required courses and transforms them into a dictionary format.
 
@@ -20,7 +20,9 @@ def get_courses_set() -> dict[str, dict]:
     required_courses = get_required_courses()
     courses_set = transform_courses_to_dict(required_courses)
 
-    # TODO adiciona também os cursos manuais com a chamada get_manual_allocation
+    for course_class_id in manual_allocation_set.keys():
+        if manual_allocation_set[course_class_id]["course_type"] == "OPT":
+            courses_set[course_class_id] = manual_allocation_set[course_class_id]
 
     return courses_set
 

@@ -25,6 +25,7 @@ class TestGetManualAllocationFromGoogleSheets(TestCase):
                 "Código único turma": ["Class1", "Class2", "Class3"],
                 "Código disciplina": ["Course1", "Course2", "Course3"],
                 "Qtd de créditos": [4, 2, 2],
+                "Tipo disciplina": ["OBG", "OPT", "OPT"],
                 "Dia da semana": ["SEG,QUA", "TER", "QUI"],
                 "Horário": ["08:00-10:00", "10:00-12:00", "10:00-12:00"],
             }
@@ -39,6 +40,7 @@ class TestGetManualAllocationFromGoogleSheets(TestCase):
                 "professor": ["Prof1", "Prof2", "Prof2"],
                 "course_id": ["Course1", "Course2", "Course3"],
                 "credits": [4, 2, 2],
+                "course_type": ["OBG", "OPT", "OPT"],
                 "day": ["SEG,QUA", "TER", "QUI"],
                 "time": ["08:00-10:00", "10:00-12:00", "10:00-12:00"],
             },
