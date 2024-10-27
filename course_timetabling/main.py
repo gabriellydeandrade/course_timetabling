@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 
 from utils import utils
-from database.construct_sets import get_courses_set, get_manual_allocation_set, get_professors_set
+from database.construct_sets import get_courses_set, get_elective_courses_set, get_manual_allocation_set, get_professors_set
 
 
 # Constants
@@ -15,18 +15,19 @@ MIN_CREDITS_PERMANENT = 8
 MAX_CREDITS_SUBSTITUTE = 12
 
 class CourseTimetabling:
-    def __init__(self, professors, permanent_professors, substitute_professors, courses, manual_allocation, course_days, course_times):
+    def __init__(self, professors, permanent_professors, substitute_professors, courses, manual_allocation):
         self.professors = professors
         self.permanent_professors = permanent_professors
         self.substitute_professors = substitute_professors
         self.courses = courses
         self.manual_allocation = manual_allocation
-        self.course_days = course_days
-        self.course_times = course_times
         self.model = gp.Model("CourseTimetabling")
         self.coefficients = {}
         self.variables = {}
         self.slack_variables = {}
+
+    def set_courses(self, courses):
+        self.courses = courses
 
     def initialize_variables_and_coefficients(self):
         """
@@ -95,6 +96,8 @@ class CourseTimetabling:
             )
 
     def add_constraints(self):
+        course_days, course_times = utils.get_possible_schedules(self.courses)
+
         # Manual
         # RH1: Alocar manualmente os professores    
         for course_class_id in self.manual_allocation.keys():
@@ -149,9 +152,9 @@ class CourseTimetabling:
         for professor in self.professors:
             if professor == DUMMY_PROFESSOR:
                 continue
-            for i in range(len(self.course_days)):
-                day = self.course_days[i]
-                time = self.course_times[i]
+            for i in range(len(course_days)):
+                day = course_days[i]
+                time = course_times[i]
                 day_courses = utils.get_courses_by_day(self.courses, day)
                 time_courses = utils.get_courses_by_time(self.courses, time)
                 common_courses = day_courses.intersection(time_courses)
@@ -209,7 +212,7 @@ class CourseTimetabling:
         pnc_professors = []
         for var in self.model.getVars():
             if var.X > 0:
-                timeschedule = f"{var.VarName} {var.X}"
+                timeschedule = f"{var.VarName}/{var.X}"
                 professor_timeschedule.append(timeschedule)
 
                 if "PNC" in timeschedule:
@@ -217,6 +220,7 @@ class CourseTimetabling:
 
         if pnc_professors:
              # TODO adicionar eletivas caso nao atinja o horário
+             self.allocate_ellective_courses(pnc_professors)
              print("PNC")
 
         model_value = self.model.ObjVal
@@ -226,11 +230,32 @@ class CourseTimetabling:
         print("=============================")
         print(f"Obj: {model_value}")
         return professor_timeschedule, model_value
+    
+    def allocate_ellective_courses(self, pnc_professors):
+        elective_courses = get_elective_courses_set()
+        self.set_courses(elective_courses)
+
+        for professor in self.permanent_professors:
+            if professor in pnc_professors:
+                qualified_courses = utils.get_qualified_courses_for_professor(self.courses, self.professors, professor)
+
+                for course in self.courses.keys():
+                    if course in qualified_courses:
+
+                        self.variables[professor][course] = {}
+
+                        workload = utils.get_course_schedule(self.courses, course)
+                        day, time = workload
+
+                        self.coefficients[professor][course][day][time] = DEFAULT_COEFFICIENT
+                        self.variables[professor][course][day] = {}
+                        self.variables[professor][course][day][time] = self.model.addVar(
+                            vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
+                        )
 
 def main():
     MANUAL_ALLOCATION = get_manual_allocation_set()
     COURSES = get_courses_set(MANUAL_ALLOCATION)
-    course_days, course_times = utils.get_possible_schedules(COURSES)
 
     professors_permanent_set, professors_substitute_set, professor_dummy = get_professors_set()
     professors_set = professors_permanent_set | professors_substitute_set | professor_dummy
@@ -238,7 +263,7 @@ def main():
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
 
-    timetabling = CourseTimetabling(PROFESSORS, PERMANENT_PROFESSORS, SUBSTITUTE_PROFESSORS, COURSES, MANUAL_ALLOCATION, course_days, course_times)
+    timetabling = CourseTimetabling(PROFESSORS, PERMANENT_PROFESSORS, SUBSTITUTE_PROFESSORS, COURSES, MANUAL_ALLOCATION)
     timetabling.initialize_variables_and_coefficients()
     timetabling.add_credit_slack_variables()
     timetabling.add_constraints()

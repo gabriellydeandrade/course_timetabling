@@ -12,7 +12,7 @@ from database.service_google_sheet import (
     get_elective_courses,
 )
 from database.transform_data import transform_courses_to_dict
-from database.construct_sets import get_courses_set
+from database.construct_sets import get_courses_set, get_elective_courses_set
 
 import pandas as pd
 
@@ -191,13 +191,15 @@ class TestGetCoursesSet(TestCase):
                 "day": "SEG,QUA",
                 "time": "13:00-15:00,08:00-10:00",
                 "course_type": "OPT",
-            }
+            },
         }
 
         self.assertDictEqual(result, expected_result)
 
     @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
-    def test_get_courses_set_only_if_manual_allocation_is_optional(self, mock_read_google_sheet):
+    def test_get_courses_set_only_if_manual_allocation_is_optional(
+        self, mock_read_google_sheet
+    ):
         mock_read_google_sheet.return_value = pd.DataFrame(
             {
                 "Alocar": ["TRUE", "TRUE"],
@@ -235,7 +237,7 @@ class TestGetCoursesSet(TestCase):
                 "day": "SEG,QUA",
                 "time": "13:00-15:00,08:00-10:00",
                 "course_type": "OPT",
-            }
+            },
         }
         result = get_courses_set(manual_allocation_set)
 
@@ -260,10 +262,11 @@ class TestGetCoursesSet(TestCase):
                 "day": "SEG,QUA",
                 "time": "13:00-15:00,08:00-10:00",
                 "course_type": "OPT",
-            }
+            },
         }
 
         self.assertDictEqual(result, expected_result)
+
 
 class TestGetElectiveCoursesFromGoogleSheets(TestCase):
 
@@ -305,6 +308,88 @@ class TestGetElectiveCoursesFromGoogleSheets(TestCase):
         expected_courses.index.name = "course_class_id"
 
         pd.testing.assert_frame_equal(result_courses, expected_courses)
+
+
+class TestTransformElectiveCourses(TestCase):
+
+    def test_treat_elective_courses_with_correct_params(self):
+        course = pd.DataFrame(
+            {
+                "course_id": ["ICP131,ICP222", "ICP888"],
+                "credits": ["4", "4"],
+                "knowledge_area": ["ED", "CC"],
+                "course_type": ["OPT", "OPT"],
+                "class_type": ["Gradução", "Mestrado"],
+            },
+            index=[
+                "OPT-BCC1-1",
+                "OPT-BCC1-2",
+            ],
+        )
+        course.index.name = "course_class_id"
+
+        result = transform_courses_to_dict(course)
+
+        expected_result = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131,ICP222",
+                "credits": 4,
+                "knowledge_area": "ED",
+                "course_type": "OPT",
+                "class_type": "Gradução",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP888",
+                "credits": 4,
+                "knowledge_area": "CC",
+                "course_type": "OPT",
+                "class_type": "Mestrado",
+            },
+        }
+
+        self.assertDictEqual(result, expected_result)
+
+
+class TestGetElectiveCoursesSet(TestCase):
+
+    @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
+    def test_get_elective_courses_set(self, mock_read_google_sheet):
+        mock_read_google_sheet.return_value = pd.DataFrame(
+            {
+                "Alocar": ["TRUE", "TRUE"],
+                "Código único turma": [
+                    "OPT-BCC1-1",
+                    "OPT-MAI-61",
+                ],
+                "Código disciplina": ["ICP777", "ICP999"],
+                "Perfil": ["CD,ED", "CC"],
+                "Nome disciplinas": ["Dados em vetor", "Prog III"],
+                "Qtd de créditos": ["4", "4"],
+                "Tipo disciplina": ["OPT", "OPT"],
+                "Tipo turma": ["Gradução", "Mestrado"],
+            }
+        )
+
+        result = get_elective_courses_set()
+
+        expected_result = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP777",
+                "credits": 4,
+                "knowledge_area": "CD,ED",
+                "course_type": "OPT",
+                "class_type": "Gradução",
+            },
+            "OPT-MAI-61": {
+                "course_id": "ICP999",
+                "credits": 4,
+                "knowledge_area": "CC",
+                "course_type": "OPT",
+                "class_type": "Mestrado",
+            },
+        }
+
+        self.assertDictEqual(result, expected_result)
 
 
 if __name__ == "__main__":

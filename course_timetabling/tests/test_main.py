@@ -5,7 +5,6 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from utils.utils import get_course_schedule
 from main import CourseTimetabling
 
 
@@ -61,8 +60,6 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
             professor_substitute,
             self.COURSES,
             {},
-            [],
-            [],
         )
         self.timetabling.initialize_variables_and_coefficients()
         return super().setUp()
@@ -119,7 +116,7 @@ class TestAddCreditSlackVariables(unittest.TestCase):
 
     def setUp(self) -> None:
         self.timetabling = CourseTimetabling(
-            ["Prof1", "Prof2"], ["Prof1"], ["Prof2"], {}, {}, [], []
+            ["Prof1", "Prof2"], ["Prof1"], ["Prof2"], {}, {}
         )
         self.timetabling.add_credit_slack_variables()
         return super().setUp()
@@ -134,8 +131,8 @@ class TestAddCreditSlackVariables(unittest.TestCase):
 
 class TestModelCourseTimetabling(unittest.TestCase):
 
-    @patch("utils.utils.get_course_schedule")
-    def setUp(self, mock_get_schedule) -> None:
+    def setUp(self) -> None:
+
         self.PERMANENT_PROFESSORS = {
             "Adriana Vivacqua": {
                 "qualified_courses": ["ICP131"],
@@ -172,13 +169,13 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "course_type": "SVC",
             },
         }
-        mock_get_schedule.side_effect = lambda courses, course: (
-            ("SEG", "13:00-15:00") if course == "OBG-BCC1-1" else ("TER", "15:00-17:00")
-        )
+      
 
         return super().setUp()
     
-    def test_if_allocates_all_required_courses_qualified_for_professors(self):
+    @patch("main.get_elective_courses_set")
+    def test_if_allocates_all_required_courses_qualified_for_professors(self, mock_get_elective_courses_set):
+        mock_get_elective_courses_set.return_value = {}
 
         timetabling = CourseTimetabling(
             professors=self.PROFESSORS,
@@ -186,8 +183,6 @@ class TestModelCourseTimetabling(unittest.TestCase):
             substitute_professors=[],
             courses=self.COURSES,
             manual_allocation={},
-            course_days=["SEG,QUA", "TER,QUI"],
-            course_times=["13:00-15:00,08:00-10:00", "15:00-17:00"],
         )
         timetabling.initialize_variables_and_coefficients()
         timetabling.add_credit_slack_variables()
@@ -198,8 +193,8 @@ class TestModelCourseTimetabling(unittest.TestCase):
         result, result_value = timetabling.generate_results()
 
         expected_result = [
-            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
-            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
+            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
+            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
         ]
 
         for item in expected_result:
@@ -207,7 +202,9 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
         self.assertLessEqual(result_value, 0)
 
-    def test_if_allocates_all_required_courses_for_dummy_professors(self):
+    @patch("main.get_elective_courses_set")
+    def test_if_allocates_all_required_courses_for_dummy_professors(self, mock_get_elective_courses_set):
+        mock_get_elective_courses_set.return_value = {}
 
         self.PERMANENT_PROFESSORS = {
             "Adriana Vivacqua": {
@@ -236,8 +233,6 @@ class TestModelCourseTimetabling(unittest.TestCase):
             substitute_professors=[],
             courses=self.COURSES,
             manual_allocation={},
-            course_days=["SEG,QUA", "TER,QUI"],
-            course_times=["13:00-15:00,08:00-10:00", "15:00-17:00"],
         )
         timetabling.initialize_variables_and_coefficients()
         timetabling.add_credit_slack_variables()
@@ -248,8 +243,8 @@ class TestModelCourseTimetabling(unittest.TestCase):
         result, result_value = timetabling.generate_results()
 
         expected_result = [
-            "DUMMY_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
-            "DUMMY_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
+            "DUMMY_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
+            "DUMMY_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
         ]
 
         for item in expected_result:
@@ -257,7 +252,9 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
         self.assertLessEqual(result_value, 0)
 
-    def test_it_professor_received_a_penaulty_for_less_credit(self):
+    @patch("main.get_elective_courses_set")
+    def test_it_professor_received_a_penalty_for_less_credit(self, mock_get_elective_courses_set):
+        mock_get_elective_courses_set.return_value = {}
 
         timetabling = CourseTimetabling(
             professors=self.PROFESSORS,
@@ -265,8 +262,6 @@ class TestModelCourseTimetabling(unittest.TestCase):
             substitute_professors=[],
             courses=self.COURSES,
             manual_allocation={},
-            course_days=["SEG,QUA", "TER,QUI"],
-            course_times=["13:00-15:00,08:00-10:00", "15:00-17:00"],
         )
         timetabling.initialize_variables_and_coefficients()
         timetabling.add_credit_slack_variables()
@@ -277,10 +272,10 @@ class TestModelCourseTimetabling(unittest.TestCase):
         result, result_value = timetabling.generate_results()
 
         expected_result = [
-            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00 1.0",
-            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00 1.0",
-            "PNC_Adriana Vivacqua 4.0",
-            "PNC_Daniel Sadoc 4.0",
+            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
+            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
+            "PNC_Adriana Vivacqua/4.0",
+            "PNC_Daniel Sadoc/4.0",
         ]
 
         self.assertEqual(result, expected_result)
