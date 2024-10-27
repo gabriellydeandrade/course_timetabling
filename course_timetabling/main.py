@@ -203,7 +203,7 @@ class CourseTimetabling:
         self.model.update()
         self.model.optimize()
 
-    def print_results(self):
+    def generate_results(self):
         professor_timeschedule = []
         for var in self.model.getVars():
             if var.X > 0:
@@ -234,7 +234,7 @@ def main():
     timetabling.add_constraints()
     timetabling.set_objective()
     timetabling.optimize()
-    timetabling.print_results()
+    timetabling.generate_results()
 
 if __name__ == "__main__":
     main()
