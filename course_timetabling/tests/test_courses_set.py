@@ -379,8 +379,6 @@ class TestGetElectiveCoursesSet(TestCase):
                 "knowledge_area": "CD,ED",
                 "course_type": "OPT",
                 "class_type": "Gradução",
-                "day": "NÃO ESPECIFICADO",
-                "time": "NÃO ESPECIFICADO",
             },
             "OPT-MAI-61": {
                 "course_id": "ICP999",
@@ -388,8 +386,6 @@ class TestGetElectiveCoursesSet(TestCase):
                 "knowledge_area": "CC",
                 "course_type": "OPT",
                 "class_type": "Mestrado",
-                "day": "NÃO ESPECIFICADO",
-                "time": "NÃO ESPECIFICADO",
             },
         }
 

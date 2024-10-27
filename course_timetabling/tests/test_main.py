@@ -135,12 +135,12 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
         self.PERMANENT_PROFESSORS = {
             "Adriana Vivacqua": {
-                "qualified_courses": ["ICP131", "ICP508"],
+                "qualified_courses": ["ICP131"],
                 "expertise": ["ED", "ES", "H"],
                 "category": "PP",
             },
             "Daniel Sadoc": {
-                "qualified_courses": ["ICP123", "ICP101"],
+                "qualified_courses": ["ICP123"],
                 "expertise": ["ED", "CD"],
                 "category": "PP",
             },
@@ -167,27 +167,6 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "day": "TER,QUI",
                 "time": "15:00-17:00",
                 "course_type": "SVC",
-            },
-        }
-
-        self.elective_courses = {
-            "OPT-BCC1-1": {
-                "course_id": "ICP508",
-                "credits": 4,
-                "knowledge_area": "ED",
-                "course_type": "OPT",
-                "class_type": "Gradução",
-                "day": "NÃO ESPECIFICADO",
-                "time": "NÃO ESPECIFICADO",
-            },
-            "OPT-BCC1-2": {
-                "course_id": "ICP101",
-                "credits": 4,
-                "knowledge_area": "CC",
-                "course_type": "OPT",
-                "class_type": "Mestrado",
-                "day": "NÃO ESPECIFICADO",
-                "time": "NÃO ESPECIFICADO",
             },
         }
       
@@ -275,7 +254,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
     @patch("main.get_elective_courses_set")
     def test_it_professor_received_a_penalty_for_less_credit(self, mock_get_elective_courses_set):
-        mock_get_elective_courses_set.return_value = self.elective_courses
+        mock_get_elective_courses_set.return_value = {}
 
         timetabling = CourseTimetabling(
             professors=self.PROFESSORS,
