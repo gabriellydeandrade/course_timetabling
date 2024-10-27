@@ -169,12 +169,13 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "course_type": "SVC",
             },
         }
-      
 
         return super().setUp()
-    
+
     @patch("main.get_elective_courses_set")
-    def test_if_allocates_all_required_courses_qualified_for_professors(self, mock_get_elective_courses_set):
+    def test_if_allocates_all_required_courses_qualified_for_professors(
+        self, mock_get_elective_courses_set
+    ):
         mock_get_elective_courses_set.return_value = {}
 
         timetabling = CourseTimetabling(
@@ -203,7 +204,9 @@ class TestModelCourseTimetabling(unittest.TestCase):
         self.assertLessEqual(result_value, 0)
 
     @patch("main.get_elective_courses_set")
-    def test_if_allocates_all_required_courses_for_dummy_professors(self, mock_get_elective_courses_set):
+    def test_if_allocates_all_required_courses_for_dummy_professors(
+        self, mock_get_elective_courses_set
+    ):
         mock_get_elective_courses_set.return_value = {}
 
         self.PERMANENT_PROFESSORS = {
@@ -253,7 +256,9 @@ class TestModelCourseTimetabling(unittest.TestCase):
         self.assertLessEqual(result_value, 0)
 
     @patch("main.get_elective_courses_set")
-    def test_it_professor_received_a_penalty_for_less_credit(self, mock_get_elective_courses_set):
+    def test_it_professor_received_a_penalty_for_less_credit(
+        self, mock_get_elective_courses_set
+    ):
         mock_get_elective_courses_set.return_value = {}
 
         timetabling = CourseTimetabling(
