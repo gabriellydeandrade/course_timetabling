@@ -7,7 +7,14 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
 
-from utils.utils import get_course_schedule, get_courses_by_time, get_courses_by_day, get_possible_schedules, get_qualified_courses_for_professor
+from utils.utils import (
+    get_course_schedule,
+    get_courses_by_time,
+    get_courses_by_day,
+    get_possible_schedules,
+    get_qualified_courses_for_professor,
+    remove_manual_courses,
+)
 
 
 class TestUtils(TestCase):
@@ -105,6 +112,7 @@ class TestUtils(TestCase):
 
         self.assertEqual(result, expected_result)
 
+
 class TestGetPossibleSchedules(TestCase):
     def test_get_possible_schedules(self):
         mock_courses = {
@@ -167,6 +175,7 @@ class TestGetPossibleSchedules(TestCase):
         self.assertEqual(result[0], expected_days)
         self.assertEqual(result[1], expected_times)
 
+
 class TestGetQualifiedCoursesForProfessor(TestCase):
     def test_professor_with_qualified_courses(self):
         mock_courses_set = {
@@ -187,20 +196,20 @@ class TestGetQualifiedCoursesForProfessor(TestCase):
         }
 
         mock_professors_set = {
-            "ProfA": {
-                "qualified_courses": ["ICP131"]
-            },
-            "ProfB": {
-                "qualified_courses": ["ICP123"]
-            }
+            "ProfA": {"qualified_courses": ["ICP131"]},
+            "ProfB": {"qualified_courses": ["ICP123"]},
         }
 
-        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfA")
+        result = get_qualified_courses_for_professor(
+            mock_courses_set, mock_professors_set, "ProfA"
+        )
         expected_result = {"OBG-BCC1-1"}
 
         self.assertEqual(result, expected_result)
 
-        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfB")
+        result = get_qualified_courses_for_professor(
+            mock_courses_set, mock_professors_set, "ProfB"
+        )
         expected_result = {"OBG-BCC1-2"}
 
         self.assertEqual(result, expected_result)
@@ -223,13 +232,11 @@ class TestGetQualifiedCoursesForProfessor(TestCase):
             },
         }
 
-        mock_professors_set = {
-            "ProfA": {
-                "qualified_courses": ["ICP999"]
-            }
-        }
+        mock_professors_set = {"ProfA": {"qualified_courses": ["ICP999"]}}
 
-        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfA")
+        result = get_qualified_courses_for_professor(
+            mock_courses_set, mock_professors_set, "ProfA"
+        )
         expected_result = set()
 
         self.assertEqual(result, expected_result)
@@ -254,7 +261,9 @@ class TestGetQualifiedCoursesForProfessor(TestCase):
 
         mock_professors_set = {}
 
-        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "DUMMY")
+        result = get_qualified_courses_for_professor(
+            mock_courses_set, mock_professors_set, "DUMMY"
+        )
         expected_result = {"OBG-BCC1-1", "OBG-BCC1-2"}
 
         self.assertEqual(result, expected_result)
@@ -277,18 +286,76 @@ class TestGetQualifiedCoursesForProfessor(TestCase):
             },
         }
 
-        mock_professors_set = {
-            "ProfA": {
-                "qualified_courses": ["ICP131"]
-            }
-        }
+        mock_professors_set = {"ProfA": {"qualified_courses": ["ICP131"]}}
 
-        result = get_qualified_courses_for_professor(mock_courses_set, mock_professors_set, "ProfB")
+        result = get_qualified_courses_for_professor(
+            mock_courses_set, mock_professors_set, "ProfB"
+        )
         expected_result = set()
 
         self.assertEqual(result, expected_result)
         self.assertRaises(KeyError)
 
+
+class TestRemoveManualCourses(TestCase):
+    def test_remove_manual_courses(self):
+        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
+        mock_manual_courses = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            }
+        }
+
+        result = remove_manual_courses(mock_courses, mock_manual_courses)
+        expected_result = {"OBG-BCC1-2"}
+
+        self.assertEqual(result, expected_result)
+
+    def test_remove_manual_courses_with_no_manual_courses(self):
+        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
+        mock_manual_courses = {}
+
+        result = remove_manual_courses(mock_courses, mock_manual_courses)
+        expected_result = mock_courses
+
+        self.assertEqual(result, expected_result)
+
+    def test_remove_manual_courses_with_all_manual_courses(self):
+        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
+        mock_manual_courses = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "15:00-17:00",
+                "course_type": "SVC",
+            },
+        }
+
+        result = remove_manual_courses(mock_courses, mock_manual_courses)
+        expected_result = set()
+
+        self.assertEqual(result, expected_result)
+
+    def test_remove_manual_courses_with_non_existent_manual_courses(self):
+        mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
+        mock_manual_courses = dict()
+
+        result = remove_manual_courses(mock_courses, mock_manual_courses)
+        expected_result = mock_courses
+
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":

@@ -101,7 +101,7 @@ def get_manual_allocation():
 
     manual_allocation = df.filter(["Nome curto professor", "Código único turma", "Código disciplina", "Qtd de créditos", "Dia da semana", "Horário"])
     manual_allocation.rename(columns={"Nome curto professor": "professor", "Código único turma": "course_class_id", "Código disciplina": "course_id", "Qtd de créditos": "credits", "Dia da semana": "day", "Horário": "time"}, inplace=True)
-    manual_allocation.set_index("professor", inplace=True)
+    manual_allocation.set_index("course_class_id", inplace=True)
 
     return manual_allocation 
 

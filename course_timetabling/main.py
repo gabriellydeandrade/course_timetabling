@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 
 from utils import utils
-from database.construct_sets import get_courses_set, get_professors_set
+from database.construct_sets import get_courses_set, get_manual_allocation_set, get_professors_set
 
 
 # Constants
@@ -63,6 +63,20 @@ def add_credit_slack_variables():
 
 
 def add_constraints(slack_variables):
+
+    # Manual
+    # RH1: Alocar manualmente os professores    
+
+    for course_class_id in MANUAL_ALLOCATION.keys():
+        professor = MANUAL_ALLOCATION[course_class_id]["professor"]
+        day = MANUAL_ALLOCATION[course_class_id]["day"]
+        time = MANUAL_ALLOCATION[course_class_id]["time"]
+
+        model.addConstr(
+            variables[professor][course_class_id][day][time] == 1
+        )       
+
+
     # Soft constraints
     # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido.
 
@@ -127,8 +141,10 @@ def add_constraints(slack_variables):
     # RH5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
     for professor in PROFESSORS:
         all_courses = utils.get_all_course_class_id(COURSES)
+        courses_available = utils.remove_manual_courses(all_courses, MANUAL_ALLOCATION)
+        
         qualified_courses = utils.get_qualified_courses_for_professor(COURSES, PROFESSORS, professor)
-        unqualified_courses = all_courses.difference(qualified_courses)
+        unqualified_courses = courses_available.difference(qualified_courses)
         model.addConstr(
             gp.quicksum(
                 variables[professor][course][utils.get_course_schedule(COURSES, course)[0]][
@@ -183,6 +199,8 @@ if __name__ == "__main__":
     PROFESSORS = professors_set
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
+
+    MANUAL_ALLOCATION = get_manual_allocation_set()
 
     professor_timeschedule, model_value = init_model()
     print("========= RESULT ==========")

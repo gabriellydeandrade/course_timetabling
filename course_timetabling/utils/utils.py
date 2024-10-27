@@ -74,6 +74,25 @@ def get_all_course_class_id(courses: dict) -> set:
     result = set([d for d in courses.keys()])
     return result
 
+def remove_manual_courses(courses: set, manual_courses: dict) -> set:
+    """
+    Removes courses that are manually specified from the set of available courses.
+
+    Args:
+        courses (set): A set of course IDs representing all available courses.
+        manual_courses (dict): A dictionary where keys are course IDs that should be removed from the available courses.
+
+    Returns:
+        set: A set of course IDs representing the available courses after removing the manually specified courses.
+    """
+
+    courses_available = courses.copy()
+
+    for course_id in manual_courses.keys():
+        courses_available.remove(course_id)
+
+    return courses_available  
+
 
 def get_courses_by_time(courses: dict, time: str) -> set:
     """
