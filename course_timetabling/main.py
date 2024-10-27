@@ -29,6 +29,22 @@ class CourseTimetabling:
         self.slack_variables = {}
 
     def initialize_variables_and_coefficients(self):
+        """
+        Initializes the variables and coefficients for the course timetabling problem.
+        This method sets up the coefficients and variables for each professor and course
+        based on their qualifications and manual allocations. It iterates through the list
+        of professors and courses, and for each combination, it determines the appropriate
+        coefficient and creates a binary variable for the scheduling model.
+        The coefficients are determined based on whether the professor is a dummy professor,
+        if the course is available for the professor, or if it is manually allocated. The
+        variables are added to the model as binary variables representing whether a professor
+        is assigned to a course at a specific day and time.
+        Constants:
+            DUMMY_COEFFICIENT: The coefficient value for dummy professors.
+            DEFAULT_COEFFICIENT: The default coefficient value for qualified courses.
+            ZERO_COEFFICIENT: The coefficient value for unqualified courses.
+            DUMMY_PROFESSOR: A constant representing a dummy professor.
+        """
         for professor in self.professors:
             self.coefficients[professor] = {}
             self.variables[professor] = {}
@@ -60,7 +76,19 @@ class CourseTimetabling:
                 )
 
     def add_credit_slack_variables(self):
-        # Variável de folga que indica quantos créditos o professor está abaixo do ideal pela coordenação
+        """
+        Adds slack variables for credit allocation to the model.
+
+        This method creates a slack variable for each permanent professor, indicating 
+        how many credits the permanent professor is below the ideal number set by the coordination. 
+        The slack variables are added to the model and stored in the `slack_variables` 
+        dictionary with the professor as the key.
+
+        Attributes:
+            permanent_professors (list): A list of permanent professors.
+            slack_variables (dict): A dictionary to store the slack variables for each professor.
+            model (gurobipy.Model): The optimization model to which the slack variables are added.
+        """
         for professor in self.permanent_professors:
             self.slack_variables[professor] = self.model.addVar(
                 vtype=GRB.INTEGER, name=f"PNC_{professor}"
