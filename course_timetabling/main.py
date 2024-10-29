@@ -13,7 +13,9 @@ from database.construct_sets import (
 # Constants
 DUMMY_PROFESSOR = "DUMMY"
 DUMMY_COEFFICIENT = 0.0001
-DEFAULT_COEFFICIENT = 1
+DEFAULT_COEFFICIENT = 100
+SERVICE_COURSE_COEFFICIENT = 10 # TODO: implementar um coeficiente para disciplinas de serviço
+ELECTIVE_COEFFICIENT = 1
 ZERO_COEFFICIENT = 0
 WEIGHT_FACTOR = 1000
 MIN_CREDITS_PERMANENT = 8
@@ -78,15 +80,27 @@ class CourseTimetabling:
                 day, time = workload
 
                 self.coefficients[professor][course][day] = {}
-                self.coefficients[professor][course][day][time] = (
-                    DUMMY_COEFFICIENT
-                    if professor == DUMMY_PROFESSOR
-                    else (
-                        DEFAULT_COEFFICIENT
-                        if course in qualified_courses_available
-                        else ZERO_COEFFICIENT
-                    )
-                )
+
+                if professor == DUMMY_PROFESSOR:
+                    self.coefficients[professor][course][day][time] = DUMMY_COEFFICIENT
+                else:
+                    if course in qualified_courses_available:
+                        if self.courses[course]["course_type"] == "OPT":
+                            self.coefficients[professor][course][day][time] = ELECTIVE_COEFFICIENT
+                        else:
+                            self.coefficients[professor][course][day][time] = DEFAULT_COEFFICIENT
+                    else:
+                        self.coefficients[professor][course][day][time] = ZERO_COEFFICIENT
+       
+                # self.coefficients[professor][course][day][time] = (
+                #     DUMMY_COEFFICIENT
+                #     if professor == DUMMY_PROFESSOR
+                #     else (
+                #         DEFAULT_COEFFICIENT
+                #         if course in qualified_courses_available
+                #         else ZERO_COEFFICIENT
+                #     )
+                # )
 
                 self.variables[professor][course][day] = {}
                 self.variables[professor][course][day][time] = self.model.addVar(
@@ -247,7 +261,6 @@ class CourseTimetabling:
 
 def main():
     MANUAL_ALLOCATION = get_manual_allocation_set()
-    COURSES = get_courses_set(MANUAL_ALLOCATION)
 
     professors_permanent_set, professors_substitute_set, professor_dummy = (
         get_professors_set()
@@ -258,6 +271,10 @@ def main():
     PROFESSORS = professors_set
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
+
+    required_courses = get_courses_set(MANUAL_ALLOCATION)
+    elective_courses = get_elective_courses_set()
+    COURSES = utils.get_all_available_courses_for_allocation(required_courses, elective_courses, PROFESSORS)
 
     timetabling = CourseTimetabling(
         PROFESSORS,

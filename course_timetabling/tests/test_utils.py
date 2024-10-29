@@ -8,6 +8,8 @@ sys.path.insert(
 )  # FIXME quero corrigir de outra forma
 
 from utils.utils import (
+    get_all_available_courses_for_allocation,
+    get_all_elective_courses_with_professor_qualified,
     get_course_schedule,
     get_courses_by_time,
     get_courses_by_day,
@@ -354,6 +356,186 @@ class TestRemoveManualCourses(TestCase):
 
         result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
         expected_result = mock_courses
+
+        self.assertEqual(result, expected_result)
+
+
+class TestGetAllElectiveCoursesWithProfessorQualified(TestCase):
+    def test_elective_courses_with_qualified_professors(self):
+        mock_courses = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "course_type": "OPT",
+            }
+        }
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP131"]},
+            "ProfB": {"qualified_courses": ["ICP123"]},
+        }
+
+        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        expected_result = {"OPT-BCC1-1", "OPT-BCC1-2"}
+
+        self.assertEqual(result, expected_result)
+
+    def test_no_elective_courses_with_qualified_professors(self):
+        mock_courses = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+        }
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP999"]},
+            "ProfB": {"qualified_courses": ["ICP888"]},
+        }
+
+        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        expected_result = set()
+
+        self.assertEqual(result, expected_result)
+
+    def test_mixed_elective_courses_with_qualified_professors(self):
+        mock_courses = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+        }
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP131"]},
+            "ProfB": {"qualified_courses": ["ICP999"]},
+        }
+
+        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        expected_result = {"OPT-BCC1-1"}
+
+        self.assertEqual(result, expected_result)
+
+
+class TestGetAllAvailableCoursesForAllocation(TestCase):
+    def test_all_available_courses_for_allocation(self):
+        mock_required_courses = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            }
+        }
+
+        mock_elective_courses = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-3": {
+                "course_id": "ICPXXX",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+        }
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP131"]},
+            "ProfB": {"qualified_courses": ["ICP123"]},
+        }
+
+        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
+        
+        mock_elective_courses["OPT-BCC1-1"].update({"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"})
+        mock_elective_courses["OPT-BCC1-2"].update({"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"})
+
+        expected_result = {
+            "OPT-BCC1-1": mock_elective_courses["OPT-BCC1-1"],
+            "OPT-BCC1-2": mock_elective_courses["OPT-BCC1-2"],
+            "OBG-BCC1-1": mock_required_courses["OBG-BCC1-1"],
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_no_available_elective_courses_for_allocation(self):
+        mock_required_courses = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            }
+        }
+
+        mock_elective_courses = {
+            "OPT-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+            "OPT-BCC1-2": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "course_type": "OPT",
+            },
+        }
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP999"]},
+            "ProfB": {"qualified_courses": ["ICP888"]},
+        }
+
+        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
+        expected_result = mock_required_courses
+
+        self.assertEqual(result, expected_result)
+
+    def test_only_required_courses_for_allocation(self):
+        mock_required_courses = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "credits": 4,
+                "day": "SEG,QUA",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            }
+        }
+
+        mock_elective_courses = {}
+
+        mock_professors = {
+            "ProfA": {"qualified_courses": ["ICP131"]},
+            "ProfB": {"qualified_courses": ["ICP123"]},
+        }
+
+        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
+        expected_result = mock_required_courses
 
         self.assertEqual(result, expected_result)
 

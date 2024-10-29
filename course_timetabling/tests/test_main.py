@@ -72,7 +72,7 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
         for day, value in self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"][day][time], 1
+                self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"][day][time], 10
             )
 
         self.assertIn("OBG-BCC1-1", self.timetabling.variables["Prof1"])
