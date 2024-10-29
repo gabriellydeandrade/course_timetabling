@@ -73,6 +73,8 @@ class CourseTimetabling:
             )
 
             for course in self.courses.keys():
+                # if professor == DUMMY_PROFESSOR and self.courses[course]["course_type"] == "OPT":
+                        # continue
                 self.coefficients[professor][course] = {}
                 self.variables[professor][course] = {}
 
@@ -92,16 +94,6 @@ class CourseTimetabling:
                     else:
                         self.coefficients[professor][course][day][time] = ZERO_COEFFICIENT
        
-                # self.coefficients[professor][course][day][time] = (
-                #     DUMMY_COEFFICIENT
-                #     if professor == DUMMY_PROFESSOR
-                #     else (
-                #         DEFAULT_COEFFICIENT
-                #         if course in qualified_courses_available
-                #         else ZERO_COEFFICIENT
-                #     )
-                # )
-
                 self.variables[professor][course][day] = {}
                 self.variables[professor][course][day][time] = self.model.addVar(
                     vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
@@ -176,6 +168,7 @@ class CourseTimetabling:
                 gp.quicksum(
                     self.variables[professor][course][day][time]
                     for professor in self.professors
+                    # if professor != DUMMY_PROFESSOR and self.courses[course]["course_type"] != "OPT"
                 )
                 == 1
             )
@@ -230,6 +223,8 @@ class CourseTimetabling:
                 for professor in self.professors
                 for course in self.courses.keys()
                 for day, time in [utils.get_course_schedule(self.courses, course)]
+                # if professor != DUMMY_PROFESSOR and self.courses[course]["course_type"] != "OPT"
+
             )
             - gp.quicksum(
                 WEIGHT_FACTOR * self.slack_variables[professor]

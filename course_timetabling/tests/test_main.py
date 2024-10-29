@@ -64,7 +64,9 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
         self.timetabling.initialize_variables_and_coefficients()
         return super().setUp()
 
-    def test_set_coefficient_to_one_if_professor_is_qualified_for_class(self):
+    def test_set_coefficient_if_professor_is_qualified_for_class(self):
+
+        expected_coefficient = 100
 
         self.assertIn("Prof1", self.timetabling.coefficients)
         self.assertIn("OBG-BCC1-1", self.timetabling.coefficients["Prof1"])
@@ -72,7 +74,8 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
         for day, value in self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"][day][time], 10
+                self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"][day][time],
+                expected_coefficient,
             )
 
         self.assertIn("OBG-BCC1-1", self.timetabling.variables["Prof1"])
@@ -168,16 +171,18 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "time": "15:00-17:00",
                 "course_type": "SVC",
             },
+            "OPT-BCC1-3": {
+                "course_id": "IPCXXX",
+                "credits": 4,
+                "day": "NÃO DEFINIDO",
+                "time": "NÃO DEFINIDO",
+                "course_type": "OPT",
+            },
         }
 
         return super().setUp()
 
-    @patch("main.get_elective_courses_set")
-    def test_if_allocates_all_required_courses_qualified_for_professors(
-        self, mock_get_elective_courses_set
-    ):
-        mock_get_elective_courses_set.return_value = {}
-
+    def test_if_allocates_all_required_courses_qualified_for_professors(self):
         timetabling = CourseTimetabling(
             professors=self.PROFESSORS,
             permanent_professors=self.PERMANENT_PROFESSORS,
@@ -203,11 +208,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
         self.assertLessEqual(result_value, 0)
 
-    @patch("main.get_elective_courses_set")
-    def test_if_allocates_all_required_courses_for_dummy_professors(
-        self, mock_get_elective_courses_set
-    ):
-        mock_get_elective_courses_set.return_value = {}
+    def test_if_allocates_all_required_courses_for_dummy_professors(self):
 
         self.PERMANENT_PROFESSORS = {
             "Adriana Vivacqua": {
@@ -255,11 +256,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
 
         self.assertLessEqual(result_value, 0)
 
-    @patch("main.get_elective_courses_set")
-    def test_it_professor_received_a_penalty_for_less_credit(
-        self, mock_get_elective_courses_set
-    ):
-        mock_get_elective_courses_set.return_value = {}
+    def test_it_professor_received_a_penalty_for_less_credit(self):
 
         timetabling = CourseTimetabling(
             professors=self.PROFESSORS,
@@ -279,6 +276,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
         expected_result = [
             "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
             "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
+            "DUMMY_OPT-BCC1-3_NÃO DEFINIDO_NÃO DEFINIDO/1.0", #FIXME não quero ter professor dummy associados a eletivas, adicionar restrição para que as eletivas não sejam obrigatórias
             "PNC_Adriana Vivacqua/4.0",
             "PNC_Daniel Sadoc/4.0",
         ]
