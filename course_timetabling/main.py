@@ -17,7 +17,7 @@ DEFAULT_COEFFICIENT = 100
 SERVICE_COURSE_COEFFICIENT = 10 # TODO: implementar um coeficiente para disciplinas de serviço
 ELECTIVE_COEFFICIENT = 1
 ZERO_COEFFICIENT = 0
-WEIGHT_FACTOR = 1000
+WEIGHT_FACTOR_PP = 1000
 MIN_CREDITS_PERMANENT = 8
 MAX_CREDITS_SUBSTITUTE = 12
 
@@ -133,7 +133,7 @@ class CourseTimetabling:
             )
 
         # Soft constraints
-        # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabilisa o modelo caso não seja atingido.
+        # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
         for professor in self.permanent_professors:
             self.model.addConstr(
                 gp.quicksum(
@@ -227,7 +227,7 @@ class CourseTimetabling:
 
             )
             - gp.quicksum(
-                WEIGHT_FACTOR * self.slack_variables[professor]
+                WEIGHT_FACTOR_PP * self.slack_variables[professor]
                 for professor in self.permanent_professors
             ),
             GRB.MAXIMIZE,
