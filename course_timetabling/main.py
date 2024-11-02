@@ -41,6 +41,21 @@ class CourseTimetabling:
         self.variables = {}
         self.slack_variables = {}
 
+        self.init_environment()
+
+    def init_environment(self):
+
+        # export GRB_LICENSE_FILE=/Users/gabriellydeandrade/gurobi.lic
+        # https://support.gurobi.com/hc/en-us/articles/12276856325265-How-do-I-set-environment-variables-for-Python-Jupyter
+
+        #FIXME termianr de colocar a env
+
+        self.env = gp.Env(empty=True)
+        self.env.setParam("LicenseID", "12345")
+        self.env.setParam("WLSAccessID", "12345-678990")
+        self.env.setParam("WLSSecret", "abcdef-abcdef")
+        self.env.start()
+
     def set_courses(self, courses):
         self.courses = courses
 
@@ -251,6 +266,11 @@ class CourseTimetabling:
             print(r)
         print("=============================")
         print(f"Obj: {model_value}")
+
+        # Clean up model and environment
+        self.model.dispose()
+        self.env.dispose()
+
         return professor_timeschedule, model_value
 
 
