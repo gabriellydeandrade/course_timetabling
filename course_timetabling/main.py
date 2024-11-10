@@ -1,6 +1,8 @@
 import gurobipy as gp
 from gurobipy import GRB
 
+import settings
+
 from utils import utils
 from database.construct_sets import (
     get_courses_set,
@@ -36,25 +38,22 @@ class CourseTimetabling:
         self.substitute_professors = substitute_professors
         self.courses = courses
         self.manual_allocation = manual_allocation
-        self.model = gp.Model("CourseTimetabling")
         self.coefficients = {}
         self.variables = {}
         self.slack_variables = {}
 
-        self.init_environment()
+        self.env = self.init_environment()
+        self.model = gp.Model(name="CourseTimetabling", env=self.env)
+
 
     def init_environment(self):
+        env = gp.Env(empty=True)
+        env.setParam("LicenseID", settings.APP_LICENSE_ID)
+        env.setParam("WLSAccessID", settings.APP_WLS_ACCESS_ID)
+        env.setParam("WLSSecret", settings.APP_WS_SECRET)
+        env.start()
 
-        # export GRB_LICENSE_FILE=/Users/gabriellydeandrade/gurobi.lic
-        # https://support.gurobi.com/hc/en-us/articles/12276856325265-How-do-I-set-environment-variables-for-Python-Jupyter
-
-        #FIXME termianr de colocar a env
-
-        self.env = gp.Env(empty=True)
-        self.env.setParam("LicenseID", "12345")
-        self.env.setParam("WLSAccessID", "12345-678990")
-        self.env.setParam("WLSSecret", "abcdef-abcdef")
-        self.env.start()
+        return env
 
     def set_courses(self, courses):
         self.courses = courses
