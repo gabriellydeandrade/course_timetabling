@@ -15,7 +15,7 @@ from utils.utils import (
     get_courses_by_day,
     get_possible_schedules,
     get_qualified_courses_for_professor,
-    remove_manual_allocation_courses,
+    remove_courses,
 )
 
 
@@ -312,7 +312,7 @@ class TestRemoveManualCourses(TestCase):
             }
         }
 
-        result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
+        result = remove_courses(mock_courses, mock_manual_courses)
         expected_result = {"OBG-BCC1-2"}
 
         self.assertEqual(result, expected_result)
@@ -321,7 +321,7 @@ class TestRemoveManualCourses(TestCase):
         mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
         mock_manual_courses = {}
 
-        result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
+        result = remove_courses(mock_courses, mock_manual_courses)
         expected_result = mock_courses
 
         self.assertEqual(result, expected_result)
@@ -345,7 +345,7 @@ class TestRemoveManualCourses(TestCase):
             },
         }
 
-        result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
+        result = remove_courses(mock_courses, mock_manual_courses)
         expected_result = set()
 
         self.assertEqual(result, expected_result)
@@ -354,7 +354,7 @@ class TestRemoveManualCourses(TestCase):
         mock_courses = {"OBG-BCC1-1", "OBG-BCC1-2"}
         mock_manual_courses = dict()
 
-        result = remove_manual_allocation_courses(mock_courses, mock_manual_courses)
+        result = remove_courses(mock_courses, mock_manual_courses)
         expected_result = mock_courses
 
         self.assertEqual(result, expected_result)

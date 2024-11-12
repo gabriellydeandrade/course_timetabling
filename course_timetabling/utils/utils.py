@@ -80,7 +80,7 @@ def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, s
 
 
 def get_all_course_class_id(courses: dict) -> set:
-    result = set([d for d in courses.keys()])
+    result = set([d for d in courses.keys() if courses[d]["course_type"] != "SVC"])
     return result
 
 
@@ -116,7 +116,7 @@ def get_all_available_courses_for_allocation(
     return available_courses
 
 
-def remove_manual_allocation_courses(courses: set, manual_courses: dict) -> set:
+def remove_courses(courses: set, manual_courses: dict) -> set:
     """
     Removes courses that are manually specified from the set of available courses.
 
@@ -170,12 +170,16 @@ def get_courses_by_time(courses: dict, time: str) -> set:
     Returns:
         set: A set of courses that have classes at the specified time.
     """
-    return {
-        course_id
-        for course_id, details in courses.items()
-        for course_time in details["time"].split(",")
-        if course_time == time
-    }
+
+    result = []
+
+    for course_id, details in courses.items():
+        if type(details["time"]) == str:
+            for course_time in details["time"].split(","):
+                if course_time == time:
+                    result.append(course_id)
+
+    return set(result)
 
 
 def get_courses_by_day(courses: dict, day: str) -> set:
@@ -192,8 +196,9 @@ def get_courses_by_day(courses: dict, day: str) -> set:
     result = []
 
     for course_id, details in courses.items():
-        for course_day in details["day"].split(","):
-            if course_day == day:
-                result.append(course_id)
+        if type(details["day"]) == str:
+            for course_day in details["day"].split(","):
+                if course_day == day:
+                    result.append(course_id)
 
     return set(result)
