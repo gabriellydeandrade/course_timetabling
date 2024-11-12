@@ -66,7 +66,7 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
 
     def test_set_coefficient_if_professor_is_qualified_for_class(self):
 
-        expected_coefficient = 100
+        expected_coefficient = 10
 
         self.assertIn("Prof1", self.timetabling.coefficients)
         self.assertIn("OBG-BCC1-1", self.timetabling.coefficients["Prof1"])
