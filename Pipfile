@@ -6,8 +6,21 @@ name = "pypi"
 [packages]
 gurobipy = "*"
 pylint = "*"
+gspread = "*"
+oauth2client = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+pandas = "*"
+numpy = "*"
+pandera = "*"
+urllib3 = "==1.26.6"
+python-decouple = "*"
+cache-pandas = "*"
 
 [dev-packages]
+ipykernel = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.9"
