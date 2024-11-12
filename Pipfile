@@ -16,6 +16,7 @@ numpy = "*"
 pandera = "*"
 urllib3 = "==1.26.6"
 python-decouple = "*"
+cache-pandas = "*"
 
 [dev-packages]
 ipykernel = "*"

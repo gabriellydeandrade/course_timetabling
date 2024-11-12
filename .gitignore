@@ -210,3 +210,5 @@ pip-selfcheck.json
 token.json
 credentials.json
 .DS_STORE
+
+cache/*

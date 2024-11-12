@@ -6,18 +6,17 @@ import settings
 from utils import utils
 from database.construct_sets import (
     get_courses_set,
-    get_elective_courses_set, #TODO implementar matérias eletivas com um coeficiente mais baixo
     get_manual_allocation_set,
     get_professors_set,
 )
 
 
-# Constants
 DUMMY_PROFESSOR = "DUMMY"
 DUMMY_COEFFICIENT = 0.0001
-DEFAULT_COEFFICIENT = 100
-SERVICE_COURSE_COEFFICIENT = 10 # TODO: implementar um coeficiente para disciplinas de serviço
-ELECTIVE_COEFFICIENT = 1
+DEFAULT_COEFFICIENT = 10
+SERVICE_COURSE_COEFFICIENT = (
+    1  # TODO: implementar um coeficiente para disciplinas de serviço
+)
 ZERO_COEFFICIENT = 0
 WEIGHT_FACTOR_PP = 1000
 MIN_CREDITS_PERMANENT = 8
@@ -44,7 +43,6 @@ class CourseTimetabling:
 
         self.env = self.init_environment()
         self.model = gp.Model(name="CourseTimetabling", env=self.env)
-
 
     def init_environment(self):
         env = gp.Env(empty=True)
@@ -87,8 +85,6 @@ class CourseTimetabling:
             )
 
             for course in self.courses.keys():
-                # if professor == DUMMY_PROFESSOR and self.courses[course]["course_type"] == "OPT":
-                        # continue
                 self.coefficients[professor][course] = {}
                 self.variables[professor][course] = {}
 
@@ -101,13 +97,14 @@ class CourseTimetabling:
                     self.coefficients[professor][course][day][time] = DUMMY_COEFFICIENT
                 else:
                     if course in qualified_courses_available:
-                        if self.courses[course]["course_type"] == "OPT":
-                            self.coefficients[professor][course][day][time] = ELECTIVE_COEFFICIENT
-                        else:
-                            self.coefficients[professor][course][day][time] = DEFAULT_COEFFICIENT
+                        self.coefficients[professor][course][day][
+                            time
+                        ] = DEFAULT_COEFFICIENT
                     else:
-                        self.coefficients[professor][course][day][time] = ZERO_COEFFICIENT
-       
+                        self.coefficients[professor][course][day][
+                            time
+                        ] = ZERO_COEFFICIENT
+
                 self.variables[professor][course][day] = {}
                 self.variables[professor][course][day][time] = self.model.addVar(
                     vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
@@ -238,7 +235,6 @@ class CourseTimetabling:
                 for course in self.courses.keys()
                 for day, time in [utils.get_course_schedule(self.courses, course)]
                 # if professor != DUMMY_PROFESSOR and self.courses[course]["course_type"] != "OPT"
-
             )
             - gp.quicksum(
                 WEIGHT_FACTOR_PP * self.slack_variables[professor]
@@ -286,9 +282,7 @@ def main():
     PERMANENT_PROFESSORS = professors_permanent_set
     SUBSTITUTE_PROFESSORS = professors_substitute_set
 
-    required_courses = get_courses_set(MANUAL_ALLOCATION)
-    elective_courses = get_elective_courses_set()
-    COURSES = utils.get_all_available_courses_for_allocation(required_courses, elective_courses, PROFESSORS)
+    COURSES = get_courses_set(MANUAL_ALLOCATION)
 
     timetabling = CourseTimetabling(
         PROFESSORS,
