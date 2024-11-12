@@ -13,10 +13,10 @@ from database.construct_sets import (
 
 DUMMY_PROFESSOR = "DUMMY"
 DUMMY_COEFFICIENT = 0.0001
-DEFAULT_COEFFICIENT = 10
-SERVICE_COURSE_COEFFICIENT = (
-    1  # TODO: implementar um coeficiente para disciplinas de serviço
-)
+DEFAULT_COEFFICIENT = 100
+SERVICE_COURSE_COEFFICIENT = 10
+SERVICE_COURSE_COEFFICIENT_PP = 1
+
 ZERO_COEFFICIENT = 0
 WEIGHT_FACTOR_PP = 1000
 MIN_CREDITS_PERMANENT = 8
@@ -96,7 +96,17 @@ class CourseTimetabling:
                 if professor == DUMMY_PROFESSOR:
                     self.coefficients[professor][course][day][time] = DUMMY_COEFFICIENT
                 else:
-                    if course in qualified_courses_available:
+                    if self.courses[course]["course_type"] == "SVC":
+                        if self.professors[professor]["category"] == "PS":
+                            self.coefficients[professor][course][day][
+                                time
+                            ] = SERVICE_COURSE_COEFFICIENT
+                        else:
+                            self.coefficients[professor][course][day][
+                                time
+                            ] = SERVICE_COURSE_COEFFICIENT_PP
+
+                    elif course in qualified_courses_available:
                         self.coefficients[professor][course][day][
                             time
                         ] = DEFAULT_COEFFICIENT
@@ -208,7 +218,7 @@ class CourseTimetabling:
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
         for professor in self.professors:
             all_courses = utils.get_all_course_class_id(self.courses)
-            courses_available = utils.remove_manual_allocation_courses(
+            courses_available = utils.remove_courses(
                 all_courses, self.manual_allocation
             )
 

@@ -47,7 +47,7 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
                 "credits": 4,
                 "day": "TER,QUI",
                 "time": "15:00-17:00",
-                "course_type": "SVC",
+                "course_type": "OBG",
             },
         }
         mock_get_schedule.side_effect = lambda courses, course: (
@@ -66,7 +66,7 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
 
     def test_set_coefficient_if_professor_is_qualified_for_class(self):
 
-        expected_coefficient = 10
+        expected_coefficient = 100
 
         self.assertIn("Prof1", self.timetabling.coefficients)
         self.assertIn("OBG-BCC1-1", self.timetabling.coefficients["Prof1"])
@@ -169,7 +169,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "credits": 4,
                 "day": "TER,QUI",
                 "time": "15:00-17:00",
-                "course_type": "SVC",
+                "course_type": "OBG",
             },
             "OPT-BCC1-3": {
                 "course_id": "IPCXXX",
@@ -276,7 +276,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
         expected_result = [
             "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
             "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
-            "DUMMY_OPT-BCC1-3_NÃO DEFINIDO_NÃO DEFINIDO/1.0", #FIXME não quero ter professor dummy associados a eletivas, adicionar restrição para que as eletivas não sejam obrigatórias
+            "DUMMY_OPT-BCC1-3_NÃO DEFINIDO_NÃO DEFINIDO/1.0",  # FIXME não quero ter professor dummy associados a eletivas, adicionar restrição para que as eletivas não sejam obrigatórias
             "PNC_Adriana Vivacqua/4.0",
             "PNC_Daniel Sadoc/4.0",
         ]
