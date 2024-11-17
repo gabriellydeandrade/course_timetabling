@@ -2,6 +2,7 @@ from unittest import TestCase, main
 
 import sys
 import os
+from unittest.mock import patch
 
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -373,7 +374,7 @@ class TestGetAllElectiveCoursesWithProfessorQualified(TestCase):
                 "course_id": "ICP123",
                 "credits": 4,
                 "course_type": "OPT",
-            }
+            },
         }
 
         mock_professors = {
@@ -381,7 +382,9 @@ class TestGetAllElectiveCoursesWithProfessorQualified(TestCase):
             "ProfB": {"qualified_courses": ["ICP123"]},
         }
 
-        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        result = get_all_elective_courses_with_professor_qualified(
+            mock_courses, mock_professors
+        )
         expected_result = {"OPT-BCC1-1", "OPT-BCC1-2"}
 
         self.assertEqual(result, expected_result)
@@ -405,7 +408,9 @@ class TestGetAllElectiveCoursesWithProfessorQualified(TestCase):
             "ProfB": {"qualified_courses": ["ICP888"]},
         }
 
-        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        result = get_all_elective_courses_with_professor_qualified(
+            mock_courses, mock_professors
+        )
         expected_result = set()
 
         self.assertEqual(result, expected_result)
@@ -429,7 +434,9 @@ class TestGetAllElectiveCoursesWithProfessorQualified(TestCase):
             "ProfB": {"qualified_courses": ["ICP999"]},
         }
 
-        result = get_all_elective_courses_with_professor_qualified(mock_courses, mock_professors)
+        result = get_all_elective_courses_with_professor_qualified(
+            mock_courses, mock_professors
+        )
         expected_result = {"OPT-BCC1-1"}
 
         self.assertEqual(result, expected_result)
@@ -470,10 +477,16 @@ class TestGetAllAvailableCoursesForAllocation(TestCase):
             "ProfB": {"qualified_courses": ["ICP123"]},
         }
 
-        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
-        
-        mock_elective_courses["OPT-BCC1-1"].update({"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"})
-        mock_elective_courses["OPT-BCC1-2"].update({"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"})
+        result = get_all_available_courses_for_allocation(
+            mock_required_courses, mock_elective_courses, mock_professors
+        )
+
+        mock_elective_courses["OPT-BCC1-1"].update(
+            {"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"}
+        )
+        mock_elective_courses["OPT-BCC1-2"].update(
+            {"day": "NÃO DEFINIDO", "time": "NÃO DEFINIDO"}
+        )
 
         expected_result = {
             "OPT-BCC1-1": mock_elective_courses["OPT-BCC1-1"],
@@ -512,7 +525,9 @@ class TestGetAllAvailableCoursesForAllocation(TestCase):
             "ProfB": {"qualified_courses": ["ICP888"]},
         }
 
-        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
+        result = get_all_available_courses_for_allocation(
+            mock_required_courses, mock_elective_courses, mock_professors
+        )
         expected_result = mock_required_courses
 
         self.assertEqual(result, expected_result)
@@ -535,28 +550,80 @@ class TestGetAllAvailableCoursesForAllocation(TestCase):
             "ProfB": {"qualified_courses": ["ICP123"]},
         }
 
-        result = get_all_available_courses_for_allocation(mock_required_courses, mock_elective_courses, mock_professors)
+        result = get_all_available_courses_for_allocation(
+            mock_required_courses, mock_elective_courses, mock_professors
+        )
         expected_result = mock_required_courses
 
         self.assertEqual(result, expected_result)
 
+
 class TestTreatAndSaveResults(TestCase):
-    def test_treat_and_save_results(self):
-        timeschedule = [
+
+    @patch("utils.utils.save_results_to_csv")
+    def test_treat_and_save_results(self, mock_save_results_to_csv):
+        timeschedule_mock = [
             "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
             "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
             "PCB_Adriana Vivacqua/4.0",
             "PCB_Daniel Sadoc/4.0",
         ]
 
-        result = treat_and_save_results(timeschedule)
+        courses_mock = {
+            "OBG-BCC1-1": {
+                "course_id": "ICP131",
+                "course_name": "Programação de Computadores I",
+                "credits": 4,
+                "course_type": "OBG",
+                "class_type": "Gradução",
+                "capacity": 40,
+                "responsable_institute": "IC",
+                "classroom_type": "Sala",
+            },
+            "OBG-BCC1-2": {
+                "course_id": "ICP132",
+                "course_name": "Processo de Software",
+                "credits": 4,
+                "course_type": "OBG",
+                "class_type": "Gradução",
+                "capacity": 30,
+                "responsable_institute": "IC",
+                "classroom_type": "Sala",
+            },
+        }
 
-        expected_result = ([
-            ["Adriana Vivacqua", "OBG-BCC1-1", "SEG,QUA", "13:00-15:00,08:00-10:00"],
-            ["Daniel Sadoc", "OBG-BCC1-2", "TER,QUI", "15:00-17:00"],
-        ], [["Adriana Vivacqua", 4.0], ["Daniel Sadoc", 4.0]])
+        result = treat_and_save_results(timeschedule_mock, courses_mock)
 
+        timeschedule = [
+            [
+                "IC",
+                "Adriana Vivacqua",
+                "ICP131",
+                "Programação de Computadores I",
+                "SEG,QUA",
+                "13:00-15:00,08:00-10:00",
+                40,
+                "Sala",
+            ],
+            [
+                "IC",
+                "Daniel Sadoc",
+                "ICP132",
+                "Processo de Software",
+                "TER,QUI",
+                "15:00-17:00",
+                30,
+                "Sala",
+            ],
+        ]
+
+        PNC = [["Adriana Vivacqua", 4.0], ["Daniel Sadoc", 4.0]]
+
+        expected_result = timeschedule, PNC
+
+        mock_save_results_to_csv.assert_called()
         self.assertEqual(result, expected_result)
+
 
 if __name__ == "__main__":
     main()

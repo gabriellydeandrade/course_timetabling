@@ -62,20 +62,28 @@ def get_required_courses() -> pd.DataFrame:
         [
             "Código único turma",
             "Código disciplina",
+            "Nome disciplina",
             "Qtd de créditos",
             "Dia da semana",
             "Horário",
             "Tipo disciplina",
+            "Qtd alunos",
+            "Instituto responsável",
+            "Tipo sala",
         ]
     )
     courses.rename(
         columns={
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
+            "Nome disciplina": "course_name",
             "Qtd de créditos": "credits",
             "Dia da semana": "day",
             "Horário": "time",
             "Tipo disciplina": "course_type",
+            "Qtd alunos": "capacity",
+            "Instituto responsável": "responsable_institute",
+            "Tipo sala": "classroom_type",
         },
         inplace=True,
     )
@@ -86,7 +94,7 @@ def get_required_courses() -> pd.DataFrame:
 
 @cache_to_csv("cache/get_elective_courses.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_elective_courses():
-    page_name = "disciplinas_eletivas!A:K"
+    page_name = "disciplinas_eletivas!A:O"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
     courses = df.loc[df["Alocar"] == "TRUE"].filter(
@@ -171,7 +179,7 @@ def get_professors():
 
 @cache_to_csv("cache/get_manual_allocation.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_manual_allocation():
-    page_name = "alocacao_manual!A:I"
+    page_name = "alocacao_manual!A:L"
 
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -180,10 +188,14 @@ def get_manual_allocation():
             "Nome curto professor",
             "Código único turma",
             "Código disciplina",
+            "Nome disciplina",
             "Qtd de créditos",
             "Tipo disciplina",
             "Dia da semana",
             "Horário",
+            "Qtd alunos",
+            "Instituto responsável",
+            "Tipo sala",
         ]
     )
     manual_allocation.rename(
@@ -191,10 +203,14 @@ def get_manual_allocation():
             "Nome curto professor": "professor",
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
+            "Nome disciplina": "course_name",
             "Qtd de créditos": "credits",
             "Tipo disciplina": "course_type",
             "Dia da semana": "day",
             "Horário": "time",
+            "Qtd alunos": "capacity",
+            "Instituto responsável": "responsable_institute",
+            "Tipo sala": "classroom_type",
         },
         inplace=True,
     )

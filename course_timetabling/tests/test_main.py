@@ -12,6 +12,8 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
 
     @patch("utils.utils.get_course_schedule")
     def setUp(self, mock_get_schedule) -> None:
+        patch("utils.utils.save_results_to_csv").start()
+
         professor_permanent = {
             "Prof1": {
                 "qualified_courses": ["ICP131"],
@@ -143,7 +145,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "category": "PP",
             },
             "Daniel Sadoc": {
-                "qualified_courses": ["ICP123"],
+                "qualified_courses": ["ICP132"],
                 "expertise": ["ED", "CD"],
                 "category": "PP",
             },
@@ -159,24 +161,39 @@ class TestModelCourseTimetabling(unittest.TestCase):
         self.COURSES = {
             "OBG-BCC1-1": {
                 "course_id": "ICP131",
+                "course_name": "Programação de Computadores I",
                 "credits": 4,
                 "day": "SEG,QUA",
                 "time": "13:00-15:00,08:00-10:00",
                 "course_type": "OBG",
+                "class_type": "Gradução",
+                "capacity": 40,
+                "responsable_institute": "IC",
+                "classroom_type": "Sala",
             },
             "OBG-BCC1-2": {
-                "course_id": "ICP123",
+                "course_id": "ICP132",
+                "course_name": "Processo de Software",
                 "credits": 4,
                 "day": "TER,QUI",
                 "time": "15:00-17:00",
                 "course_type": "OBG",
+                "class_type": "Gradução",
+                "capacity": 30,
+                "responsable_institute": "IC",
+                "classroom_type": "Sala",
             },
             "OPT-BCC1-3": {
                 "course_id": "IPCXXX",
+                "course_name": "Eletiva",
                 "credits": 4,
                 "day": "NÃO DEFINIDO",
                 "time": "NÃO DEFINIDO",
                 "course_type": "OPT",
+                "class_type": "Gradução",
+                "capacity": 30,
+                "responsable_institute": "IC",
+                "classroom_type": "Sala",
             },
         }
 
