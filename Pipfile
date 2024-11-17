@@ -17,6 +17,7 @@ pandera = "*"
 urllib3 = "==1.26.6"
 python-decouple = "*"
 cache-pandas = "*"
+streamlit = "*"
 
 [dev-packages]
 ipykernel = "*"

@@ -11,18 +11,6 @@ from database.construct_sets import (
 )
 
 
-DUMMY_PROFESSOR = "DUMMY"
-DUMMY_COEFFICIENT = 0.0001
-DEFAULT_COEFFICIENT = 100
-SERVICE_COURSE_COEFFICIENT = 10
-SERVICE_COURSE_COEFFICIENT_PP = 1
-
-ZERO_COEFFICIENT = 0
-WEIGHT_FACTOR_PP = 1000
-MIN_CREDITS_PERMANENT = 8
-MAX_CREDITS_SUBSTITUTE = 12
-
-
 class CourseTimetabling:
     def __init__(
         self,
@@ -58,30 +46,25 @@ class CourseTimetabling:
 
     def initialize_variables_and_coefficients(self):
         """
-        Initializes the variables and coefficients for the course timetabling problem.
-        This method sets up the coefficients and variables for each professor and course
-        based on their qualifications and manual allocations. It iterates through the list
-        of professors and courses, and for each combination, it determines the appropriate
-        coefficient and creates a binary variable for the scheduling model.
-        The coefficients are determined based on whether the professor is a dummy professor,
-        if the course is available for the professor, or if it is manually allocated. The
-        variables are added to the model as binary variables representing whether a professor
-        is assigned to a course at a specific day and time.
+        Initializes the binary variables and coefficients for the course timetabling problem.
+
         Constants:
-            DUMMY_COEFFICIENT: The coefficient value for dummy professors.
-            DEFAULT_COEFFICIENT: The default coefficient value for qualified courses.
-            ZERO_COEFFICIENT: The coefficient value for unqualified courses.
-            DUMMY_PROFESSOR: A constant representing a dummy professor.
+            settings.DUMMY_PROFESSOR_NAME: A constant representing a dummy professor.
+            settings.DUMMY_COEFFICIENT: The coefficient value for dummy professors.
+            settings.DEFAULT_COEFFICIENT: The default coefficient value for qualified courses.
+            settings.ZERO_COEFFICIENT: The coefficient value for unqualified courses.
         """
         for professor in self.professors:
             self.coefficients[professor] = {}
             self.variables[professor] = {}
+
             qualified_courses = utils.get_qualified_courses_for_professor(
                 self.courses, self.professors, professor
             )
-
-            qualified_courses_available = utils.add_manual_allocation_courses(
-                professor, qualified_courses, self.manual_allocation
+            qualified_courses_with_manual_allocation = (
+                utils.add_manual_allocation_courses(
+                    professor, qualified_courses, self.manual_allocation
+                )
             )
 
             for course in self.courses.keys():
@@ -93,27 +76,29 @@ class CourseTimetabling:
 
                 self.coefficients[professor][course][day] = {}
 
-                if professor == DUMMY_PROFESSOR:
-                    self.coefficients[professor][course][day][time] = DUMMY_COEFFICIENT
+                if professor == settings.DUMMY_PROFESSOR_NAME:
+                    self.coefficients[professor][course][day][
+                        time
+                    ] = settings.DUMMY_COEFFICIENT
                 else:
                     if self.courses[course]["course_type"] == "SVC":
                         if self.professors[professor]["category"] == "PS":
                             self.coefficients[professor][course][day][
                                 time
-                            ] = SERVICE_COURSE_COEFFICIENT
+                            ] = settings.SERVICE_COURSE_COEFFICIENT_SP
                         else:
                             self.coefficients[professor][course][day][
                                 time
-                            ] = SERVICE_COURSE_COEFFICIENT_PP
+                            ] = settings.SERVICE_COURSE_COEFFICIENT_PP
 
-                    elif course in qualified_courses_available:
+                    elif course in qualified_courses_with_manual_allocation:
                         self.coefficients[professor][course][day][
                             time
-                        ] = DEFAULT_COEFFICIENT
+                        ] = settings.DEFAULT_COEFFICIENT
                     else:
                         self.coefficients[professor][course][day][
                             time
-                        ] = ZERO_COEFFICIENT
+                        ] = settings.ZERO_COEFFICIENT
 
                 self.variables[professor][course][day] = {}
                 self.variables[professor][course][day][time] = self.model.addVar(
@@ -126,8 +111,6 @@ class CourseTimetabling:
 
         This method creates a slack variable for each permanent professor, indicating
         how many credits the permanent professor is below the ideal number set by the coordination.
-        The slack variables are added to the model and stored in the `slack_variables`
-        dictionary with the professor as the key.
 
         Attributes:
             permanent_professors (list): A list of permanent professors.
@@ -136,7 +119,7 @@ class CourseTimetabling:
         """
         for professor in self.permanent_professors:
             self.slack_variables[professor] = self.model.addVar(
-                vtype=GRB.INTEGER, name=f"PNC_{professor}"
+                vtype=GRB.INTEGER, name=f"PCB_{professor}"
             )
 
     def add_constraints(self):
@@ -164,7 +147,7 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                == MIN_CREDITS_PERMANENT - self.slack_variables[professor]
+                == settings.MIN_CREDITS_PERMANENT - self.slack_variables[professor]
             )
 
         # Hard constraints
@@ -178,7 +161,7 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                <= MAX_CREDITS_SUBSTITUTE
+                <= settings.MAX_CREDITS_SUBSTITUTE
             )
 
         # RN3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
@@ -189,14 +172,14 @@ class CourseTimetabling:
                 gp.quicksum(
                     self.variables[professor][course][day][time]
                     for professor in self.professors
-                    # if professor != DUMMY_PROFESSOR and self.courses[course]["course_type"] != "OPT"
+                    # if professor != settings.DUMMY_PROFESSOR_NAME and self.courses[course]["course_type"] != "OPT"
                 )
                 == 1
             )
 
         # RN4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
         for professor in self.professors:
-            if professor == DUMMY_PROFESSOR:
+            if professor == settings.DUMMY_PROFESSOR_NAME:
                 continue
             for i in range(len(course_days)):
                 day = course_days[i]
@@ -244,10 +227,10 @@ class CourseTimetabling:
                 for professor in self.professors
                 for course in self.courses.keys()
                 for day, time in [utils.get_course_schedule(self.courses, course)]
-                # if professor != DUMMY_PROFESSOR and self.courses[course]["course_type"] != "OPT"
+                # if professor != settings.DUMMY_PROFESSOR_NAME and self.courses[course]["course_type"] != "OPT"
             )
             - gp.quicksum(
-                WEIGHT_FACTOR_PP * self.slack_variables[professor]
+                settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]
                 for professor in self.permanent_professors
             ),
             GRB.MAXIMIZE,
@@ -257,26 +240,32 @@ class CourseTimetabling:
         self.model.update()
         self.model.optimize()
 
+    def clean_model(self):
+        self.model.dispose()
+        self.env.dispose()
+
     def generate_results(self):
 
-        professor_timeschedule = []
+        timeschedule = []
         for var in self.model.getVars():
             if var.X > 0:
-                timeschedule = f"{var.VarName}/{var.X}"
-                professor_timeschedule.append(timeschedule)
+                allocation = f"{var.VarName}/{var.X}"
+                timeschedule.append(allocation)
 
         model_value = self.model.ObjVal
+
+        save_model = self.model.write("results/model.lp")
+        utils.treat_and_save_results(timeschedule)
+
         print("========= RESULT ==========")
-        for r in professor_timeschedule:
+        for r in timeschedule:
             print(r)
         print("=============================")
         print(f"Obj: {model_value}")
 
-        # Clean up model and environment
-        self.model.dispose()
-        self.env.dispose()
+        self.clean_model()
 
-        return professor_timeschedule, model_value
+        return timeschedule, model_value
 
 
 def main():
