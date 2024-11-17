@@ -16,6 +16,7 @@ from utils.utils import (
     get_possible_schedules,
     get_qualified_courses_for_professor,
     remove_courses,
+    treat_and_save_results,
 )
 
 
@@ -539,6 +540,23 @@ class TestGetAllAvailableCoursesForAllocation(TestCase):
 
         self.assertEqual(result, expected_result)
 
+class TestTreatAndSaveResults(TestCase):
+    def test_treat_and_save_results(self):
+        timeschedule = [
+            "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
+            "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
+            "PCB_Adriana Vivacqua/4.0",
+            "PCB_Daniel Sadoc/4.0",
+        ]
+
+        result = treat_and_save_results(timeschedule)
+
+        expected_result = ([
+            ["Adriana Vivacqua", "OBG-BCC1-1", "SEG,QUA", "13:00-15:00,08:00-10:00"],
+            ["Daniel Sadoc", "OBG-BCC1-2", "TER,QUI", "15:00-17:00"],
+        ], [["Adriana Vivacqua", 4.0], ["Daniel Sadoc", 4.0]])
+
+        self.assertEqual(result, expected_result)
 
 if __name__ == "__main__":
     main()

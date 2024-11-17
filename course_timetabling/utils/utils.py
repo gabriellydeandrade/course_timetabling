@@ -1,4 +1,5 @@
 from typing import Tuple
+import csv
 
 
 def get_qualified_courses_for_professor(
@@ -9,6 +10,7 @@ def get_qualified_courses_for_professor(
     Returns a set with the disciplines they can teach.
 
     Args:
+        courses_set (dict): A dictionary containing course information
         professors_set (dict): A dictionary containing professor information.
         professor (str): The name or identifier of the professor.
 
@@ -140,9 +142,10 @@ def add_manual_allocation_courses(
     professor: str, courses: set, manual_courses: dict
 ) -> set:
     """
-    Adds courses that are manually specified to the set of available courses.
+    Adds courses that are manually specified to the set of available courses if it matchs the professor.
 
     Args:
+        professor (str): The name of the professor.
         courses (set): A set of course IDs representing all available courses.
         manual_courses (dict): A dictionary where keys are course IDs that should be added to the available courses.
 
@@ -202,3 +205,28 @@ def get_courses_by_day(courses: dict, day: str) -> set:
                     result.append(course_id)
 
     return set(result)
+
+def save_to_csv(data: list, filename: str) -> None:
+    with open(filename, "w") as file:
+        spamwriter = csv.writer(file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for line in data:
+            spamwriter.writerow(line)
+
+
+def treat_and_save_results(timeschedule: list):
+    timeschedule_treated = []
+    pcb_professors = []
+
+    for schedule in timeschedule:
+        schedule, value = schedule.split("/")
+        allocation = schedule.split("_")
+
+        if "PCB" in allocation:
+            pcb_professors.append(allocation[1:]+[float(value)])
+        else:
+            timeschedule_treated.append(allocation)
+
+    save_to_csv(timeschedule_treated, "course_timetabling/results/timeschedule.csv")
+    save_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
+    
+    return timeschedule_treated, pcb_professors

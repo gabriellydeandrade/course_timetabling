@@ -277,8 +277,8 @@ class TestModelCourseTimetabling(unittest.TestCase):
             "Adriana Vivacqua_OBG-BCC1-1_SEG,QUA_13:00-15:00,08:00-10:00/1.0",
             "Daniel Sadoc_OBG-BCC1-2_TER,QUI_15:00-17:00/1.0",
             "DUMMY_OPT-BCC1-3_NÃO DEFINIDO_NÃO DEFINIDO/1.0",  # FIXME não quero ter professor dummy associados a eletivas, adicionar restrição para que as eletivas não sejam obrigatórias
-            "PNC_Adriana Vivacqua/4.0",
-            "PNC_Daniel Sadoc/4.0",
+            "PCB_Adriana Vivacqua/4.0",
+            "PCB_Daniel Sadoc/4.0",
         ]
 
         self.assertEqual(result, expected_result)
