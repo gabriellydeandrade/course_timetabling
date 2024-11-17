@@ -206,14 +206,14 @@ def get_courses_by_day(courses: dict, day: str) -> set:
 
     return set(result)
 
-def save_to_csv(data: list, filename: str) -> None:
+def save_results_to_csv(data: list, filename: str) -> None:
     with open(filename, "w") as file:
         spamwriter = csv.writer(file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for line in data:
             spamwriter.writerow(line)
 
 
-def treat_and_save_results(timeschedule: list):
+def treat_and_save_results(timeschedule: list, courses: dict):
     timeschedule_treated = []
     pcb_professors = []
 
@@ -224,9 +224,23 @@ def treat_and_save_results(timeschedule: list):
         if "PCB" in allocation:
             pcb_professors.append(allocation[1:]+[float(value)])
         else:
-            timeschedule_treated.append(allocation)
+            professor = allocation[0]
 
-    save_to_csv(timeschedule_treated, "course_timetabling/results/timeschedule.csv")
-    save_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
+            course_class_id = allocation[1]
+            course_id = courses[course_class_id]["course_id"]
+            course_name = courses[course_class_id]["course_name"]
+            capacity = courses[course_class_id]["capacity"]
+            classroom_type = courses[course_class_id]["classroom_type"]
+            responsable_institute = courses[course_class_id]["responsable_institute"]
+
+            day = allocation[2]
+            time = allocation[3]
+
+            result = [responsable_institute, professor, course_id, course_name, day, time, capacity, classroom_type]
+
+            timeschedule_treated.append(result)
+
+    save_results_to_csv(timeschedule_treated, "course_timetabling/results/timeschedule.csv")
+    save_results_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
     
     return timeschedule_treated, pcb_professors

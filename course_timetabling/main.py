@@ -172,7 +172,6 @@ class CourseTimetabling:
                 gp.quicksum(
                     self.variables[professor][course][day][time]
                     for professor in self.professors
-                    # if professor != settings.DUMMY_PROFESSOR_NAME and self.courses[course]["course_type"] != "OPT"
                 )
                 == 1
             )
@@ -227,7 +226,6 @@ class CourseTimetabling:
                 for professor in self.professors
                 for course in self.courses.keys()
                 for day, time in [utils.get_course_schedule(self.courses, course)]
-                # if professor != settings.DUMMY_PROFESSOR_NAME and self.courses[course]["course_type"] != "OPT"
             )
             - gp.quicksum(
                 settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]
@@ -254,16 +252,12 @@ class CourseTimetabling:
 
         model_value = self.model.ObjVal
 
-        save_model = self.model.write("results/model.lp")
-        utils.treat_and_save_results(timeschedule)
+        utils.treat_and_save_results(timeschedule, self.courses)
 
         print("========= RESULT ==========")
-        for r in timeschedule:
-            print(r)
+        print("Result was saved in results/*")
         print("=============================")
         print(f"Obj: {model_value}")
-
-        self.clean_model()
 
         return timeschedule, model_value
 
@@ -296,6 +290,7 @@ def main():
     timetabling.set_objective()
     timetabling.optimize()
     timetabling.generate_results()
+    timetabling.clean_model()
 
 
 if __name__ == "__main__":
