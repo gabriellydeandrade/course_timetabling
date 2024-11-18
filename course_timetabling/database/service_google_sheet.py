@@ -55,7 +55,7 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
 
 @cache_to_csv("cache/get_required_courses.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_required_courses() -> pd.DataFrame:
-    page_name = "disciplinas_obrigatorias!A:Q"
+    page_name = "disciplinas_obrigatorias!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
     courses = df.loc[df["Alocar"] == "TRUE"].filter(
@@ -70,6 +70,7 @@ def get_required_courses() -> pd.DataFrame:
             "Qtd alunos",
             "Instituto responsável",
             "Tipo sala",
+            "Período",
         ]
     )
     courses.rename(
@@ -84,6 +85,7 @@ def get_required_courses() -> pd.DataFrame:
             "Qtd alunos": "capacity",
             "Instituto responsável": "responsable_institute",
             "Tipo sala": "classroom_type",
+            "Período": "term",
         },
         inplace=True,
     )
@@ -94,7 +96,7 @@ def get_required_courses() -> pd.DataFrame:
 
 @cache_to_csv("cache/get_elective_courses.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_elective_courses():
-    page_name = "disciplinas_eletivas!A:O"
+    page_name = "disciplinas_eletivas!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
     courses = df.loc[df["Alocar"] == "TRUE"].filter(
@@ -105,6 +107,7 @@ def get_elective_courses():
             "Perfil",
             "Tipo disciplina",
             "Tipo turma",
+            "Período",
         ]
     )
     courses.rename(
@@ -115,6 +118,7 @@ def get_elective_courses():
             "Perfil": "knowledge_area",
             "Tipo disciplina": "course_type",
             "Tipo turma": "class_type",
+            "Período": "term",
         },
         inplace=True,
     )
@@ -125,7 +129,7 @@ def get_elective_courses():
 
 @cache_to_csv("cache/get_substitute_professor.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_substitute_professor():
-    page_name = "professores!A:K"
+    page_name = "professores!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
     professors_availables = df.loc[df["Alocar"] == "TRUE"].filter(
@@ -149,7 +153,7 @@ def get_substitute_professor():
 
 @cache_to_csv("cache/get_permanent_professors.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_permanent_professors():
-    page_name = "professores!A:K"
+    page_name = "professores!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
     professors_availables = df.loc[df["Alocar"] == "TRUE"].filter(
@@ -179,7 +183,7 @@ def get_professors():
 
 @cache_to_csv("cache/get_manual_allocation.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_manual_allocation():
-    page_name = "alocacao_manual!A:L"
+    page_name = "alocacao_manual!A:S"
 
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -196,6 +200,7 @@ def get_manual_allocation():
             "Qtd alunos",
             "Instituto responsável",
             "Tipo sala",
+            "Período",
         ]
     )
     manual_allocation.rename(
@@ -211,6 +216,7 @@ def get_manual_allocation():
             "Qtd alunos": "capacity",
             "Instituto responsável": "responsable_institute",
             "Tipo sala": "classroom_type",
+            "Período": "term",
         },
         inplace=True,
     )

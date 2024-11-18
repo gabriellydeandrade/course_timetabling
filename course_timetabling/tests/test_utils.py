@@ -579,6 +579,7 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 40,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
+                "term": 1
             },
             "OBG-BCC1-2": {
                 "course_id": "ICP132",
@@ -589,6 +590,7 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 30,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
+                "term": 1
             },
         }
 
@@ -604,6 +606,8 @@ class TestTreatAndSaveResults(TestCase):
                 "13:00-15:00,08:00-10:00",
                 40,
                 "Sala",
+                "OBG",
+                1
             ],
             [
                 "IC",
@@ -614,6 +618,8 @@ class TestTreatAndSaveResults(TestCase):
                 "15:00-17:00",
                 30,
                 "Sala",
+                "OBG",
+                1
             ],
         ]
 
