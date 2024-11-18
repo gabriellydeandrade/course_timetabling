@@ -170,6 +170,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "capacity": 40,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
+                "term": 1
             },
             "OBG-BCC1-2": {
                 "course_id": "ICP132",
@@ -182,6 +183,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "capacity": 30,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
+                "term": 1
             },
             "OPT-BCC1-3": {
                 "course_id": "IPCXXX",
@@ -194,6 +196,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "capacity": 30,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
+                "term": None
             },
         }
 
