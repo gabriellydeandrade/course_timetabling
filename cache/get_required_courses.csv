@@ -25,13 +25,13 @@ OBG-BCC1-23,ICP237,Introdução a Modelagem de Sistemas,4,"TER,QUI",15:00-17:00,
 OBG-BCC1-24,ICP239,Programação Orientada a Objeto,4,"TER,QUI",10:00-12:00,OBG,,IC,,3
 OBG-BCC1-25,ICP238,Introdução a Computação Numérica,2,SEG,08:00-10:00,OBG,,IC,,3
 OBG-BCC2-26,ICP238,Introdução a Computação Numérica,2,SEG,13:00-15:00,OBG,,IC,,3
-OBG-BCC1-27,ICP246,Arquitetura de Computadores e Sistemas Operacionais,4,TER,10:00-12:00,OBG,,IC,,4
-OBG-BCC1-28,ICP248,Computação Científica e Análise de dados,4,QUA,10:00-12:00,OBG,,IC,,4
+OBG-BCC1-27,ICP246,Arquitetura de Computadores e Sistemas Operacionais,4,"TER,QUI",10:00-12:00,OBG,,IC,,4
+OBG-BCC1-28,ICP248,Computação Científica e Análise de dados,4,"QUA,SEX",10:00-12:00,OBG,,IC,,4
 OBG-BCC1-29,ICP123,Linguagens Formais,4,"SEG,QUA",13:00-15:00,OBG,,IC,,5
-OBG-BCC1-30,ICP350,Modelagem e Avaliação de Desempenho,4,SEG,08:00-10:00,OBG,,IC,,5
-OBG-BCC2-31,ICP350,Modelagem e Avaliação de Desempenho,4,SEG,10:00-12:00,OBG,,IC,,5
-OBG-BCC1-32,ICP351,Modelagem Matemática e Computacional,4,SEG,08:00-10:00,OBG,,IC,,5
-OBG-BCC1-33,ICP353,Computadores e Programação,4,TER,08:00-10:00,OBG,,IC,,5
+OBG-BCC1-30,ICP350,Modelagem e Avaliação de Desempenho,4,"SEG,QUA",08:00-10:00,OBG,,IC,,5
+OBG-BCC2-31,ICP350,Modelagem e Avaliação de Desempenho,4,"SEG,QUA",10:00-12:00,OBG,,IC,,5
+OBG-BCC1-32,ICP351,Modelagem Matemática e Computacional,4,"SEG,QUA",08:00-10:00,OBG,,IC,,5
+OBG-BCC1-33,ICP353,Computadores e Programação,4,"TER,QUI",08:00-10:00,OBG,,IC,,5
 OBG-BCC1-34,ICP368,Algoritmos e Grafos,4,"TER,QUI",10:00-12:00,OBG,,IC,,5
 OBG-BCC1-CMT1-ASD1-35,ICP489,Banco de Dados I,4,"QUA,SEX",08:00-10:00,OBG,,IC,,5
 OBG-BCC1-36,ICP362,Redes de Computadores I,4,"QUA,SEX",10:00-12:00,OBG,,IC,,6
@@ -39,9 +39,9 @@ OBG-BCC1-37,ICP361,Programação Concorrente,4,"TER,QUI",08:00-10:00,OBG,,IC,,6
 OBG-BCC1-38,ICP363,Introdução ao Aprendizado de Máquina,4,"TER,QUI",13:00-15:00,OBG,,IC,,6
 OBG-BCC1-39,ICP365,Otimização,4,"TER,QUI",10:00-12:00,OBG,,IC,,6
 OBG-BCC1-40,ICP370,Lógica e Computabilidade,4,"QUA,SEX",08:00-10:00,OBG,,IC,,6
-OBG-BCC1-41,ICP366,Sistemas Operacionais,4,TER,10:00-12:00,OBG,,IC,,7
-OBG-BCC1-42,ICP472,Metodologia da Pesquisa,4,QUA,10:00-12:00,OBG,,IC,,7
-OBG-BCC1-43,ICP473,Segurança da Informação,4,QUA,08:00-10:00,OBG,,IC,,7
+OBG-BCC1-41,ICP366,Sistemas Operacionais,4,"TER,QUI",10:00-12:00,OBG,,IC,,7
+OBG-BCC1-42,ICP472,Metodologia da Pesquisa,4,"QUA,SEX",10:00-12:00,OBG,,IC,,7
+OBG-BCC1-43,ICP473,Segurança da Informação,4,"QUA,SEX",08:00-10:00,OBG,,IC,,7
 OBG-BCC1-44,ICP515,Avaliação e Desempenho,4,"SEG,QUA",10:00-12:00,OBG,,IC,Sala,7
 OBG-BCC2-45,ICP515,Avaliação e Desempenho,4,"SEG,QUA",08:00-10:00,OBG,,IC,Sala,7
 OBG-CMT1-46,CMT012,Introdução à Programação c/c++,4,,,OBG,,IC,,10
