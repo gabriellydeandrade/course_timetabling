@@ -63,6 +63,7 @@ def get_required_courses() -> pd.DataFrame:
             "Código único turma",
             "Código disciplina",
             "Nome disciplina",
+            "Curso",
             "Qtd de créditos",
             "Dia da semana",
             "Horário",
@@ -78,6 +79,7 @@ def get_required_courses() -> pd.DataFrame:
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
             "Nome disciplina": "course_name",
+            "Curso": "gratuation_course",
             "Qtd de créditos": "credits",
             "Dia da semana": "day",
             "Horário": "time",
@@ -108,6 +110,7 @@ def get_elective_courses():
             "Tipo disciplina",
             "Tipo turma",
             "Período",
+            "Curso"
         ]
     )
     courses.rename(
@@ -119,6 +122,7 @@ def get_elective_courses():
             "Tipo disciplina": "course_type",
             "Tipo turma": "class_type",
             "Período": "term",
+            "Curso": "gratuation_course"
         },
         inplace=True,
     )
@@ -171,7 +175,7 @@ def get_permanent_professors():
     professors_availables.set_index("professor", inplace=True)
 
     permanent = professors_availables.loc[
-        (~professors_availables["category"].isin(["PS", "EX", "AP"]))
+        (~professors_availables["category"].isin(["PS", "EX"]))
     ]
 
     return permanent
@@ -193,6 +197,7 @@ def get_manual_allocation():
             "Código único turma",
             "Código disciplina",
             "Nome disciplina",
+            "Curso",
             "Qtd de créditos",
             "Tipo disciplina",
             "Dia da semana",
@@ -209,6 +214,7 @@ def get_manual_allocation():
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
             "Nome disciplina": "course_name",
+            "Curso": "gratuation_course",
             "Qtd de créditos": "credits",
             "Tipo disciplina": "course_type",
             "Dia da semana": "day",

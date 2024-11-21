@@ -6,6 +6,7 @@ df = pd.read_csv(
     delimiter=";",
     names=[
         "responsable_institute",
+        "graduation_course",
         "professor",
         "course_id",
         "course_name",
@@ -14,17 +15,14 @@ df = pd.read_csv(
         "capacity",
         "classroom_type",
         "course_type",
-        "term"
+        "term",
     ],
 )
 
 df_pcb = pd.read_csv(
     "course_timetabling/results/pcb_professors.csv",
     delimiter=";",
-    names=[
-        "professor",
-        "credits_below"
-    ],
+    names=["professor", "credits_below"],
 )
 
 st.set_page_config(
@@ -43,23 +41,20 @@ with st.container(border=True) as general:
     all_professors = general_without_dummy["professor"].unique().tolist()
     all_professors.insert(0, "Todos")
 
-    options = st.multiselect(
-        "Seleciona um docente",
-        all_professors,
-        ["Todos"]
-    )
+    options = st.multiselect("Seleciona um docente", all_professors, ["Todos"])
 
     if "Todos" in options:
         selected_professors = general_without_dummy["professor"].unique()
     else:
         selected_professors = options
 
-    df_filter = general_without_dummy[general_without_dummy["professor"].isin(selected_professors)]
+    df_filter = general_without_dummy[
+        general_without_dummy["professor"].isin(selected_professors)
+    ]
 
     courses_svc = df_filter.loc[df_filter["course_type"] == "SVC"]
     courses_opt = df_filter.loc[df_filter["course_type"] == "OPT"]
     courses_obg = df_filter.loc[df_filter["course_type"] == "OBG"]
-
 
     col1, col2, col3 = st.columns(3)
 
@@ -71,6 +66,7 @@ with st.container(border=True) as general:
         df_filter,
         column_config={
             "responsable_institute": "Instituto responsável",
+            "graduation_course": "Curso de oferta",
             "professor": "Docente",
             "course_id": "Código disciplina",
             "course_name": "Nome disciplina",
@@ -97,9 +93,13 @@ with st.container(border=True) as pcb:
     st.subheader("Visão professores abaixo da carga horária mínima")
     st.text("Professores que estão abaixo da carga horária mínima de 8 créditos.")
 
-    st.metric(label="Qtd de professores", value=len(df_pcb), help=f"Existem {len(df_pcb)} professores no PCB.")
+    st.metric(
+        label="Qtd de professores",
+        value=len(df_pcb),
+        help=f"Existem {len(df_pcb)} professores no PCB.",
+    )
 
-    df_pcb["credits_below_percent"] =  ((df_pcb["credits_below"])/8)*100 
+    df_pcb["credits_below_percent"] = ((df_pcb["credits_below"]) / 8) * 100
     df_pcb = df_pcb.sort_values(by="credits_below_percent", ascending=False)
 
     st.dataframe(
@@ -107,7 +107,12 @@ with st.container(border=True) as pcb:
         column_config={
             "professor": "Docente",
             "credits_below": "Créditos abaixo",
-            "credits_below_percent": st.column_config.ProgressColumn(label="Percentual abaixo do ideal", min_value=0, max_value=100, format="%f%%"),
+            "credits_below_percent": st.column_config.ProgressColumn(
+                label="Percentual abaixo do ideal",
+                min_value=0,
+                max_value=100,
+                format="%f%%",
+            ),
         },
         hide_index=True,
         use_container_width=False,
@@ -117,14 +122,21 @@ with st.container(border=True) as dummy:
     dummy = df.loc[df["professor"] == "DUMMY"]
 
     st.subheader("Visão professores DUMMY")
-    st.text("Disciplinas que não possuem professores, mas que deveriam por serem disciplinas obrigatórias.")
+    st.text(
+        "Disciplinas que não possuem professores, mas que deveriam por serem disciplinas obrigatórias."
+    )
 
-    st.metric(label="Qtd de DUMMY", value=len(dummy), help=f"Existem {len(dummy)} disciplinas sem professores.")
+    st.metric(
+        label="Qtd de DUMMY",
+        value=len(dummy),
+        help=f"Existem {len(dummy)} disciplinas sem professores.",
+    )
 
     st.dataframe(
         dummy,
         column_config={
             "responsable_institute": "Instituto responsável",
+            "graduation_course": "Curso de oferta",
             "professor": "Docente",
             "course_id": "Código disciplina",
             "course_name": "Nome disciplina",
@@ -146,4 +158,3 @@ with st.container(border=True) as dummy:
         hide_index=True,
         use_container_width=False,
     )
-    
