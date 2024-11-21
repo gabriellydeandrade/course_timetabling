@@ -1,90 +1,89 @@
-IC;Adriana Vivacqua;ICP131;Programação de Computadores I;SEG,QUA;10:00-12:00;50;;OBG;1
-IC;Adriana Vivacqua;ICP145;Habilidades sociais para o trabalho;QUI;10:00-12:00;;;OBG;2
-IC;Adriana Vivacqua;ICP145;Habilidades sociais para o trabalho;QUI;13:00-15:00;;;OBG;2
-IC;Aloisio Pina;ICP225,ICP241;Computação II (EP),Computação II (SV);TER,QUI;13:00-15:00;;;SVC;
-IC;Aloisio Pina;ICP101;Introdução ao suporte à decisão;PREENCHER MANUALMENTE;PREENCHER MANUALMENTE;;;OPT;7
-IC;Amaury Cruz;ICP225;Computação II (EP);QUA,SEX;08:00-10:00;;;SVC;
-IC;Amaury Cruz;ICP231;Cálculo Numérico (SV);SEG,QUA;13:00-15:00;;;SVC;
-IC;Anamaria Moreira;ICP133;Fundamentos de Sistemas de Computação;TER,QUI;10:00-12:00;;;OBG;1
-IC;Anamaria Moreira;ICP133;Fundamentos de Sistemas de Computação;TER,QUI;08:00-10:00;;;OBG;1
-IC;Angela Gonçalves;ICP114;Computação I (EP);SEG;10:00-12:00,13:00-15:00;;;SVC;
-IC;Angela Gonçalves;MAW351;Informática Aplicada ao Ensino;TER;18:30-20:10;;;SVC;
-IC;Carla Delgado;ICP472;Metodologia da Pesquisa;QUA,SEX;10:00-12:00;;;OBG;7
-IC;Carla Delgado;ICP225;Computação II (EP);TER,QUI;13:00-15:00;;;SVC;
-IC;Carolina Marcelino;ICP231;Cálculo Numérico (SV);TER,QUI;08:00-10:00;;;SVC;
-IC;Carolina Marcelino;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;;;SVC;
-IC;Claudson Bornstein;ICP116;Estrutura de Dados;TER,QUI;13:00-15:00;;;OBG;3
-IC;Claudson Bornstein;ICP114;Computação I (EP);TER,QUI;10:00-12:00;;;SVC;
-IC;Daniel Alfaro;ICP114;Computação I (EP);SEG;08:00-10:00,15:00-17:00;;;SVC;
-IC;Daniel Alfaro;ICP241;Computação II (SV);TER,QUI;08:00-10:00;;;SVC;
-IC;Daniel Bastos;ICP134;Números Inteiros e Criptografia;TER,QUI;08:00-10:00;;;OBG;1
-IC;Daniel Bastos;ICP134;Números Inteiros e Criptografia;TER,QUI;08:00-10:00;;;OBG;1
-IC;Daniel Sadoc;ICP473;Segurança da Informação;QUA,SEX;08:00-10:00;;;OBG;7
-IC;Daniel Sadoc;ICP103;Análise de Risco;;;;Sala;OBG;10
-IC;Daniel Serrão Schneider;ICP121;Computação I (SV);TER,QUI;15:00-17:00;;;SVC;
-IC;Daniel Serrão Schneider;ICP231;Cálculo Numérico (SV);QUA,SEX;08:00-10:00;;;SVC;
-IC;Eldânae Teixeira;ICP132;Processo de Software;SEG,QUA;10:00-12:00;;;OBG;1
-IC;Eldânae Teixeira;ICP135;Projeto de Carreira;SEG,QUA;13:00-15:00;;;OBG;1
-IC;Gabriel Pereira;ICP143;Projeto Prático;TER;13:00-15:00;;;OBG;2
-IC;Gabriel Pereira;ICP143;Projeto Prático;QUI;13:00-15:00;;;OBG;2
-IC;Gabriel Pereira;ICP246;Arquitetura de Computadores e Sistemas Operacionais;TER,QUI;10:00-12:00;;;OBG;4
-IC;Geraldo Bonorino Xexéo;ICP121;Computação I (SV);QUI;10:00-12:00,13:00-15:00;;;SVC;
-IC;Geraldo Bonorino Xexéo;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;;;SVC;
-IC;Giseli Lopes;ICP141;Programação de Computadores II;QUA,SEX;08:00-10:00;;;OBG;2
-IC;Giseli Lopes;ICP489;Banco de Dados I;QUA,SEX;08:00-10:00;;;OBG;5
-IC;Hugo Musso;ICP123;Linguagens Formais;SEG,QUA;13:00-15:00;;;OBG;5
-IC;Hugo Musso;ICP121;Computação I (SV);TER,QUI;13:00-15:00;;;SVC;
-IC;Hugo Nobrega;ICP144;Matemática Discreta;TER,QUI;08:00-10:00;;;OBG;2
-IC;Hugo Nobrega;ICP370;Lógica e Computabilidade;QUA,SEX;08:00-10:00;;;OBG;6
-IC;João Carlos Pereira;ICP136;Introdução ao Pensamento Dedutivo;SEG,QUA;08:00-10:00;;;OBG;1
-IC;João Carlos Pereira;ICP363;Introdução ao Aprendizado de Máquina;TER,QUI;13:00-15:00;;;OBG;6
-IC;João Paixão;ICP248;Computação Científica e Análise de dados;QUA,SEX;10:00-12:00;;;OBG;4
-IC;João Paixão;ICP114;Computação I (EP);SEG,SEX;13:00-15:00,10:00-12:00;;;SVC;
-IC;Jonice de Oliveira;ICP142;Organização de Dados;TER;10:00-12:00;;;OBG;2
-IC;Jonice de Oliveira;ICP249;Tecnologia e Sociedade	;TER,QUI;13:00-15:00;;;OBG;4
-IC;Josefino Cabral;ICP114;Computação I (EP);SEG;10:00-12:00,13:00-15:00;;;SVC;
-IC;Josefino Cabral;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;;;SVC;
-IC;Juliana França;ICP132;Processo de Software;TER,QUI;13:00-15:00;40;;OBG;1
-IC;Juliana França;ICP121,MAW112;Computação I (SV),Introdução à Computação (SV);QUI;18:30-20:10,20:10-21:50;;;SVC;
-IC;Juliana Valério;ICP115;Álgebra Linear Algorítmica;SEG,QUA,SEX;13:00-15:00,13:00-15:00,8:00-10:00;;;OBG;3
-IC;Luziane Mendonça;ICP131;Programação de Computadores I;SEG,QUA;10:00-12:00;;;OBG;1
-IC;Luziane Mendonça;ICP114;Computação I (EP);SEG;08:00-10:00,13:00-15:00;;;SVC;
-IC;Marcello Goulart;ICP238;Introdução a Computação Numérica;SEG;08:00-10:00;;;OBG;3
-IC;Marcello Goulart;ICP238;Introdução a Computação Numérica;SEG;13:00-15:00;;;OBG;3
-IC;Marcello Goulart;ICP225;Computação II (EP);SEG,QUA;10:00-12:00;;;SVC;
-IC;Marcia Helena Costa Fampa;ICP114;Computação I (EP);SEG,QUA;10:00-12:00;;;SVC;
-IC;Marcia Helena Costa Fampa;ICP121;Computação I (SV);QUI;10:00-12:00,13:00-15:00;;;SVC;
-IC;Marcia Rosana Cerioli;ICP225;Computação II (EP);QUA,SEX;15:00-17:00;;;SVC;
-IC;Marcia Rosana Cerioli;MAW123;Matemática Finita;TER,QUI;15:00-17:00;;;SVC;
-IC;Maria Helena Jardim;ICP365;Otimização;TER,QUI;10:00-12:00;;;OBG;6
-IC;Maria Helena Jardim;ICP121;Computação I (SV);TER,QUI;10:00-12:00;;;SVC;
-IC;Maria Luiza Campos;ICP135;Projeto de Carreira;SEG,QUA;13:00-15:00;;;OBG;1
-IC;Maria Luiza Campos;MAW112;Introdução à Computação (SV);QUI;18:30-20:10,20:10-21:50;;;SVC;
-IC;Mitre Dourado;ICP368;Algoritmos e Grafos;TER,QUI;10:00-12:00;;;OBG;5
-IC;Mônica Ferreira da Silva;ICP114;Computação I (EP);SEG,TER;08:00-10:00,10:00-12:00;;;SVC;
-IC;Mônica Ferreira da Silva;ICP225;Computação II (EP);QUA,SEX;08:00-10:00;;;SVC;
-IC;Rafael Mello;ICP225;Computação II (EP);TER,QUI;10:00-12:00;;;SVC;
-IC;Rafael Mello;ICP231;Cálculo Numérico (SV);TER,QUI;15:00-17:00;;;SVC;
-IC;Severino Collier;ICP136;Introdução ao Pensamento Dedutivo;SEG,QUA;10:00-12:00;;;OBG;1
-IC;Severino Collier;ICP351;Modelagem Matemática e Computacional;SEG,QUA;08:00-10:00;;;OBG;5
-IC;Silvana Rossetto;ICP361;Programação Concorrente;TER,QUI;08:00-10:00;;;OBG;6
-IC;Silvana Rossetto;ICP121,ICP114;Computação I (SV),Computação I (EP);TER,QUI;08:00-10:00;;;SVC;
-IC;Sulamita Klein;ICP225;Computação II (EP);SEG,QUA;08:00-10:00,13:00-15:00;;;SVC;
-IC;Sulamita Klein;ICP478;Métodos Numéricos I;TER,QUI;08:00-10:00;;;SVC;
-IC;Valéria Bastos;ICP353;Computadores e Programação;TER,QUI;08:00-10:00;;;OBG;5
-IC;Valéria Bastos;ICP231;Cálculo Numérico (SV);TER,QUI;15:00-17:00;;;SVC;
-IC;Vinícius Gusmão;ICP350;Modelagem e Avaliação de Desempenho;SEG,QUA;08:00-10:00;;;OBG;5
-IC;Vinícius Gusmão;ICP350;Modelagem e Avaliação de Desempenho;SEG,QUA;10:00-12:00;;;OBG;5
-IC;Vivian Santos;ICP357;Data Warehousing no Sup. à Tomada de Decisão;SEG,QUA;13:00-15:00;;;OBG;10
-IC;Vivian Santos;ICP225;Computação II (EP);TER,QUI;10:00-12:00;;;SVC;
-IC;Evandro Macedo;ICP362;Redes de Computadores I;QUA,SEX;10:00-12:00;;;OBG;6
-IC;Ronald Chiesse;ICP239;Programação Orientada a Objeto;TER,QUI;10:00-12:00;;;OBG;3
-IC;DUMMY;ICP144;Matemática Discreta;TER,QUI;15:00-17:00;;;OBG;2
-IC;DUMMY;ICP237;Introdução a Modelagem de Sistemas;TER,QUI;15:00-17:00;;;OBG;3
-IC;DUMMY;ICP366;Sistemas Operacionais;TER,QUI;10:00-12:00;;;OBG;7
-IC;DUMMY;ICP515;Avaliação e Desempenho;SEG,QUA;10:00-12:00;;Sala;OBG;7
-IC;DUMMY;ICP515;Avaliação e Desempenho;SEG,QUA;08:00-10:00;;Sala;OBG;7
-IC;DUMMY;CMT012;Introdução à Programação c/c++;;;;;OBG;10
-IC;DUMMY;ICP101;Introdução à Análise e Suporte à Decisão;;;;;OBG;10
-IC;DUMMY;ICP102;Trabalhando com Grandes Volumes de Dados;;;;;OBG;10
-IC;DUMMY;ICP532;Mineração de Dados;SEG,QUA;10:00-12:00;;;OBG;10
+IC;BCC1;Adriana Vivacqua;ICP131;Programação de Computadores I;SEG,QUA;10:00-12:00;60;T,P;OBG;1
+IC;BCC1;Adriana Vivacqua;ICP145;Habilidades sociais para o trabalho;QUI;10:00-12:00;60;T;OBG;2
+IC;BCC2;Adriana Vivacqua;ICP145;Habilidades sociais para o trabalho;QUI;13:00-15:00;30;T;OBG;2
+IC;CMT1;Aloisio Pina;ICP532;Mineração de Dados;SEG,QUA;10:00-12:00;60;T;OBG;10
+IC;IFN,IQQ;Aloisio Pina;ICP121,MAW112;Computação I (SV),Introdução à Computação (SV);QUI;18:30-20:10,20:10-21:50;60;N/A;SVC;
+IC;BCC1;Amaury Cruz;ICP351;Modelagem Matemática e Computacional;SEG,QUA;08:00-10:00;60;T;OBG;5
+IC;EP1;Amaury Cruz;ICP114;Computação I (EP);SEG,SEX;13:00-15:00,10:00-12:00;60;N/A;SVC;
+IC;BCC2-CMT1;Anamaria Moreira;ICP133;Fundamentos de Sistemas de Computação;TER,QUI;08:00-10:00;30;T;OBG;1
+IC;EE1;Anamaria Moreira;ICP114;Computação I (EP);SEG,TER;08:00-10:00,10:00-12:00;60;N/A;SVC;
+IC;EN1;Angela Gonçalves;ICP114;Computação I (EP);TER,QUI;10:00-12:00;60;N/A;SVC;
+IC;IGA-IG1;Angela Gonçalves;ICP121;Computação I (SV);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;BCC1;Carla Delgado;ICP135;Projeto de Carreira;SEG,QUA;13:00-15:00;60;T;OBG;1
+IC;BCC1;Carla Delgado;ICP472;Metodologia da Pesquisa;QUA,SEX;10:00-12:00;60;T;OBG;7
+IC;BCC1;Carolina Marcelino;ICP362;Redes de Computadores I;QUA,SEX;10:00-12:00;60;T;OBG;6
+IC;BCC1;Carolina Marcelino;ICP011;Tóp. Esp. em Ciência de Dados I;PREENCHER MANUALMENTE;PREENCHER MANUALMENTE;30;;OPT;7
+IC;BCC1-CMT1-ASD1;Claudson Bornstein;ICP116;Estrutura de Dados;TER,QUI;13:00-15:00;60;T;OBG;3
+IC;EC2-EPT;Claudson Bornstein;ICP114;Computação I (EP);SEG;08:00-10:00,15:00-17:00;60;N/A;SVC;
+IC;ET1;Daniel Alfaro;ICP225;Computação II (EP);QUA,SEX;08:00-10:00;60;N/A;SVC;
+IC;EC2;Daniel Alfaro;ICP231;Cálculo Numérico (SV);TER,QUI;08:00-10:00;60;N/A;SVC;
+IC;BCC1;Daniel Bastos;ICP134;Números Inteiros e Criptografia;TER,QUI;08:00-10:00;60;T;OBG;1
+IC;BCC2-CMT1;Daniel Bastos;ICP134;Números Inteiros e Criptografia;TER,QUI;08:00-10:00;30;T;OBG;1
+IC;BCC2;Daniel Sadoc;ICP350;Modelagem e Avaliação de Desempenho;SEG,QUA;10:00-12:00;60;T;OBG;5
+IC;CMT1;Daniel Sadoc;ICP103;Análise de Risco;;;60;P;OBG;10
+IC;BCC1;Gabriel Pereira;ICP143;Projeto Prático;TER;13:00-15:00;60;T;OBG;2
+IC;BCC2-CMT1;Gabriel Pereira;ICP143;Projeto Prático;QUI;13:00-15:00;30;T;OBG;2
+IC;BCC1;Gabriel Pereira;ICP246;Arquitetura de Computadores e Sistemas Operacionais;TER,QUI;10:00-12:00;60;T;OBG;4
+IC;BCC1;Giseli Lopes;ICP141;Programação de Computadores II;QUA,SEX;08:00-10:00;60;T,P;OBG;2
+IC;BCC1-CMT1-ASD1;Giseli Lopes;ICP489;Banco de Dados I;QUA,SEX;08:00-10:00;60;T,P;OBG;5
+IC;BCC1;Hugo Musso;ICP123;Linguagens Formais;SEG,QUA;13:00-15:00;60;T;OBG;5
+IC;MAE-CMT1;Hugo Musso;ICP241;Computação II (SV);TER,QUI;08:00-10:00;60;N/A;SVC;
+IC;BCC1;Hugo Nobrega;ICP144;Matemática Discreta;TER,QUI;08:00-10:00;60;T;OBG;2
+IC;BCC2;Hugo Nobrega;ICP144;Matemática Discreta;TER,QUI;15:00-17:00;30;T;OBG;2
+IC;BCC1;João Carlos Pereira;ICP363;Introdução ao Aprendizado de Máquina;TER,QUI;13:00-15:00;60;T;OBG;6
+IC;BCC1;João Carlos Pereira;ICP370;Lógica e Computabilidade;QUA,SEX;08:00-10:00;60;T;OBG;6
+IC;BCC1;João Paixão;ICP136;Introdução ao Pensamento Dedutivo;SEG,QUA;08:00-10:00;60;T;OBG;1
+IC;BCC1;João Paixão;ICP248;Computação Científica e Análise de dados;QUA,SEX;10:00-12:00;60;T,P;OBG;4
+IC;BCC1;Jonice de Oliveira;ICP132;Processo de Software;TER,QUI;13:00-15:00;60;T,P;OBG;1
+IC;MAM-IQN;Jonice de Oliveira;MAW112;Introdução à Computação (SV);QUI;18:30-20:10,20:10-21:50;60;N/A;SVC;
+IC;EC1;Josefino Cabral;ICP114;Computação I (EP);SEG;08:00-10:00,13:00-15:00;60;N/A;SVC;
+IC;CMT2;Josefino Cabral;ICP121;Computação I (SV);QUI;10:00-12:00,13:00-15:00;60;N/A;SVC;
+IC;BCC2-CMT1;Juliana França;ICP132;Processo de Software;SEG,QUA;10:00-12:00;30;T,P;OBG;1
+IC;CMT1;Juliana França;ICP102;Trabalhando com Grandes Volumes de Dados;;;60;T;OBG;10
+IC;BCC1;Juliana Valério;ICP115;Álgebra Linear Algorítmica;SEG,QUA,SEX;13:00-15:00,13:00-15:00,8:00-10:00;60;T,T,P;OBG;3
+IC;CMT3;Juliana Valério;ICP121;Computação I (SV);TER,QUI;15:00-17:00;60;N/A;SVC;
+IC;EM1;Luziane Mendonça;ICP114;Computação I (EP);SEG;10:00-12:00,13:00-15:00;60;N/A;SVC;
+IC;EM2;Luziane Mendonça;ICP225;Computação II (EP);TER,QUI;10:00-12:00;60;N/A;SVC;
+IC;BCC1;Marcello Goulart;ICP238;Introdução a Computação Numérica;SEG;08:00-10:00;60;P;OBG;3
+IC;BCC2;Marcello Goulart;ICP238;Introdução a Computação Numérica;SEG;13:00-15:00;30;P;OBG;3
+IC;CMT1;Marcello Goulart;ICP121;Computação I (SV);QUI;10:00-12:00,13:00-15:00;60;N/A;SVC;
+IC;BCC1;Maria Helena Jardim;ICP365;Otimização;TER,QUI;10:00-12:00;60;T;OBG;6
+IC;EAM-MAA;Maria Helena Jardim;ICP231;Cálculo Numérico (SV);SEG,QUA;13:00-15:00;60;N/A;SVC;
+IC;BCC2;Maria Luiza Campos;ICP135;Projeto de Carreira;SEG,QUA;13:00-15:00;30;T;OBG;1
+IC;BCC1;Maria Luiza Campos;ICP249;Tecnologia e Sociedade	;TER,QUI;13:00-15:00;60;T;OBG;4
+IC;ET1-ER1-ENU;Mauro Rincon;ICP114;Computação I (EP);SEG,QUA;10:00-12:00;60;N/A;SVC;
+IC;EP1;Mauro Rincon;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;BCC1;Mitre Dourado;ICP368;Algoritmos e Grafos;TER,QUI;10:00-12:00;60;T;OBG;5
+IC;EE1;Mitre Dourado;ICP231;Cálculo Numérico (SV);QUA,SEX;08:00-10:00;60;N/A;SVC;
+IC;BCC1;Rafael Mello;ICP237;Introdução a Modelagem de Sistemas;TER,QUI;15:00-17:00;60;T,P;OBG;3
+IC;MEM;Rafael Mello;ICP121;Computação I (SV);TER,QUI;10:00-12:00;60;N/A;SVC;
+IC;BCC2-CMT1;Severino Collier;ICP136;Introdução ao Pensamento Dedutivo;SEG,QUA;10:00-12:00;30;T;OBG;1
+IC;EM2;Severino Collier;ICP114;Computação I (EP);SEG;10:00-12:00,13:00-15:00;60;N/A;SVC;
+IC;BCC1;Silvana Rossetto;ICP133;Fundamentos de Sistemas de Computação;TER,QUI;10:00-12:00;60;T;OBG;1
+IC;BCC1;Silvana Rossetto;ICP361;Programação Concorrente;TER,QUI;08:00-10:00;60;T,P;OBG;6
+IC;BCC2;Valéria Bastos;ICP131;Programação de Computadores I;SEG,QUA;10:00-12:00;30;T,P;OBG;1
+IC;BCC1;Valéria Bastos;ICP353;Computadores e Programação;TER,QUI;08:00-10:00;60;T;OBG;5
+IC;BCC2;Vinícius Gusmão;ICP350;Modelagem e Aval de Desempenho;SEG,QUA;10:00-12:00;60;T;OBG;7
+IC;BCC2;Vinícius Gusmão;ICP350;Modelagem e Aval de Desempenho;SEG,QUA;08:00-10:00;30;T;OBG;7
+IC;CMT1;Vivian Santos;ICP357;Data Warehousing no Sup. à Tomada de Decisão;SEG,QUA;13:00-15:00;60;T;OBG;10
+IC;MAA-BCC1;Vivian Santos;ICP478;Métodos Numéricos I;TER,QUI;08:00-10:00;60;N/A;SVC;
+IC;EE1;Alan Costa de Souza;ICP225;Computação II (EP);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;MAL;Alan Costa de Souza;MAW123;Matemática Finita;TER,QUI;15:00-17:00;60;N/A;SVC;
+IC;ER1;Diego Muguet;ICP225;Computação II (EP);QUA,SEX;08:00-10:00;60;N/A;SVC;
+IC;BCC1;Evandro Macedo;ICP473;Segurança da Informação;QUA,SEX;08:00-10:00;60;T;OBG;7
+IC;EM1;Francis Spiegel;ICP225;Computação II (EP);TER,QUI;10:00-12:00;60;N/A;SVC;
+IC;EN1;Francis Spiegel;ICP225;Computação II (EP);QUA,SEX;15:00-17:00;60;N/A;SVC;
+IC;EP1;Rafaela Brum;ICP225;Computação II (EP);SEG,QUA;08:00-10:00,13:00-15:00;60;N/A;SVC;
+IC;EN1-ENU;Rodrigo de Sapienza Luna;ICP231;Cálculo Numérico (SV);TER,QUI;15:00-17:00;60;N/A;SVC;
+IC;BCC1;Ronald Chiesse;ICP239;Programação Orientada a Objeto;TER,QUI;10:00-12:00;60;T,P;OBG;3
+IC;EPT-EP2-CMT1;Ronald Chiesse;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;EM1;Ronald Chiesse;ICP231;Cálculo Numérico (SV);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;ET1-ER1;Silas Lima;ICP231;Cálculo Numérico (SV);TER,QUI;15:00-17:00;60;N/A;SVC;
+IC;MAN;Silas Lima;MAW351;Informática Aplicada ao Ensino;TER;18:30-20:10;60;N/A;SVC;
+IC;MAA,NTA-BIO;Simone Ingrid Monteiro Gama;ICP121,ICP114;Computação I (SV),Computação I (EP);TER,QUI;08:00-10:00;60;N/A;SVC;
+IC;ENU,MEM;Simone Ingrid Monteiro Gama;ICP225,ICP241;Computação II (EP),Computação II (SV);TER,QUI;13:00-15:00;60;N/A;SVC;
+IC;EPT;Simone Ingrid Monteiro Gama;ICP225;Computação II (EP);SEG,QUA;10:00-12:00;60;N/A;SVC;
+IC;BCC1-CMT1;DUMMY;ICP142;Organização de Dados;TER;10:00-12:00;60;T;OBG;2
+IC;BCC1;DUMMY;ICP350;Modelagem e Avaliação de Desempenho;SEG,QUA;08:00-10:00;60;T;OBG;5
+IC;CMT1;DUMMY;CMT012;Introdução à Programação c/c++;;;60;T,P;OBG;10
+IC;CMT1;DUMMY;ICP101;Introdução à Análise e Suporte à Decisão;;;60;T;OBG;10

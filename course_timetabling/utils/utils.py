@@ -234,11 +234,13 @@ def treat_and_save_results(timeschedule: list, courses: dict):
             responsable_institute = courses[course_class_id]["responsable_institute"]
             course_type = courses[course_class_id]["course_type"]
             term = courses[course_class_id]["term"]
+            graduation_course = courses[course_class_id]["gratuation_course"]
+
 
             day = allocation[2]
             time = allocation[3]
 
-            result = [responsable_institute, professor, course_id, course_name, day, time, capacity, classroom_type, course_type, term]
+            result = [responsable_institute, graduation_course, professor, course_id, course_name, day, time, capacity, classroom_type, course_type, term]
 
             timeschedule_treated.append(result)
 

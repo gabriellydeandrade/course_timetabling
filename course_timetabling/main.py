@@ -90,7 +90,6 @@ class CourseTimetabling:
                             self.coefficients[professor][course][day][
                                 time
                             ] = settings.SERVICE_COURSE_COEFFICIENT_PP
-
                     elif course in qualified_courses_with_manual_allocation:
                         self.coefficients[professor][course][day][
                             time
