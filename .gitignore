@@ -209,6 +209,7 @@ pip-selfcheck.json
 
 token.json
 credentials.json
+*gurobi.lic
 .DS_STORE
 
 cache/*
