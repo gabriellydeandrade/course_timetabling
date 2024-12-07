@@ -4,6 +4,11 @@
 
 This project is a course timetabling system that uses a mathematical model to optimize the allocation of professors to courses. The optimization method is based on linear programming using the Gurobi solver. The case study is applied to the Institute of Computing at UFRJ, as part of my undergraduate thesis.
 
+> The latest result of the model, pointing to the main branch, can be viewed at the following URL: [https://course-timetabling-ufrj.streamlit.app](https://course-timetabling-ufrj.streamlit.app)
+
+### Phase 2: Allocate classrooms to courses
+This project is part 1 of 2. The second phase, which will be released soon, will focus on the allocation of classrooms. This phase will use the results of the current model to continue the optimization process.
+
 ### Method
 
 ```mermaid
@@ -108,4 +113,4 @@ course_timetabling/
 
 ## Mathematical Formulation
 
-See course_timetabling.ipynb
+See the [course_timetabling.ipynb](course_timetabling.ipynb) file
