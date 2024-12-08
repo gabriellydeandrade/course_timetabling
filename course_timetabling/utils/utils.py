@@ -47,18 +47,18 @@ def get_possible_schedules(courses: dict) -> Tuple[list, list]:
             - days (list): A list of unique days on which the courses are scheduled.
             - time (list): A list of unique times at which the courses are scheduled.
     """
-    days = []
-    times = []
+    unique_schedules = set()
 
     for _, course_details in courses.items():
         day = course_details["day"]
         time = course_details["time"]
+        unique_schedules.add((day, time))
 
+    days = []
+    times = []
+    for day, time in unique_schedules:
         days.append(day)
         times.append(time)
-
-    days = list(set(days))
-    times = list(set(times))
 
     return days, times
 
@@ -179,7 +179,7 @@ def get_courses_by_time(courses: dict, time: str) -> set:
     for course_id, details in courses.items():
         if type(details["time"]) == str:
             for course_time in details["time"].split(","):
-                if course_time == time:
+                if course_time and course_time in time:
                     result.append(course_id)
 
     return set(result)
@@ -201,7 +201,7 @@ def get_courses_by_day(courses: dict, day: str) -> set:
     for course_id, details in courses.items():
         if type(details["day"]) == str:
             for course_day in details["day"].split(","):
-                if course_day == day:
+                if course_day and course_day in day:
                     result.append(course_id)
 
     return set(result)
@@ -234,13 +234,13 @@ def treat_and_save_results(timeschedule: list, courses: dict):
             responsable_institute = courses[course_class_id]["responsable_institute"]
             course_type = courses[course_class_id]["course_type"]
             term = courses[course_class_id]["term"]
+            class_type = courses[course_class_id]["class_type"]
             graduation_course = courses[course_class_id]["gratuation_course"]
-
 
             day = allocation[2]
             time = allocation[3]
 
-            result = [responsable_institute, graduation_course, professor, course_id, course_name, day, time, capacity, classroom_type, course_type, term]
+            result = [responsable_institute, graduation_course, professor, course_id, course_name, day, time, capacity, classroom_type, course_type, term, class_type]
 
             timeschedule_treated.append(result)
 

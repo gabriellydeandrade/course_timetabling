@@ -16,6 +16,7 @@ df = pd.read_csv(
         "classroom_type",
         "course_type",
         "term",
+        "class_type"
     ],
 )
 
@@ -66,7 +67,6 @@ with st.container(border=True) as general:
         df_filter,
         column_config={
             "responsable_institute": "Instituto responsável",
-            "graduation_course": "Curso de oferta",
             "professor": "Docente",
             "course_id": "Código disciplina",
             "course_name": "Nome disciplina",
@@ -82,8 +82,10 @@ with st.container(border=True) as general:
             ),
             "capacity": "Vagas",
             "classroom_type": "Tipo de sala",
-            "course_type": "Tipo de disciplina",
             "term": "Período",
+            "class_type": "Tipo de turma",
+            "course_type": "Tipo de disciplina",
+            "graduation_course": "Curso de oferta"
         },
         hide_index=True,
         use_container_width=False,

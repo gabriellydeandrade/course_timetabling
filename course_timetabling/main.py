@@ -98,6 +98,10 @@ class CourseTimetabling:
                         self.coefficients[professor][course][day][
                             time
                         ] = settings.ZERO_COEFFICIENT
+                
+                #FIXME: somente o professor Gabriel pode lecionar a disciplina ICP143, não está claro
+                # o motivo dele não ser alocado uma vez que o coeficiente é 100 e isso aumentaria o valor
+                # final da função objetivo. O resultado hoje está para o DUMMY (coeficiente 0.0001)
 
                 self.variables[professor][course][day] = {}
                 self.variables[professor][course][day][time] = self.model.addVar(
@@ -220,11 +224,11 @@ class CourseTimetabling:
     def set_objective(self):
         self.model.setObjective(
             gp.quicksum(
-                self.variables[professor][course][day][time]
-                * self.coefficients[professor][course][day][time]
+                self.variables[professor][course][utils.get_course_schedule(self.courses, course)[0]][utils.get_course_schedule(self.courses, course)[1]]
+                * self.coefficients[professor][course][utils.get_course_schedule(self.courses, course)[0]][utils.get_course_schedule(self.courses, course)[1]]
                 for professor in self.professors
                 for course in self.courses.keys()
-                for day, time in [utils.get_course_schedule(self.courses, course)]
+                # for day, time in [utils.get_course_schedule(self.courses, course)]
             )
             - gp.quicksum(
                 settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]

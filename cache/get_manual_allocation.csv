@@ -1,3 +1,3 @@
-course_class_id,professor,course_id,course_name,gratuation_course,credits,course_type,day,time,capacity,responsable_institute,classroom_type,term
-OBG-BCC1-1,Adriana Vivacqua,ICP131,Programação de Computadores I,BCC1,4,OBG,"SEG,QUA",10:00-12:00,60,IC,"T,P",1
-OPT-BCC1-14,Carolina Marcelino,ICP011,Tóp. Esp. em Ciência de Dados I,BCC1,4,OPT,PREENCHER MANUALMENTE,PREENCHER MANUALMENTE,30,IC,,7
+course_class_id,professor,course_id,course_name,gratuation_course,credits,course_type,day,time,capacity,class_type,responsable_institute,classroom_type,term
+OBG-BCC1-1,Adriana Vivacqua,ICP131,Programação de Computadores I,BCC1,4,OBG,"SEG,QUA",10:00-12:00,60,Calouro,IC,"T,P",1
+OPT-BCC1-14,Carolina Marcelino,ICP011,Tóp. Esp. em Ciência de Dados I,BCC1,4,OPT,PREENCHER MANUALMENTE,PREENCHER MANUALMENTE,30,G,IC,,7
