@@ -19,3 +19,6 @@ ZERO_COEFFICIENT = config("ZERO_COEFFICIENT", default=0, cast=int)
 WEIGHT_FACTOR_PP = config("WEIGHT_FACTOR_PP", default=1000, cast=int)
 MIN_CREDITS_PERMANENT = config("MIN_CREDITS_PERMANENT", default=8, cast=int)
 MAX_CREDITS_SUBSTITUTE = config("MAX_CREDITS_SUBSTITUTE", default=12, cast=int)
+
+SVC_MATH_COURSES = config("SVC_MATH_COURSES", default=["ICP231", "MAW123", "ICP478"], cast=list)
+SVC_BASIC_COURSES = config("SVC_BASIC_COURSES", default=["ICP114", "ICP121", "MAW112"], cast=list)

@@ -1,8 +1,9 @@
+import settings
 from database.service_google_sheet import (
     get_required_courses,
     get_elective_courses,
     get_professors,
-    get_manual_allocation
+    get_manual_allocation,
 )
 from database.transform_data import (
     transform_courses_to_dict,
@@ -60,7 +61,9 @@ def get_professors_set() -> tuple[dict, dict, dict]:
         }
     }
 
-    # TODO adiciona expertise dos professores e serviço com a chamada treat_professors_expertise
+    for professor in professors_permanent_set:
+        if "CC" in professors_permanent_set[professor]["expertise"]:
+            professors_permanent_set[professor]["qualified_courses"] += settings.SVC_MATH_COURSES
 
     return professors_permanent_set, professors_substitute_set, professor_dummy
 

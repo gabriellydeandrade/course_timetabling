@@ -83,7 +83,11 @@ class CourseTimetabling:
                 if professor == settings.DUMMY_PROFESSOR_NAME:
                     EAPI = settings.DUMMY_COEFFICIENT
                 else:
-                    if self.courses[course]["course_type"] == "SVC":
+                    if (
+                        self.courses[course]["course_type"] == "SVC"
+                        and self.courses[course]["course_id"]
+                        in settings.SVC_BASIC_COURSES
+                    ):
                         if self.professors[professor]["category"] == "PS":
                             EAPI = settings.SERVICE_COURSE_COEFFICIENT_SP
                         else:

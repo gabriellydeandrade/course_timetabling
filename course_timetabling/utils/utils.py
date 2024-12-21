@@ -1,3 +1,4 @@
+import settings
 from typing import Tuple
 import csv
 
@@ -82,7 +83,7 @@ def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, s
 
 
 def get_all_course_class_id(courses: dict) -> set:
-    result = set([d for d in courses.keys() if courses[d]["course_type"] != "SVC"])
+    result = set([d for d in courses.keys() if courses[d]["course_id"] not in settings.SVC_BASIC_COURSES])
     return result
 
 
