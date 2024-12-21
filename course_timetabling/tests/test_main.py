@@ -5,6 +5,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from course_timetabling.settings import DUMMY_COEFFICIENT
 from main import CourseTimetabling
 
 
@@ -70,51 +71,51 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
 
         expected_coefficient = 10
 
-        self.assertIn("Prof1", self.timetabling.coefficients)
-        self.assertIn("OBG-BCC1-1", self.timetabling.coefficients["Prof1"])
+        self.assertIn("Prof1", self.timetabling.EAP_coefficient)
+        self.assertIn("OBG-BCC1-1", self.timetabling.EAP_coefficient["Prof1"])
 
-        for day, value in self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"].items():
+        for day, value in self.timetabling.EAP_coefficient["Prof1"]["OBG-BCC1-1"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["Prof1"]["OBG-BCC1-1"][day][time],
+                self.timetabling.EAP_coefficient["Prof1"]["OBG-BCC1-1"][day][time],
                 expected_coefficient,
             )
 
-        self.assertIn("OBG-BCC1-1", self.timetabling.variables["Prof1"])
+        self.assertIn("OBG-BCC1-1", self.timetabling.X_variables["Prof1"])
 
     def test_set_coefficient_to_zero_if_professor_is_not_qualified_for_class(self):
 
-        self.assertIn("Prof1", self.timetabling.coefficients)
-        self.assertIn("OBG-BCC1-2", self.timetabling.coefficients["Prof1"])
+        self.assertIn("Prof1", self.timetabling.EAP_coefficient)
+        self.assertIn("OBG-BCC1-2", self.timetabling.EAP_coefficient["Prof1"])
 
-        for day, value in self.timetabling.coefficients["Prof1"]["OBG-BCC1-2"].items():
+        for day, value in self.timetabling.EAP_coefficient["Prof1"]["OBG-BCC1-2"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["Prof1"]["OBG-BCC1-2"][day][time], 0
+                self.timetabling.EAP_coefficient["Prof1"]["OBG-BCC1-2"][day][time], 0
             )
 
-        self.assertIn("OBG-BCC1-2", self.timetabling.variables["Prof1"])
+        self.assertIn("OBG-BCC1-2", self.timetabling.X_variables["Prof1"])
 
     def test_set_coefficient_specific_if_professor_is_dummy(self):
 
-        self.assertIn("DUMMY", self.timetabling.coefficients)
-        self.assertIn("OBG-BCC1-1", self.timetabling.coefficients["DUMMY"])
-        self.assertIn("OBG-BCC1-2", self.timetabling.coefficients["DUMMY"])
+        self.assertIn("DUMMY", self.timetabling.EAP_coefficient)
+        self.assertIn("OBG-BCC1-1", self.timetabling.EAP_coefficient["DUMMY"])
+        self.assertIn("OBG-BCC1-2", self.timetabling.EAP_coefficient["DUMMY"])
 
-        for day, value in self.timetabling.coefficients["DUMMY"]["OBG-BCC1-1"].items():
+        for day, value in self.timetabling.EAP_coefficient["DUMMY"]["OBG-BCC1-1"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["DUMMY"]["OBG-BCC1-1"][day][time], 0.0001
+                self.timetabling.EAP_coefficient["DUMMY"]["OBG-BCC1-1"][day][time], DUMMY_COEFFICIENT
             )
 
-        for day, value in self.timetabling.coefficients["DUMMY"]["OBG-BCC1-2"].items():
+        for day, value in self.timetabling.EAP_coefficient["DUMMY"]["OBG-BCC1-2"].items():
             time = list(value.keys())[0]
             self.assertEqual(
-                self.timetabling.coefficients["DUMMY"]["OBG-BCC1-2"][day][time], 0.0001
+                self.timetabling.EAP_coefficient["DUMMY"]["OBG-BCC1-2"][day][time], DUMMY_COEFFICIENT
             )
 
-        self.assertIn("OBG-BCC1-1", self.timetabling.variables["DUMMY"])
-        self.assertIn("OBG-BCC1-2", self.timetabling.variables["DUMMY"])
+        self.assertIn("OBG-BCC1-1", self.timetabling.X_variables["DUMMY"])
+        self.assertIn("OBG-BCC1-2", self.timetabling.X_variables["DUMMY"])
 
 
 class TestAddCreditSlackVariables(unittest.TestCase):

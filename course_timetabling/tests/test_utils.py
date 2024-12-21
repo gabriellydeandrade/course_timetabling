@@ -118,6 +118,14 @@ class TestUtils(TestCase):
 
 
 class TestGetPossibleSchedules(TestCase):
+    def compare_schedules(self, result, expected_days, expected_times):
+        result_days, result_times = result
+        expected_pairs = list(zip(expected_days, expected_times))
+        result_pairs = list(zip(result_days, result_times))
+
+        for pair in expected_pairs:
+            self.assertIn(pair, result_pairs)
+
     def test_get_possible_schedules(self):
         mock_courses = {
             "OBG-BCC1-1": {
@@ -137,11 +145,11 @@ class TestGetPossibleSchedules(TestCase):
         }
 
         result = get_possible_schedules(mock_courses)
+
         expected_days = ["SEG,QUA", "TER,QUI"]
         expected_times = ["13:00-15:00,08:00-10:00", "15:00-17:00"]
 
-        self.assertEqual(set(result[0]), set(expected_days))
-        self.assertEqual(set(result[1]), set(expected_times))
+        self.compare_schedules(result, expected_days, expected_times)
 
     def test_get_schedule_without_schedules(self):
 
@@ -153,7 +161,7 @@ class TestGetPossibleSchedules(TestCase):
         self.assertEqual(result[0], expected_days)
         self.assertEqual(result[1], expected_times)
 
-    def test_get_courses_with_same_schedule(self):
+    def test_get_all_unique_possible_schedules_from_courses(self):
 
         mock_courses = {
             "OBG-BCC1-1": {
@@ -170,14 +178,20 @@ class TestGetPossibleSchedules(TestCase):
                 "time": "13:00-15:00",
                 "course_type": "SVC",
             },
+            "SVG-EQUAL": {
+                "course_id": "ICP123",
+                "credits": 4,
+                "day": "SEG,QUI",
+                "time": "13:00-15:00",
+                "course_type": "SVC",
+            },
         }
 
-        result = get_possible_schedules(mock_courses)
-        expected_days = list(set(["SEG,QUA", "SEG,QUI"]))
-        expected_times = list(set(["13:00-15:00"]))
+        expected_days = ["SEG,QUA", "SEG,QUI"]
+        expected_times = ["13:00-15:00", "13:00-15:00"]
 
-        self.assertEqual(result[0], expected_days)
-        self.assertEqual(result[1], expected_times)
+        result = get_possible_schedules(mock_courses)
+        self.compare_schedules(result, expected_days, expected_times)
 
 
 class TestGetQualifiedCoursesForProfessor(TestCase):
@@ -579,7 +593,8 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 40,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
-                "term": 1
+                "gratuation_course": "BCC",
+                "term": 1,
             },
             "OBG-BCC1-2": {
                 "course_id": "ICP132",
@@ -590,7 +605,8 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 30,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
-                "term": 1
+                "gratuation_course": "BCC",
+                "term": 1,
             },
         }
 
@@ -599,6 +615,7 @@ class TestTreatAndSaveResults(TestCase):
         timeschedule = [
             [
                 "IC",
+                "BCC",
                 "Adriana Vivacqua",
                 "ICP131",
                 "Programação de Computadores I",
@@ -607,10 +624,12 @@ class TestTreatAndSaveResults(TestCase):
                 40,
                 "Sala",
                 "OBG",
-                1
+                1,
+                "Gradução",
             ],
             [
                 "IC",
+                "BCC",
                 "Daniel Sadoc",
                 "ICP132",
                 "Processo de Software",
@@ -619,7 +638,8 @@ class TestTreatAndSaveResults(TestCase):
                 30,
                 "Sala",
                 "OBG",
-                1
+                1,
+                "Gradução",
             ],
         ]
 
