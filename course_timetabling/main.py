@@ -83,10 +83,9 @@ class CourseTimetabling:
                 if professor == settings.DUMMY_PROFESSOR_NAME:
                     EAPI = settings.DUMMY_COEFFICIENT
                 else:
-                    if (
-                        self.courses[course]["course_type"] == "SVC"
-                        and self.courses[course]["course_id"]
-                        in settings.SVC_BASIC_COURSES
+                    if self.courses[course]["course_type"] == "SVC" and any(
+                        cid in settings.SVC_BASIC_COURSES
+                        for cid in self.courses[course]["course_id"].split(",")
                     ):
                         if self.professors[professor]["category"] == "PS":
                             EAPI = settings.SERVICE_COURSE_COEFFICIENT_SP
@@ -155,7 +154,7 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                == settings.MIN_CREDITS_PERMANENT - self.slack_variables[professor]
+                >= settings.MIN_CREDITS_PERMANENT - self.slack_variables[professor]
             )
 
         # Hard constraints
@@ -201,31 +200,39 @@ class CourseTimetabling:
                 )
                 conflict_courses = common_courses.difference(exact_time_courses)
 
-                if professor == "Gabriel Pereira":
-                    print(common_courses)
-                # self.model.addConstr(
-                #     gp.quicksum(
-                #         self.X_variables[professor][course][day][time]
-                #         for course in exact_time_courses
-                #     )
-                #     <= 1
-                # )
+                self.model.addConstr(
+                    gp.quicksum(
+                        self.X_variables[professor][course][day][time]
+                        for course in exact_time_courses
+                    )
+                    <= 1
+                )
 
+                # Adiciona restrição para garantir que se uma variável for 1, as outras sejam 0
                 for course in exact_time_courses:
-                    self.model.addConstr(
-                        gp.quicksum(
-                            self.X_variables[professor][cc][
+                    for cc in conflict_courses:
+                        self.model.addConstr(
+                            self.X_variables[professor][course][day][time]
+                            + self.X_variables[professor][cc][
                                 utils.get_course_schedule(self.courses, cc)[0]
                             ][utils.get_course_schedule(self.courses, cc)[1]]
-                            for cc in conflict_courses
+                            <= 1
                         )
-                        + gp.quicksum(
-                            self.X_variables[professor][ec][day][time]
-                            for ec in exact_time_courses
-                        )
-                        # self.X_variables[professor][course][day][time]
-                        <= 1
-                    )
+                # for course in exact_time_courses:
+                #     self.model.addConstr(
+                #         gp.quicksum(
+                #             self.X_variables[professor][cc][
+                #                 utils.get_course_schedule(self.courses, cc)[0]
+                #             ][utils.get_course_schedule(self.courses, cc)[1]]
+                #             for cc in conflict_courses
+                #         )
+                #         + gp.quicksum(
+                #             self.X_variables[professor][ec][day][time]
+                #             for ec in exact_time_courses
+                #         )
+                #         # self.X_variables[professor][course][day][time]
+                #         <= 1
+                #     )
 
                 # self.model.addConstr(
                 #     gp.quicksum(
