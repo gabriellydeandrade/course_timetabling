@@ -116,6 +116,48 @@ class TestUtils(TestCase):
 
         self.assertEqual(result, expected_result)
 
+    def test_get_temp_gabriel(self):
+        mock_courses = {
+            "OBG-BCC2-CMT1-16": {
+                "course_id": "ICP143",
+                "credits": 2,
+                "day": "QUI",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-15": {
+                "course_id": "ICP143",
+                "credits": 2,
+                "day": "TER",
+                "time": "13:00-15:00",
+                "course_type": "OBG",
+            },
+            "OBG-BCC1-27": {
+                "course_id": "ICP246",
+                "credits": 4,
+                "day": "TER,QUI",
+                "time": "10:00-12:00",
+                "course_type": "OBG",
+            },
+            "SVC-CMT1-65": {
+                "course_id": "ICP121",
+                "credits": 4,
+                "day": "QUI",
+                "time": "10:00-12:00,13:00-15:00",
+                "course_type": "OBG",
+            }
+        }
+
+        course_days, course_times = get_possible_schedules(mock_courses)
+
+        for i in range(len(course_days)):
+            day = course_days[i]
+            time = course_times[i]
+            day_courses = get_courses_by_day(mock_courses, day)
+            time_courses = get_courses_by_time(mock_courses, time)
+            common_courses = day_courses.intersection(time_courses)
+            print(common_courses)
+
 
 class TestGetPossibleSchedules(TestCase):
     def compare_schedules(self, result, expected_days, expected_times):

@@ -162,6 +162,17 @@ def add_manual_allocation_courses(
 
     return courses_available
 
+def get_courses_by_exact_day_and_time(courses: dict, day: str, time: str) -> set:
+
+    result = []
+
+    for course_id, details in courses.items():
+        if details["day"] and details["day"] == day:
+            if details["time"] and details["time"] == time:
+                result.append(course_id)
+
+    return set(result)
+
 
 def get_courses_by_time(courses: dict, time: str) -> set:
     """
@@ -205,7 +216,8 @@ def get_courses_by_day(courses: dict, day: str) -> set:
                 if course_day and course_day in day:
                     result.append(course_id)
 
-    return set(result)
+    r = set(result)
+    return r
 
 
 def save_results_to_csv(data: list, filename: str) -> None:

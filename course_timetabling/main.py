@@ -191,18 +191,51 @@ class CourseTimetabling:
             for i in range(len(course_days)):
                 day = course_days[i]
                 time = course_times[i]
+
                 day_courses = utils.get_courses_by_day(self.courses, day)
                 time_courses = utils.get_courses_by_time(self.courses, time)
                 common_courses = day_courses.intersection(time_courses)
-                self.model.addConstr(
-                    gp.quicksum(
-                        self.X_variables[professor][course][
-                            utils.get_course_schedule(self.courses, course)[0]
-                        ][utils.get_course_schedule(self.courses, course)[1]]
-                        for course in common_courses
-                    )
-                    <= 1
+
+                exact_time_courses = utils.get_courses_by_exact_day_and_time(
+                    self.courses, day, time
                 )
+                conflict_courses = common_courses.difference(exact_time_courses)
+
+                if professor == "Gabriel Pereira":
+                    print(common_courses)
+                # self.model.addConstr(
+                #     gp.quicksum(
+                #         self.X_variables[professor][course][day][time]
+                #         for course in exact_time_courses
+                #     )
+                #     <= 1
+                # )
+
+                for course in exact_time_courses:
+                    self.model.addConstr(
+                        gp.quicksum(
+                            self.X_variables[professor][cc][
+                                utils.get_course_schedule(self.courses, cc)[0]
+                            ][utils.get_course_schedule(self.courses, cc)[1]]
+                            for cc in conflict_courses
+                        )
+                        + gp.quicksum(
+                            self.X_variables[professor][ec][day][time]
+                            for ec in exact_time_courses
+                        )
+                        # self.X_variables[professor][course][day][time]
+                        <= 1
+                    )
+
+                # self.model.addConstr(
+                #     gp.quicksum(
+                #         self.X_variables[professor][course][
+                #             utils.get_course_schedule(self.courses, course)[0]
+                #         ][utils.get_course_schedule(self.courses, course)[1]]
+                #         for course in common_courses
+                #     )
+                #     <= 1
+                # )
 
         # RNG4: Um professor não pode lecionar uma disciplina em que ele não esteja apto
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
@@ -237,7 +270,6 @@ class CourseTimetabling:
                 ][utils.get_course_schedule(self.courses, course)[1]]
                 for professor in self.professors
                 for course in self.courses.keys()
-                # for day, time in [utils.get_course_schedule(self.courses, course)]
             )
             - gp.quicksum(
                 settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]
