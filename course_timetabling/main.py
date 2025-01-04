@@ -25,9 +25,10 @@ class CourseTimetabling:
         self.substitute_professors = substitute_professors
         self.courses = courses
         self.manual_allocation = manual_allocation
-        self.coefficients = {}
-        self.variables = {}
-        self.slack_variables = {}
+        self.EAP_coefficient = {}
+        self.X_variables = {}
+        self.PP_slack_variables = {}
+        self.PS_slack_variables = {}
 
         self.env = self.init_environment()
         self.model = gp.Model(name="CourseTimetabling", env=self.env)
@@ -55,8 +56,8 @@ class CourseTimetabling:
             settings.ZERO_COEFFICIENT: The coefficient value for unqualified courses.
         """
         for professor in self.professors:
-            self.coefficients[professor] = {}
-            self.variables[professor] = {}
+            self.EAP_coefficient[professor] = {}
+            self.X_variables[professor] = {}
 
             qualified_courses = utils.get_qualified_courses_for_professor(
                 self.courses, self.professors, professor
@@ -68,39 +69,43 @@ class CourseTimetabling:
             )
 
             for course in self.courses.keys():
-                self.coefficients[professor][course] = {}
-                self.variables[professor][course] = {}
+                self.EAP_coefficient[professor][course] = {}
+                self.X_variables[professor][course] = {}
 
                 workload = utils.get_course_schedule(self.courses, course)
                 day, time = workload
 
-                self.coefficients[professor][course][day] = {}
+                self.EAP_coefficient[professor][course][day] = {}
+
+                EAPI = 0
+                EAPP = 0
+                EAPS = 0
 
                 if professor == settings.DUMMY_PROFESSOR_NAME:
-                    self.coefficients[professor][course][day][
-                        time
-                    ] = settings.DUMMY_COEFFICIENT
+                    EAPI = settings.DUMMY_COEFFICIENT
                 else:
-                    if self.courses[course]["course_type"] == "SVC":
+                    if self.courses[course]["course_type"] == "SVC" and any(
+                        cid in settings.SVC_BASIC_COURSES
+                        for cid in self.courses[course]["course_id"].split(",")
+                    ):
                         if self.professors[professor]["category"] == "PS":
-                            self.coefficients[professor][course][day][
-                                time
-                            ] = settings.SERVICE_COURSE_COEFFICIENT_SP
+                            EAPI = settings.SERVICE_COURSE_COEFFICIENT_SP
                         else:
-                            self.coefficients[professor][course][day][
-                                time
-                            ] = settings.SERVICE_COURSE_COEFFICIENT_PP
+                            EAPI = settings.SERVICE_COURSE_COEFFICIENT_PP
                     elif course in qualified_courses_with_manual_allocation:
-                        self.coefficients[professor][course][day][
-                            time
-                        ] = settings.DEFAULT_COEFFICIENT
+                        EAPI = settings.DEFAULT_COEFFICIENT
                     else:
-                        self.coefficients[professor][course][day][
-                            time
-                        ] = settings.ZERO_COEFFICIENT
+                        EAPI = settings.ZERO_COEFFICIENT
 
-                self.variables[professor][course][day] = {}
-                self.variables[professor][course][day][time] = self.model.addVar(
+                if EAPI:
+                    self.EAP_coefficient[professor][course][day][time] = (
+                        EAPI + EAPP + EAPS
+                    )
+                else:
+                    self.EAP_coefficient[professor][course][day][time] = 0
+
+                self.X_variables[professor][course][day] = {}
+                self.X_variables[professor][course][day][time] = self.model.addVar(
                     vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
                 )
 
@@ -117,44 +122,61 @@ class CourseTimetabling:
             model (gurobipy.Model): The optimization model to which the slack variables are added.
         """
         for professor in self.permanent_professors:
-            self.slack_variables[professor] = self.model.addVar(
+            self.PP_slack_variables[professor] = self.model.addVar(
                 vtype=GRB.INTEGER, name=f"PCB_{professor}"
+            )
+
+        for professor in self.substitute_professors:
+            self.PS_slack_variables[professor] = self.model.addVar(
+                vtype=GRB.INTEGER, name=f"PSB_{professor}"
             )
 
     def add_constraints(self):
         course_days, course_times = utils.get_possible_schedules(self.courses)
 
         # Manual
-        # RN1: Alocar manualmente os professores
+        # RNP1: Alocar manualmente os professores
         for course_class_id in self.manual_allocation.keys():
             professor = self.manual_allocation[course_class_id]["professor"]
             day = self.manual_allocation[course_class_id]["day"]
             time = self.manual_allocation[course_class_id]["time"]
 
             self.model.addConstr(
-                self.variables[professor][course_class_id][day][time] == 1
+                self.X_variables[professor][course_class_id][day][time] == 1
             )
 
         # Soft constraints
-        # RF1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
+        # RNG1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
         for professor in self.permanent_professors:
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][
+                    self.X_variables[professor][course][
                         utils.get_course_schedule(self.courses, course)[0]
                     ][utils.get_course_schedule(self.courses, course)[1]]
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                == settings.MIN_CREDITS_PERMANENT - self.slack_variables[professor]
+                == settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
             )
 
         # Hard constraints
-        # RN2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+
         for professor in self.substitute_professors:
+            # RNP3: Garante que o professor substituto pelo menos dê uma aula
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][
+                    self.X_variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    for course in self.courses.keys()
+                )
+                >= settings.MIN_CLASSES_SUBSTITUTE - self.PS_slack_variables[professor]
+            )
+
+            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+            self.model.addConstr(
+                gp.quicksum(
+                    self.X_variables[professor][course][
                         utils.get_course_schedule(self.courses, course)[0]
                     ][utils.get_course_schedule(self.courses, course)[1]]
                     * self.courses[course]["credits"]
@@ -163,39 +185,55 @@ class CourseTimetabling:
                 <= settings.MAX_CREDITS_SUBSTITUTE
             )
 
-        # RN3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
+        # RNG2: Uma disciplina de uma turma, deverá ser ministrada por um único professor
         for course in self.courses.keys():
             workload = utils.get_course_schedule(self.courses, course)
             day, time = workload
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][day][time]
+                    self.X_variables[professor][course][day][time]
                     for professor in self.professors
                 )
                 == 1
             )
 
-        # RN4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
+        # RNG3: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
         for professor in self.professors:
             if professor == settings.DUMMY_PROFESSOR_NAME:
                 continue
             for i in range(len(course_days)):
                 day = course_days[i]
                 time = course_times[i]
+
                 day_courses = utils.get_courses_by_day(self.courses, day)
                 time_courses = utils.get_courses_by_time(self.courses, time)
                 common_courses = day_courses.intersection(time_courses)
+
+                exact_time_courses = utils.get_courses_by_exact_day_and_time(
+                    self.courses, day, time
+                )
+                conflict_courses = common_courses.difference(exact_time_courses)
+
                 self.model.addConstr(
                     gp.quicksum(
-                        self.variables[professor][course][
-                            utils.get_course_schedule(self.courses, course)[0]
-                        ][utils.get_course_schedule(self.courses, course)[1]]
-                        for course in common_courses
+                        self.X_variables[professor][course][day][time]
+                        for course in exact_time_courses
                     )
                     <= 1
                 )
 
-        # RN5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+                # Adiciona restrição para garantir que se uma variável for 1, as outras sejam 0
+                for course in exact_time_courses:
+                    for cc in conflict_courses:
+                        self.model.addConstr(
+                            self.X_variables[professor][course][day][time]
+                            + self.X_variables[professor][cc][
+                                utils.get_course_schedule(self.courses, cc)[0]
+                            ][utils.get_course_schedule(self.courses, cc)[1]]
+                            <= 1
+                        )
+
+        # RNG4: Um professor não pode lecionar uma disciplina em que ele não esteja apto
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
         for professor in self.professors:
             all_courses = utils.get_all_course_class_id(self.courses)
@@ -209,7 +247,7 @@ class CourseTimetabling:
             unqualified_courses = courses_available.difference(qualified_courses)
             self.model.addConstr(
                 gp.quicksum(
-                    self.variables[professor][course][
+                    self.X_variables[professor][course][
                         utils.get_course_schedule(self.courses, course)[0]
                     ][utils.get_course_schedule(self.courses, course)[1]]
                     for course in unqualified_courses
@@ -220,15 +258,22 @@ class CourseTimetabling:
     def set_objective(self):
         self.model.setObjective(
             gp.quicksum(
-                self.variables[professor][course][day][time]
-                * self.coefficients[professor][course][day][time]
+                self.X_variables[professor][course][
+                    utils.get_course_schedule(self.courses, course)[0]
+                ][utils.get_course_schedule(self.courses, course)[1]]
+                * self.EAP_coefficient[professor][course][
+                    utils.get_course_schedule(self.courses, course)[0]
+                ][utils.get_course_schedule(self.courses, course)[1]]
                 for professor in self.professors
                 for course in self.courses.keys()
-                for day, time in [utils.get_course_schedule(self.courses, course)]
             )
             - gp.quicksum(
-                settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]
+                settings.WEIGHT_FACTOR_PP * self.PP_slack_variables[professor]
                 for professor in self.permanent_professors
+            )
+            - gp.quicksum(
+                settings.WEIGHT_FACTOR_PS * self.PS_slack_variables[professor]
+                for professor in self.substitute_professors
             ),
             GRB.MAXIMIZE,
         )

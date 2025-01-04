@@ -1,87 +1,87 @@
-course_class_id,course_id,course_name,gratuation_course,credits,day,time,course_type,capacity,responsable_institute,classroom_type,term
-OBG-BCC1-1,ICP131,Programação de Computadores I,BCC1,4,"SEG,QUA",10:00-12:00,OBG,60,IC,"T,P",1
-OBG-BCC1-2,ICP132,Processo de Software,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,IC,"T,P",1
-OBG-BCC1-3,ICP133,Fundamentos de Sistemas de Computação,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,IC,T,1
-OBG-BCC1-4,ICP134,Números Inteiros e Criptografia,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,IC,T,1
-OBG-BCC1-5,ICP135,Projeto de Carreira,BCC1,4,"SEG,QUA",13:00-15:00,OBG,60,IC,T,1
-OBG-BCC1-6,ICP136,Introdução ao Pensamento Dedutivo,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,IC,T,1
-OBG-BCC2-7,ICP131,Programação de Computadores I,BCC2,4,"SEG,QUA",10:00-12:00,OBG,30,IC,"T,P",1
-OBG-BCC2-CMT1-8,ICP132,Processo de Software,BCC2-CMT1,4,"SEG,QUA",10:00-12:00,OBG,30,IC,"T,P",1
-OBG-BCC2-CMT1-9,ICP133,Fundamentos de Sistemas de Computação,BCC2-CMT1,4,"TER,QUI",08:00-10:00,OBG,30,IC,T,1
-OBG-BCC2-CMT1-10,ICP134,Números Inteiros e Criptografia,BCC2-CMT1,4,"TER,QUI",08:00-10:00,OBG,30,IC,T,1
-OBG-BCC2-11,ICP135,Projeto de Carreira,BCC2,4,"SEG,QUA",13:00-15:00,OBG,30,IC,T,1
-OBG-BCC2-CMT1-12,ICP136,Introdução ao Pensamento Dedutivo,BCC2-CMT1,4,"SEG,QUA",10:00-12:00,OBG,30,IC,T,1
-OBG-BCC1-13,ICP141,Programação de Computadores II,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,IC,"T,P",2
-OBG-BCC1-CMT1-14,ICP142,Organização de Dados,BCC1-CMT1,2,TER,10:00-12:00,OBG,60,IC,T,2
-OBG-BCC1-15,ICP143,Projeto Prático,BCC1,2,TER,13:00-15:00,OBG,60,IC,T,2
-OBG-BCC2-CMT1-16,ICP143,Projeto Prático,BCC2-CMT1,2,QUI,13:00-15:00,OBG,30,IC,T,2
-OBG-BCC1-17,ICP144,Matemática Discreta,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,IC,T,2
-OBG-BCC2-18,ICP144,Matemática Discreta,BCC2,4,"TER,QUI",15:00-17:00,OBG,30,IC,T,2
-OBG-BCC1-19,ICP145,Habilidades sociais para o trabalho,BCC1,2,QUI,10:00-12:00,OBG,60,IC,T,2
-OBG-BCC2-20,ICP145,Habilidades sociais para o trabalho,BCC2,2,QUI,13:00-15:00,OBG,30,IC,T,2
-OBG-BCC1-21,ICP115,Álgebra Linear Algorítmica,BCC1,5,"SEG,QUA,SEX","13:00-15:00,13:00-15:00,8:00-10:00",OBG,60,IC,"T,T,P",3
-OBG-BCC1-CMT1-ASD1-22,ICP116,Estrutura de Dados,BCC1-CMT1-ASD1,4,"TER,QUI",13:00-15:00,OBG,60,IC,T,3
-OBG-BCC1-23,ICP237,Introdução a Modelagem de Sistemas,BCC1,4,"TER,QUI",15:00-17:00,OBG,60,IC,"T,P",3
-OBG-BCC1-24,ICP239,Programação Orientada a Objeto,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,IC,"T,P",3
-OBG-BCC1-25,ICP238,Introdução a Computação Numérica,BCC1,2,SEG,08:00-10:00,OBG,60,IC,P,3
-OBG-BCC2-26,ICP238,Introdução a Computação Numérica,BCC2,2,SEG,13:00-15:00,OBG,30,IC,P,3
-OBG-BCC1-27,ICP246,Arquitetura de Computadores e Sistemas Operacionais,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,IC,T,4
-OBG-BCC1-28,ICP248,Computação Científica e Análise de dados,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,IC,"T,P",4
-OBG-BCC1-29,ICP123,Linguagens Formais,BCC1,4,"SEG,QUA",13:00-15:00,OBG,60,IC,T,5
-OBG-BCC1-30,ICP350,Modelagem e Avaliação de Desempenho,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,IC,T,5
-OBG-BCC2-31,ICP350,Modelagem e Avaliação de Desempenho,BCC2,4,"SEG,QUA",10:00-12:00,OBG,60,IC,T,5
-OBG-BCC1-32,ICP351,Modelagem Matemática e Computacional,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,IC,T,5
-OBG-BCC1-33,ICP353,Computadores e Programação,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,IC,T,5
-OBG-BCC1-34,ICP368,Algoritmos e Grafos,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,IC,T,5
-OBG-BCC1-CMT1-ASD1-35,ICP489,Banco de Dados I,BCC1-CMT1-ASD1,4,"QUA,SEX",08:00-10:00,OBG,60,IC,"T,P",5
-OBG-BCC1-36,ICP362,Redes de Computadores I,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,IC,T,6
-OBG-BCC1-37,ICP361,Programação Concorrente,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,IC,"T,P",6
-OBG-BCC1-38,ICP363,Introdução ao Aprendizado de Máquina,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,IC,T,6
-OBG-BCC1-39,ICP365,Otimização,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,IC,T,6
-OBG-BCC1-40,ICP370,Lógica e Computabilidade,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,IC,T,6
-OBG-BCC1-41,ICP472,Metodologia da Pesquisa,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,IC,T,7
-OBG-BCC1-42,ICP473,Segurança da Informação,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,IC,T,7
-OBG-CMT1-43,CMT012,Introdução à Programação c/c++,CMT1,4,,,OBG,60,IC,"T,P",10
-OBG-CMT1-44,ICP101,Introdução à Análise e Suporte à Decisão,CMT1,4,,,OBG,60,IC,T,10
-OBG-CMT1-45,ICP102,Trabalhando com Grandes Volumes de Dados,CMT1,4,,,OBG,60,IC,T,10
-OBG-CMT1-46,ICP103,Análise de Risco,CMT1,4,,,OBG,60,IC,P,10
-OBG-CMT1-47,ICP532,Mineração de Dados,CMT1,4,"SEG,QUA",10:00-12:00,OBG,60,IC,T,10
-OBG-CMT1-48,ICP357,Data Warehousing no Sup. à Tomada de Decisão,CMT1,4,"SEG,QUA",13:00-15:00,OBG,60,IC,T,10
-OBG-BCC1-49,ICP249,Tecnologia e Sociedade	,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,IC,T,4
-SVC-EM1-50,ICP114,Computação I (EP),EM1,4,SEG,"10:00-12:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-EM2-51,ICP114,Computação I (EP),EM2,4,SEG,"10:00-12:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-EC1-52,ICP114,Computação I (EP),EC1,4,SEG,"08:00-10:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-EC2-EPT-53,ICP114,Computação I (EP),EC2-EPT,4,SEG,"08:00-10:00,15:00-17:00",SVC,60,IC,N/A,
-SVC-EN1-54,ICP114,Computação I (EP),EN1,4,"TER,QUI",10:00-12:00,SVC,60,IC,N/A,
-SVC-MEM-55,ICP121,Computação I (SV),MEM,4,"TER,QUI",10:00-12:00,SVC,60,IC,N/A,
-SVC-EE1-56,ICP114,Computação I (EP),EE1,4,"SEG,TER","08:00-10:00,10:00-12:00",SVC,60,IC,N/A,
-SVC-EP1-57,ICP114,Computação I (EP),EP1,4,"SEG,SEX","13:00-15:00,10:00-12:00",SVC,60,IC,N/A,
-SVC-ET1-ER1-ENU-58,ICP114,Computação I (EP),ET1-ER1-ENU,4,"SEG,QUA",10:00-12:00,SVC,60,IC,N/A,
-SVC-MAA-NTA-BIO-62,"ICP121,ICP114","Computação I (SV),Computação I (EP)","MAA,NTA-BIO",4,"TER,QUI",08:00-10:00,SVC,60,IC,N/A,
-SVC-MAE-CMT1-61,ICP241,Computação II (SV),MAE-CMT1,4,"TER,QUI",08:00-10:00,SVC,60,IC,N/A,
-SVC-IGA-IG1-62,ICP121,Computação I (SV),IGA-IG1,4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-IFN-IQQ-66,"ICP121,MAW112","Computação I (SV),Introdução à Computação (SV)","IFN,IQQ",4,QUI,"18:30-20:10,20:10-21:50",SVC,60,IC,N/A,
-SVC-CMT1-65,ICP121,Computação I (SV),CMT1,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-CMT2-66,ICP121,Computação I (SV),CMT2,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-CMT3-67,ICP121,Computação I (SV),CMT3,3,"TER,QUI",15:00-17:00,SVC,60,IC,N/A,
-SVC-EM1-68,ICP225,Computação II (EP),EM1,4,"TER,QUI",10:00-12:00,SVC,60,IC,N/A,
-SVC-EM2-69,ICP225,Computação II (EP),EM2,4,"TER,QUI",10:00-12:00,SVC,60,IC,N/A,
-SVC-EE1-70,ICP225,Computação II (EP),EE1,4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-ENU-MEM-73,"ICP225,ICP241","Computação II (EP),Computação II (SV)","ENU,MEM",4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-EPT-73,ICP225,Computação II (EP),EPT,4,"SEG,QUA",10:00-12:00,SVC,60,IC,N/A,
-SVC-ET1-74,ICP225,Computação II (EP),ET1,4,"QUA,SEX",08:00-10:00,SVC,60,IC,N/A,
-SVC-ER1-75,ICP225,Computação II (EP),ER1,4,"QUA,SEX",08:00-10:00,SVC,60,IC,N/A,
-SVC-EP1-76,ICP225,Computação II (EP),EP1,4,"SEG,QUA","08:00-10:00,13:00-15:00",SVC,60,IC,N/A,
-SVC-EN1-77,ICP225,Computação II (EP),EN1,4,"QUA,SEX",15:00-17:00,SVC,60,IC,N/A,
-SVC-EC2-78,ICP231,Cálculo Numérico (SV),EC2,4,"TER,QUI",08:00-10:00,SVC,60,IC,N/A,
-SVC-EAM-MAA-79,ICP231,Cálculo Numérico (SV),EAM-MAA,4,"SEG,QUA",13:00-15:00,SVC,60,IC,N/A,
-SVC-EP1-80,ICP231,Cálculo Numérico (SV),EP1,4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-EN1-ENU-81,ICP231,Cálculo Numérico (SV),EN1-ENU,4,"TER,QUI",15:00-17:00,SVC,60,IC,N/A,
-SVC-EPT-EP2-CMT1-82,ICP231,Cálculo Numérico (SV),EPT-EP2-CMT1,4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-EE1-83,ICP231,Cálculo Numérico (SV),EE1,4,"QUA,SEX",08:00-10:00,SVC,60,IC,N/A,
-SVC-EM1-84,ICP231,Cálculo Numérico (SV),EM1,4,"TER,QUI",13:00-15:00,SVC,60,IC,N/A,
-SVC-ET1-ER1-85,ICP231,Cálculo Numérico (SV),ET1-ER1,4,"TER,QUI",15:00-17:00,SVC,60,IC,N/A,
-SVC-MAL-86,MAW123,Matemática Finita,MAL,4,"TER,QUI",15:00-17:00,SVC,60,IC,N/A,
-SVC-MAN-87,MAW351,Informática Aplicada ao Ensino,MAN,4,TER,18:30-20:10,SVC,60,IC,N/A,
-SVC-MAM-IQN-88,MAW112,Introdução à Computação (SV),MAM-IQN,4,QUI,"18:30-20:10,20:10-21:50",SVC,60,IC,N/A,
-SVC-MAA-BCC1-89,ICP478,Métodos Numéricos I,MAA-BCC1,4,"TER,QUI",08:00-10:00,SVC,60,IC,N/A,
+course_class_id,course_id,course_name,gratuation_course,credits,day,time,course_type,capacity,class_type,responsable_institute,classroom_type,term
+OBG-BCC1-1,ICP131,Programação de Computadores I,BCC1,4,"SEG,QUA",10:00-12:00,OBG,60,Calouro,IC,"T,P",1
+OBG-BCC1-2,ICP132,Processo de Software,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,Calouro,IC,"T,P",1
+OBG-BCC1-3,ICP133,Fundamentos de Sistemas de Computação,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Calouro,IC,T,1
+OBG-BCC1-4,ICP134,Números Inteiros e Criptografia,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,Calouro,IC,T,1
+OBG-BCC1-5,ICP135,Projeto de Carreira,BCC1,4,"SEG,QUA",13:00-15:00,OBG,60,Calouro,IC,T,1
+OBG-BCC1-6,ICP136,Introdução ao Pensamento Dedutivo,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,Calouro,IC,T,1
+OBG-BCC2-7,ICP131,Programação de Computadores I,BCC2,4,"SEG,QUA",10:00-12:00,OBG,30,Veterano,IC,"T,P",1
+OBG-BCC2-CMT1-8,ICP132,Processo de Software,BCC2-CMT1,4,"SEG,QUA",10:00-12:00,OBG,30,Veterano,IC,"T,P",1
+OBG-BCC2-CMT1-9,ICP133,Fundamentos de Sistemas de Computação,BCC2-CMT1,4,"TER,QUI",08:00-10:00,OBG,30,Veterano,IC,T,1
+OBG-BCC2-CMT1-10,ICP134,Números Inteiros e Criptografia,BCC2-CMT1,4,"TER,QUI",08:00-10:00,OBG,30,Veterano,IC,T,1
+OBG-BCC2-11,ICP135,Projeto de Carreira,BCC2,4,"SEG,QUA",13:00-15:00,OBG,30,Veterano,IC,T,1
+OBG-BCC2-CMT1-12,ICP136,Introdução ao Pensamento Dedutivo,BCC2-CMT1,4,"SEG,QUA",10:00-12:00,OBG,30,Veterano,IC,T,1
+OBG-BCC1-13,ICP141,Programação de Computadores II,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,Regular,IC,"T,P",2
+OBG-BCC1-CMT1-14,ICP142,Organização de Dados,BCC1-CMT1,2,TER,10:00-12:00,OBG,60,Regular,IC,T,2
+OBG-BCC1-15,ICP143,Projeto Prático,BCC1,2,TER,13:00-15:00,OBG,60,Regular,IC,T,2
+OBG-BCC2-CMT1-16,ICP143,Projeto Prático,BCC2-CMT1,2,QUI,13:00-15:00,OBG,30,Extra,IC,T,2
+OBG-BCC1-17,ICP144,Matemática Discreta,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,Calouro,IC,T,2
+OBG-BCC2-18,ICP144,Matemática Discreta,BCC2,4,"TER,QUI",15:00-17:00,OBG,30,Extra,IC,T,2
+OBG-BCC1-19,ICP145,Habilidades sociais para o trabalho,BCC1,2,QUI,10:00-12:00,OBG,60,Calouro,IC,T,2
+OBG-BCC2-20,ICP145,Habilidades sociais para o trabalho,BCC2,2,QUI,13:00-15:00,OBG,30,Extra,IC,T,2
+OBG-BCC1-21,ICP115,Álgebra Linear Algorítmica,BCC1,5,"SEG,QUA,SEX","13:00-15:00,13:00-15:00,8:00-10:00",OBG,60,Regular,IC,"T,T,P",3
+OBG-BCC1-CMT1-ASD1-22,ICP116,Estrutura de Dados,BCC1-CMT1-ASD1,4,"TER,QUI",13:00-15:00,OBG,60,Regular,IC,T,3
+OBG-BCC1-23,ICP237,Introdução a Modelagem de Sistemas,BCC1,4,"TER,QUI",15:00-17:00,OBG,60,Regular,IC,"T,P",3
+OBG-BCC1-24,ICP239,Programação Orientada a Objeto,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Regular,IC,"T,P",3
+OBG-BCC1-25,ICP238,Introdução a Computação Numérica,BCC1,2,SEG,08:00-10:00,OBG,60,Calouro,IC,P,3
+OBG-BCC2-26,ICP238,Introdução a Computação Numérica,BCC2,2,SEG,13:00-15:00,OBG,30,Extra,IC,P,3
+OBG-BCC1-27,ICP246,Arquitetura de Computadores e Sistemas Operacionais,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Regular,IC,T,4
+OBG-BCC1-28,ICP248,Computação Científica e Análise de dados,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,Regular,IC,"T,P",4
+OBG-BCC1-29,ICP123,Linguagens Formais,BCC1,4,"SEG,QUA",13:00-15:00,OBG,60,Regular,IC,T,5
+OBG-BCC1-30,ICP350,Modelagem e Avaliação de Desempenho,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,Regular,IC,T,5
+OBG-BCC2-31,ICP350,Modelagem e Avaliação de Desempenho,BCC2,4,"SEG,QUA",10:00-12:00,OBG,60,Extra,IC,T,5
+OBG-BCC1-32,ICP351,Modelagem Matemática e Computacional,BCC1,4,"SEG,QUA",08:00-10:00,OBG,60,Regular,IC,T,5
+OBG-BCC1-33,ICP353,Computadores e Programação,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,Regular,IC,T,5
+OBG-BCC1-34,ICP368,Algoritmos e Grafos,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Regular,IC,T,5
+OBG-BCC1-CMT1-ASD1-35,ICP489,Banco de Dados I,BCC1-CMT1-ASD1,4,"QUA,SEX",08:00-10:00,OBG,60,Regular,IC,"T,P",5
+OBG-BCC1-36,ICP362,Redes de Computadores I,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,Regular,IC,T,6
+OBG-BCC1-37,ICP361,Programação Concorrente,BCC1,4,"TER,QUI",08:00-10:00,OBG,60,Regular,IC,"T,P",6
+OBG-BCC1-38,ICP363,Introdução ao Aprendizado de Máquina,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,Regular,IC,T,6
+OBG-BCC1-39,ICP365,Otimização,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Regular,IC,T,6
+OBG-BCC1-40,ICP370,Lógica e Computabilidade,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,Regular,IC,T,6
+OBG-BCC1-41,ICP472,Metodologia da Pesquisa,BCC1,4,"QUA,SEX",10:00-12:00,OBG,60,Regular,IC,T,7
+OBG-BCC1-42,ICP473,Segurança da Informação,BCC1,4,"QUA,SEX",08:00-10:00,OBG,60,Regular,IC,T,7
+OBG-CMT1-43,CMT012,Introdução à Programação c/c++,CMT1,4,,,OBG,60,Regular,IC,"T,P",10
+OBG-CMT1-44,ICP101,Introdução à Análise e Suporte à Decisão,CMT1,4,,,OBG,60,Regular,IC,T,10
+OBG-CMT1-45,ICP102,Trabalhando com Grandes Volumes de Dados,CMT1,4,,,OBG,60,Regular,IC,T,10
+OBG-CMT1-46,ICP103,Análise de Risco,CMT1,4,,,OBG,60,Regular,IC,P,10
+OBG-CMT1-47,ICP532,Mineração de Dados,CMT1,4,"SEG,QUA",10:00-12:00,OBG,60,Regular,IC,T,10
+OBG-CMT1-48,ICP357,Data Warehousing no Sup. à Tomada de Decisão,CMT1,4,"SEG,QUA",13:00-15:00,OBG,60,Regular,IC,T,10
+OBG-BCC1-49,ICP249,Tecnologia e Sociedade	,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,Regular,IC,T,4
+SVC-EM1-50,ICP114,Computação I (EP),EM1,4,SEG,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-EM2-51,ICP114,Computação I (EP),EM2,4,SEG,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-EC1-52,ICP114,Computação I (EP),EC1,4,SEG,"08:00-10:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-EC2-EPT-53,ICP114,Computação I (EP),EC2-EPT,4,SEG,"08:00-10:00,15:00-17:00",SVC,60,Curso externo,IC,N/A,
+SVC-EN1-54,ICP114,Computação I (EP),EN1,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-MEM-55,ICP121,Computação I (SV),MEM,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-EE1-56,ICP114,Computação I (EP),EE1,4,"SEG,TER","08:00-10:00,10:00-12:00",SVC,60,Curso externo,IC,N/A,
+SVC-EP1-57,ICP114,Computação I (EP),EP1,4,"SEG,SEX","13:00-15:00,10:00-12:00",SVC,60,Curso externo,IC,N/A,
+SVC-ET1-ER1-ENU-58,ICP114,Computação I (EP),ET1-ER1-ENU,4,"SEG,QUA",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-MAA-NTA-BIO-62,"ICP121,ICP114","Computação I (SV),Computação I (EP)","MAA,NTA-BIO",4,"TER,QUI",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-MAE-CMT1-61,ICP241,Computação II (SV),MAE-CMT1,4,"TER,QUI",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-IGA-IG1-62,ICP121,Computação I (SV),IGA-IG1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-IFN-IQQ-66,"ICP121,MAW112","Computação I (SV),Introdução à Computação (SV)","IFN,IQQ",4,QUI,"18:30-20:10,20:10-21:50",SVC,60,Curso externo,IC,N/A,
+SVC-CMT1-65,ICP121,Computação I (SV),CMT1,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-CMT2-66,ICP121,Computação I (SV),CMT2,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-CMT3-67,ICP121,Computação I (SV),CMT3,3,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-EM1-68,ICP225,Computação II (EP),EM1,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-EM2-69,ICP225,Computação II (EP),EM2,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-EE1-70,ICP225,Computação II (EP),EE1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-ENU-MEM-73,"ICP225,ICP241","Computação II (EP),Computação II (SV)","ENU,MEM",4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-EPT-73,ICP225,Computação II (EP),EPT,4,"SEG,QUA",10:00-12:00,SVC,60,Curso externo,IC,N/A,
+SVC-ET1-74,ICP225,Computação II (EP),ET1,4,"QUA,SEX",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-ER1-75,ICP225,Computação II (EP),ER1,4,"QUA,SEX",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-EP1-76,ICP225,Computação II (EP),EP1,4,"SEG,QUA","08:00-10:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
+SVC-EN1-77,ICP225,Computação II (EP),EN1,4,"QUA,SEX",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-EC2-78,ICP231,Cálculo Numérico (SV),EC2,4,"TER,QUI",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-EAM-MAA-79,ICP231,Cálculo Numérico (SV),EAM-MAA,4,"SEG,QUA",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-EP1-80,ICP231,Cálculo Numérico (SV),EP1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-EN1-ENU-81,ICP231,Cálculo Numérico (SV),EN1-ENU,4,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-EPT-EP2-CMT1-82,ICP231,Cálculo Numérico (SV),EPT-EP2-CMT1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-EE1-83,ICP231,Cálculo Numérico (SV),EE1,4,"QUA,SEX",08:00-10:00,SVC,60,Curso externo,IC,N/A,
+SVC-EM1-84,ICP231,Cálculo Numérico (SV),EM1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,
+SVC-ET1-ER1-85,ICP231,Cálculo Numérico (SV),ET1-ER1,4,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-MAL-86,MAW123,Matemática Finita,MAL,4,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-MAN-87,MAW351,Informática Aplicada ao Ensino,MAN,4,TER,18:30-20:10,SVC,60,Curso externo,IC,N/A,
+SVC-MAM-IQN-88,MAW112,Introdução à Computação (SV),MAM-IQN,4,QUI,"18:30-20:10,20:10-21:50",SVC,60,Curso externo,IC,N/A,
+SVC-MAA-BCC1-89,ICP478,Métodos Numéricos I,MAA-BCC1,4,"TER,QUI",08:00-10:00,SVC,60,Curso externo,IC,N/A,

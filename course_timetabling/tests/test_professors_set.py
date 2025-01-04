@@ -1,4 +1,4 @@
-from unittest import TestCase, main, skip
+from unittest import TestCase, main
 from unittest.mock import patch
 import sys
 import os
@@ -9,22 +9,26 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
 
+
 def mock_decorator(*args, **kwargs):
     """Decorate by doing nothing."""
+
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             return f(*args, **kwargs)
+
         return decorated_function
+
     return decorator
 
-patch('cache_pandas.cache_to_csv', mock_decorator).start()
+
+patch("cache_pandas.cache_to_csv", mock_decorator).start()
 
 from database.construct_sets import get_professors_set
 from database.service_google_sheet import get_professors
 from database.transform_data import (
     transform_professors_to_dict,
-    treat_professors_expertise,
 )
 
 import pandas as pd
@@ -150,24 +154,6 @@ class TestTransformProfessors(TestCase):
                 "category": "PP",
             },
         }
-
-        self.assertDictEqual(result, expected_result)
-
-    @skip("Implementar após chamada com disciplinas eletivas")
-    def test_treat_permanent_professors_with_expertise(self):
-        permanent_professors = pd.DataFrame(
-            {
-                "qualified_courses": ["ICP145,ICP616", ""],
-                "expertise": ["ED,ES,H", "ED,CD"],
-                "category": ["PP", "PP"],
-            },
-            index=["Adriana Vivacqua", "Daniel Sadoc"],
-        )
-        permanent_professors.index.name = "professor"
-
-        result = treat_professors_expertise(permanent_professors, [], "permanent")
-
-        expected_result = {}
 
         self.assertDictEqual(result, expected_result)
 

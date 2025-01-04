@@ -1,6 +1,6 @@
 professor,qualified_courses,expertise,category
-Adriana Vivacqua,"ICP145,ICP616,ICP142","ED,ES,H",PP
-Aloisio Pina,ICP532,"CD,TC",PP
+Adriana Vivacqua,"ICP145,ICP616,ICP142,ICP472","ED,ES,H",PP
+Aloisio Pina,"ICP532,ICP225,ICP241","CD,TC",PP
 Amaury Cruz,"ICP351,ICP231,ICP478",CC,PP
 Anamaria Moreira,ICP133,"ES,TC",PP
 Angela Gonçalves,ICP231,CC,PP
@@ -23,7 +23,7 @@ Juliana Valério,"ICP115,ICP136",CC,PP
 Luziane Mendonça,"ICP231,ICP365",CC,PP
 Marcello Goulart,"ICP238,ICP478",CC,PP
 Maria Helena Jardim,"ICP231,ICP365,MAW351,ICP231",CC,PP
-Maria Luiza Campos,"ICP135,ICP030,ICP603,ICP357,ICP249","ED,ES,H",PP
+Maria Luiza Campos,"ICP135,ICP030,ICP603,ICP357,ICP249,ICP145","ED,ES,H",PP
 Mauro Rincon,"ICP014,ICP231",CC,PP
 Mitre Dourado,"ICP368,ICP123",TC,PP
 Rafael Mello,ICP237,ES,PP

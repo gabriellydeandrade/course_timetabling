@@ -1,3 +1,4 @@
+import settings
 from typing import Tuple
 import csv
 
@@ -25,12 +26,16 @@ def get_qualified_courses_for_professor(
     else:
         try:
             qualified_courses = professors_set[professor]["qualified_courses"]
+            qualified_courses = qualified_courses + settings.SVC_BASIC_COURSES
         except KeyError:
             print(f"Professor {professor} not found in the list of discipline profiles")
             return set()
 
         for course_class_id in courses_set.keys():
-            if courses_set[course_class_id]["course_id"] in qualified_courses:
+            if any(
+                cid in qualified_courses
+                for cid in courses_set[course_class_id]["course_id"].split(",")
+            ):
                 qualified_course_class_id.append(course_class_id)
 
     return set(qualified_course_class_id)
@@ -47,18 +52,18 @@ def get_possible_schedules(courses: dict) -> Tuple[list, list]:
             - days (list): A list of unique days on which the courses are scheduled.
             - time (list): A list of unique times at which the courses are scheduled.
     """
-    days = []
-    times = []
+    unique_schedules = set()
 
     for _, course_details in courses.items():
         day = course_details["day"]
         time = course_details["time"]
+        unique_schedules.add((day, time))
 
+    days = []
+    times = []
+    for day, time in unique_schedules:
         days.append(day)
         times.append(time)
-
-    days = list(set(days))
-    times = list(set(times))
 
     return days, times
 
@@ -82,7 +87,7 @@ def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, s
 
 
 def get_all_course_class_id(courses: dict) -> set:
-    result = set([d for d in courses.keys() if courses[d]["course_type"] != "SVC"])
+    result = set([d for d in courses.keys()])
     return result
 
 
@@ -162,6 +167,18 @@ def add_manual_allocation_courses(
     return courses_available
 
 
+def get_courses_by_exact_day_and_time(courses: dict, day: str, time: str) -> set:
+
+    result = []
+
+    for course_id, details in courses.items():
+        if details["day"] and details["day"] == day:
+            if details["time"] and details["time"] == time:
+                result.append(course_id)
+
+    return set(result)
+
+
 def get_courses_by_time(courses: dict, time: str) -> set:
     """
     Returns a set of courses that have classes at the specified time.
@@ -177,9 +194,9 @@ def get_courses_by_time(courses: dict, time: str) -> set:
     result = []
 
     for course_id, details in courses.items():
-        if type(details["time"]) == str:
+        if time and details["time"]:
             for course_time in details["time"].split(","):
-                if course_time == time:
+                if course_time and course_time in time:
                     result.append(course_id)
 
     return set(result)
@@ -199,16 +216,20 @@ def get_courses_by_day(courses: dict, day: str) -> set:
     result = []
 
     for course_id, details in courses.items():
-        if type(details["day"]) == str:
+        if day and details["day"]:
             for course_day in details["day"].split(","):
-                if course_day == day:
+                if course_day and course_day in day:
                     result.append(course_id)
 
-    return set(result)
+    r = set(result)
+    return r
+
 
 def save_results_to_csv(data: list, filename: str) -> None:
     with open(filename, "w") as file:
-        spamwriter = csv.writer(file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        spamwriter = csv.writer(
+            file, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL
+        )
         for line in data:
             spamwriter.writerow(line)
 
@@ -216,13 +237,16 @@ def save_results_to_csv(data: list, filename: str) -> None:
 def treat_and_save_results(timeschedule: list, courses: dict):
     timeschedule_treated = []
     pcb_professors = []
+    psb_professors = []
 
     for schedule in timeschedule:
         schedule, value = schedule.split("/")
         allocation = schedule.split("_")
 
         if "PCB" in allocation:
-            pcb_professors.append(allocation[1:]+[float(value)])
+            pcb_professors.append(allocation[1:] + [float(value)])
+        elif "PSB" in allocation:
+            psb_professors.append(allocation[1:] + [float(value)])
         else:
             professor = allocation[0]
 
@@ -234,17 +258,35 @@ def treat_and_save_results(timeschedule: list, courses: dict):
             responsable_institute = courses[course_class_id]["responsable_institute"]
             course_type = courses[course_class_id]["course_type"]
             term = courses[course_class_id]["term"]
+            class_type = courses[course_class_id]["class_type"]
             graduation_course = courses[course_class_id]["gratuation_course"]
-
 
             day = allocation[2]
             time = allocation[3]
 
-            result = [responsable_institute, graduation_course, professor, course_id, course_name, day, time, capacity, classroom_type, course_type, term]
+            result = [
+                responsable_institute,
+                graduation_course,
+                professor,
+                course_id,
+                course_name,
+                day,
+                time,
+                capacity,
+                classroom_type,
+                course_type,
+                term,
+                class_type,
+            ]
 
             timeschedule_treated.append(result)
 
-    save_results_to_csv(timeschedule_treated, "course_timetabling/results/timeschedule.csv")
+    save_results_to_csv(
+        timeschedule_treated, "course_timetabling/results/timeschedule.csv"
+    )
     save_results_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
-    
+    save_results_to_csv(
+        psb_professors, "course_timetabling/results/psb_professors.csv"
+    )
+
     return timeschedule_treated, pcb_professors
