@@ -26,12 +26,16 @@ def get_qualified_courses_for_professor(
     else:
         try:
             qualified_courses = professors_set[professor]["qualified_courses"]
+            qualified_courses = qualified_courses + settings.SVC_BASIC_COURSES
         except KeyError:
             print(f"Professor {professor} not found in the list of discipline profiles")
             return set()
 
         for course_class_id in courses_set.keys():
-            if courses_set[course_class_id]["course_id"] in qualified_courses:
+            if any(
+                cid in qualified_courses
+                for cid in courses_set[course_class_id]["course_id"].split(",")
+            ):
                 qualified_course_class_id.append(course_class_id)
 
     return set(qualified_course_class_id)
@@ -83,13 +87,7 @@ def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, s
 
 
 def get_all_course_class_id(courses: dict) -> set:
-    result = set(
-        [
-            d
-            for d in courses.keys()
-            if courses[d]["course_id"] not in settings.SVC_BASIC_COURSES
-        ]
-    )
+    result = set([d for d in courses.keys()])
     return result
 
 
@@ -239,7 +237,7 @@ def save_results_to_csv(data: list, filename: str) -> None:
 def treat_and_save_results(timeschedule: list, courses: dict):
     timeschedule_treated = []
     pcb_professors = []
-    ps_bellow_professors = []
+    psb_professors = []
 
     for schedule in timeschedule:
         schedule, value = schedule.split("/")
@@ -248,7 +246,7 @@ def treat_and_save_results(timeschedule: list, courses: dict):
         if "PCB" in allocation:
             pcb_professors.append(allocation[1:] + [float(value)])
         elif "PSB" in allocation:
-            ps_bellow_professors.append(allocation[1:] + [float(value)])
+            psb_professors.append(allocation[1:] + [float(value)])
         else:
             professor = allocation[0]
 
@@ -288,7 +286,7 @@ def treat_and_save_results(timeschedule: list, courses: dict):
     )
     save_results_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
     save_results_to_csv(
-        ps_bellow_professors, "course_timetabling/results/ps_bellow_professors.csv"
+        psb_professors, "course_timetabling/results/psb_professors.csv"
     )
 
     return timeschedule_treated, pcb_professors

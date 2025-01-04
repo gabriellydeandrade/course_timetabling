@@ -32,7 +32,8 @@ def transform_professors_to_dict(professors_availables: pd.DataFrame) -> Dict:
         professors_availables_transformed[professor]["qualified_courses"] = (
             professors_availables_transformed[professor]["qualified_courses"].split(",")
             if professors_availables_transformed[professor]["qualified_courses"]
-            and type(professors_availables_transformed[professor]["qualified_courses"]) == str
+            and type(professors_availables_transformed[professor]["qualified_courses"])
+            == str
             else []
         )
         professors_availables_transformed[professor]["expertise"] = (
@@ -43,17 +44,3 @@ def transform_professors_to_dict(professors_availables: pd.DataFrame) -> Dict:
         )
 
     return professors_availables_transformed
-
-
-def treat_professors_expertise(
-    professors_availables, elective_courses, type="permanent"
-):
-
-    professors_availables = transform_professors_to_dict(professors_availables)
-
-    # TODO implementar chamada para disciplinas de acordo com area do professor. area -> cod_disciplina para as disciplinas eletivas
-
-    if type == "substitute":
-        pass  # TODO chamar disciplina de serviço para substitutos
-
-    return professors_availables
