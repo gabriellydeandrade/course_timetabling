@@ -159,10 +159,8 @@ class CourseTimetabling:
                 == settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
             )
 
-        # Hard constraints
-
         for professor in self.substitute_professors:
-            # RNP3: Garante que o professor substituto pelo menos dê uma aula
+            # RNG2: Garante que o professor substituto pelo menos dê uma aula
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][
@@ -172,6 +170,8 @@ class CourseTimetabling:
                 )
                 >= settings.MIN_CLASSES_SUBSTITUTE - self.PS_slack_variables[professor]
             )
+
+            # Hard constraints
 
             # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
             self.model.addConstr(
@@ -185,7 +185,7 @@ class CourseTimetabling:
                 <= settings.MAX_CREDITS_SUBSTITUTE
             )
 
-        # RNG2: Uma disciplina de uma turma, deverá ser ministrada por um único professor
+        # RNG3: Uma disciplina de uma turma, deverá ser ministrada por um único professor
         for course in self.courses.keys():
             workload = utils.get_course_schedule(self.courses, course)
             day, time = workload
@@ -197,7 +197,7 @@ class CourseTimetabling:
                 == 1
             )
 
-        # RNG3: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
+        # RNG4: Um professor poderá dar no máximo 1 disciplina de uma turma em um mesmo dia e horário (binário OU <= 1)
         for professor in self.professors:
             if professor == settings.DUMMY_PROFESSOR_NAME:
                 continue
@@ -233,7 +233,7 @@ class CourseTimetabling:
                             <= 1
                         )
 
-        # RNG4: Um professor não pode lecionar uma disciplina em que ele não esteja apto
+        # RNG5: Um professor não pode lecionar uma disciplina em que ele não esteja apto
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
         for professor in self.professors:
             all_courses = utils.get_all_course_class_id(self.courses)
