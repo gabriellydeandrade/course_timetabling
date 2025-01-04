@@ -26,6 +26,12 @@ df_pcb = pd.read_csv(
     names=["professor", "credits_below"],
 )
 
+df_psb = pd.read_csv(
+    "course_timetabling/results/psb_professors.csv",
+    delimiter=";",
+    names=["professor", "min_classes"],
+)
+
 st.set_page_config(
     layout="wide",
 )
@@ -92,33 +98,57 @@ with st.container(border=True) as general:
     )
 
 with st.container(border=True) as pcb:
-    st.subheader("Visão professores abaixo da carga horária mínima")
-    st.text("Professores que estão abaixo da carga horária mínima de 8 créditos.")
 
-    st.metric(
-        label="Qtd de professores",
-        value=len(df_pcb),
-        help=f"Existem {len(df_pcb)} professores no PCB.",
-    )
+    col1, col2 = st.columns(2)
 
-    df_pcb["credits_below_percent"] = ((df_pcb["credits_below"]) / 8) * 100
-    df_pcb = df_pcb.sort_values(by="credits_below_percent", ascending=False)
+    with col1:
+        st.subheader("Professores efetivos abaixo da carga horária mínima")
+        st.text("Professores que estão abaixo da carga horária mínima de 8 créditos. Oportunidade para serem alocados em outras disciplinas, como eletivas.")
 
-    st.dataframe(
-        df_pcb,
-        column_config={
-            "professor": "Docente",
-            "credits_below": "Créditos abaixo",
-            "credits_below_percent": st.column_config.ProgressColumn(
-                label="Percentual abaixo do ideal",
-                min_value=0,
-                max_value=100,
-                format="%f%%",
-            ),
-        },
-        hide_index=True,
-        use_container_width=False,
-    )
+        st.metric(
+            label="Qtd de professores",
+            value=len(df_pcb),
+            help=f"Existem {len(df_pcb)} professores no PCB.",
+        )
+
+        df_pcb["credits_below_percent"] = ((df_pcb["credits_below"]) / 8) * 100
+        df_pcb = df_pcb.sort_values(by="credits_below_percent", ascending=False)
+
+        st.dataframe(
+            df_pcb,
+            column_config={
+                "professor": "Docente",
+                "credits_below": "Qtd de créditos",
+                "credits_below_percent": st.column_config.ProgressColumn(
+                    label="Percentual abaixo do ideal",
+                    min_value=0,
+                    max_value=100,
+                    format="%f%%",
+                ),
+            },
+            hide_index=True,
+            use_container_width=False,
+        )
+
+    with col2:
+        st.subheader("Professores substitutos sem alocação")
+        st.text("Professores que estão sem alocação em nenhuma disciplina.")
+
+        st.metric(
+            label="Qtd de professores",
+            value=len(df_psb),
+            help=f"Existem {len(df_psb)} professores substitutos no que não estão alocados.",
+        )
+
+        st.dataframe(
+            df_psb,
+            column_config={
+                "professor": "Professor substituto",
+                "min_classes": "Qtd de aulas esperada"
+            },
+            hide_index=True,
+            use_container_width=False,
+        )
 
 with st.container(border=True) as dummy:
     dummy = df.loc[df["professor"] == "DUMMY"]
