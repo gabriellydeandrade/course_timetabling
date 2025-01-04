@@ -27,7 +27,8 @@ class CourseTimetabling:
         self.manual_allocation = manual_allocation
         self.EAP_coefficient = {}
         self.X_variables = {}
-        self.slack_variables = {}
+        self.PP_slack_variables = {}
+        self.PS_slack_variables = {}
 
         self.env = self.init_environment()
         self.model = gp.Model(name="CourseTimetabling", env=self.env)
@@ -103,10 +104,6 @@ class CourseTimetabling:
                 else:
                     self.EAP_coefficient[professor][course][day][time] = 0
 
-                # FIXME: somente o professor Gabriel pode lecionar a disciplina ICP143, não está claro
-                # o motivo dele não ser alocado uma vez que o coeficiente é 100 e isso aumentaria o valor
-                # final da função objetivo. O resultado hoje está para o DUMMY (coeficiente 0.0001)
-
                 self.X_variables[professor][course][day] = {}
                 self.X_variables[professor][course][day][time] = self.model.addVar(
                     vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
@@ -125,8 +122,13 @@ class CourseTimetabling:
             model (gurobipy.Model): The optimization model to which the slack variables are added.
         """
         for professor in self.permanent_professors:
-            self.slack_variables[professor] = self.model.addVar(
+            self.PP_slack_variables[professor] = self.model.addVar(
                 vtype=GRB.INTEGER, name=f"PCB_{professor}"
+            )
+
+        for professor in self.substitute_professors:
+            self.PS_slack_variables[professor] = self.model.addVar(
+                vtype=GRB.INTEGER, name=f"PSB_{professor}"
             )
 
     def add_constraints(self):
@@ -154,12 +156,24 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                >= settings.MIN_CREDITS_PERMANENT - self.slack_variables[professor]
+                == settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
             )
 
         # Hard constraints
-        # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+
         for professor in self.substitute_professors:
+            # RNP3: Garante que o professor substituto pelo menos dê uma aula
+            self.model.addConstr(
+                gp.quicksum(
+                    self.X_variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    for course in self.courses.keys()
+                )
+                >= settings.MIN_CLASSES_SUBSTITUTE - self.PS_slack_variables[professor]
+            )
+
+            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][
@@ -218,31 +232,6 @@ class CourseTimetabling:
                             ][utils.get_course_schedule(self.courses, cc)[1]]
                             <= 1
                         )
-                # for course in exact_time_courses:
-                #     self.model.addConstr(
-                #         gp.quicksum(
-                #             self.X_variables[professor][cc][
-                #                 utils.get_course_schedule(self.courses, cc)[0]
-                #             ][utils.get_course_schedule(self.courses, cc)[1]]
-                #             for cc in conflict_courses
-                #         )
-                #         + gp.quicksum(
-                #             self.X_variables[professor][ec][day][time]
-                #             for ec in exact_time_courses
-                #         )
-                #         # self.X_variables[professor][course][day][time]
-                #         <= 1
-                #     )
-
-                # self.model.addConstr(
-                #     gp.quicksum(
-                #         self.X_variables[professor][course][
-                #             utils.get_course_schedule(self.courses, course)[0]
-                #         ][utils.get_course_schedule(self.courses, course)[1]]
-                #         for course in common_courses
-                #     )
-                #     <= 1
-                # )
 
         # RNG4: Um professor não pode lecionar uma disciplina em que ele não esteja apto
         # Caso o professor seja alocado manualmente, ele não precisa lecionar uma disciplina que esteja apto (sem verificação)
@@ -279,8 +268,12 @@ class CourseTimetabling:
                 for course in self.courses.keys()
             )
             - gp.quicksum(
-                settings.WEIGHT_FACTOR_PP * self.slack_variables[professor]
+                settings.WEIGHT_FACTOR_PP * self.PP_slack_variables[professor]
                 for professor in self.permanent_professors
+            )
+            - gp.quicksum(
+                settings.WEIGHT_FACTOR_PS * self.PS_slack_variables[professor]
+                for professor in self.substitute_professors
             ),
             GRB.MAXIMIZE,
         )

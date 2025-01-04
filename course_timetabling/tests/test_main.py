@@ -128,11 +128,11 @@ class TestAddCreditSlackVariables(unittest.TestCase):
         return super().setUp()
 
     def test_add_credit_slack_variables(self):
-        self.assertIn("Prof1", self.timetabling.slack_variables)
+        self.assertIn("Prof1", self.timetabling.PP_slack_variables)
 
     def test_add_credit_slack_variables_only_for_permanent_professors(self):
-        self.assertIn("Prof1", self.timetabling.slack_variables)
-        self.assertNotIn("Prof2", self.timetabling.slack_variables)
+        self.assertIn("Prof1", self.timetabling.PP_slack_variables)
+        self.assertNotIn("Prof2", self.timetabling.PP_slack_variables)
 
 
 class TestModelCourseTimetabling(unittest.TestCase):

@@ -1,5 +1,6 @@
 from typing import Dict
 import pandas as pd
+import numpy as np
 
 
 def transform_courses_to_dict(courses: pd.DataFrame) -> Dict:
@@ -12,6 +13,8 @@ def transform_courses_to_dict(courses: pd.DataFrame) -> Dict:
         dict: A dictionary where each key is a course identifier and each value is a
               dictionary of course details, with the 'credits' field converted to an integer.
     """
+
+    courses = courses.replace({np.nan: None})
     courses_transformed = courses.to_dict("index")
 
     for course in courses_transformed:

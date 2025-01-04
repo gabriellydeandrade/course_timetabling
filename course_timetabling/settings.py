@@ -6,7 +6,7 @@ APP_LICENSE_ID = config("LICENSE_ID", default=123, cast=int)
 APP_WLS_ACCESS_ID = config("WLS_ACCESS_ID", default="access_id")
 APP_WS_SECRET = config("WS_SECRET", default="secret")
 
-APP_CACHE_TTL = config("CACHE_TTL", default=0, cast=int)
+APP_CACHE_TTL = config("CACHE_TTL", default=819283018, cast=int)
 
 # Model parameters
 
@@ -16,9 +16,12 @@ DEFAULT_COEFFICIENT = config("DEFAULT_COEFFICIENT", default=100, cast=int)
 SERVICE_COURSE_COEFFICIENT_SP = config("SERVICE_COURSE_COEFFICIENT_SP", default=10, cast=int)
 SERVICE_COURSE_COEFFICIENT_PP = config("SERVICE_COURSE_COEFFICIENT_PP", default=1, cast=int)
 ZERO_COEFFICIENT = config("ZERO_COEFFICIENT", default=0, cast=int)
-WEIGHT_FACTOR_PP = config("WEIGHT_FACTOR_PP", default=1000, cast=int)
+WEIGHT_FACTOR_PP = config("WEIGHT_FACTOR_PP", default=100, cast=int)
 MIN_CREDITS_PERMANENT = config("MIN_CREDITS_PERMANENT", default=8, cast=int)
+
+WEIGHT_FACTOR_PS = config("WEIGHT_FACTOR_PS", default=1000, cast=int)
 MAX_CREDITS_SUBSTITUTE = config("MAX_CREDITS_SUBSTITUTE", default=12, cast=int)
+MIN_CLASSES_SUBSTITUTE = config("MIN_CLASSES_SUBSTITUTE", default=1, cast=int)
 
 SVC_MATH_COURSES = config("SVC_MATH_COURSES", default=["ICP231", "MAW123", "ICP478"], cast=list)
 SVC_BASIC_COURSES = config("SVC_BASIC_COURSES", default=["ICP114", "ICP121", "MAW112"], cast=list)

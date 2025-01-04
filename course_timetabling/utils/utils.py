@@ -83,7 +83,13 @@ def get_course_schedule(courses_set: dict, course_class_id: str) -> Tuple[str, s
 
 
 def get_all_course_class_id(courses: dict) -> set:
-    result = set([d for d in courses.keys() if courses[d]["course_id"] not in settings.SVC_BASIC_COURSES])
+    result = set(
+        [
+            d
+            for d in courses.keys()
+            if courses[d]["course_id"] not in settings.SVC_BASIC_COURSES
+        ]
+    )
     return result
 
 
@@ -162,6 +168,7 @@ def add_manual_allocation_courses(
 
     return courses_available
 
+
 def get_courses_by_exact_day_and_time(courses: dict, day: str, time: str) -> set:
 
     result = []
@@ -189,7 +196,7 @@ def get_courses_by_time(courses: dict, time: str) -> set:
     result = []
 
     for course_id, details in courses.items():
-        if type(details["time"]) == str:
+        if time and details["time"]:
             for course_time in details["time"].split(","):
                 if course_time and course_time in time:
                     result.append(course_id)
@@ -211,7 +218,7 @@ def get_courses_by_day(courses: dict, day: str) -> set:
     result = []
 
     for course_id, details in courses.items():
-        if type(details["day"]) == str:
+        if day and details["day"]:
             for course_day in details["day"].split(","):
                 if course_day and course_day in day:
                     result.append(course_id)
@@ -232,6 +239,7 @@ def save_results_to_csv(data: list, filename: str) -> None:
 def treat_and_save_results(timeschedule: list, courses: dict):
     timeschedule_treated = []
     pcb_professors = []
+    ps_bellow_professors = []
 
     for schedule in timeschedule:
         schedule, value = schedule.split("/")
@@ -239,6 +247,8 @@ def treat_and_save_results(timeschedule: list, courses: dict):
 
         if "PCB" in allocation:
             pcb_professors.append(allocation[1:] + [float(value)])
+        elif "PSB" in allocation:
+            ps_bellow_professors.append(allocation[1:] + [float(value)])
         else:
             professor = allocation[0]
 
@@ -277,5 +287,8 @@ def treat_and_save_results(timeschedule: list, courses: dict):
         timeschedule_treated, "course_timetabling/results/timeschedule.csv"
     )
     save_results_to_csv(pcb_professors, "course_timetabling/results/pcb_professors.csv")
+    save_results_to_csv(
+        ps_bellow_professors, "course_timetabling/results/ps_bellow_professors.csv"
+    )
 
     return timeschedule_treated, pcb_professors
