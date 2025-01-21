@@ -11,22 +11,35 @@ from cache_pandas import cache_to_csv
 
 import settings
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-
 
 def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
-    """Reads data from a Google Sheet and returns it as a pandas DataFrame."""
+    """
+    Reads data from a Google Sheet and returns it as a pandas DataFrame.
+
+    Args:
+        spreadsheet_id (str): The ID of the Google Spreadsheet.
+        range_name (str): The range of cells to read from the spreadsheet.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the data read from the Google Sheet.
+
+    Note:
+        It is not necessary to test this function, as it is a wrapper for the Google Sheets API and used with the Google website example.
+    """
     creds = None
 
     if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        creds = Credentials.from_authorized_user_file(
+            "token.json", settings.APP_SHEETS_SCOPES
+        )
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json", settings.APP_SHEETS_SCOPES
+            )
             creds = flow.run_local_server(port=0)
 
         with open("token.json", "w") as token:
@@ -112,7 +125,7 @@ def get_elective_courses():
             "Tipo disciplina",
             "Tipo turma",
             "Período",
-            "Curso"
+            "Curso",
         ]
     )
     courses.rename(
@@ -124,7 +137,7 @@ def get_elective_courses():
             "Tipo disciplina": "course_type",
             "Tipo turma": "class_type",
             "Período": "term",
-            "Curso": "graduation_course"
+            "Curso": "graduation_course",
         },
         inplace=True,
     )

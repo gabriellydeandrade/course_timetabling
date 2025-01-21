@@ -8,6 +8,8 @@ APP_WS_SECRET = config("WS_SECRET", default="secret")
 
 APP_CACHE_TTL = config("CACHE_TTL", default=829812309, cast=int)
 
+APP_SHEETS_SCOPES = config("SHEETS_SCOPES", default=["https://www.googleapis.com/auth/spreadsheets.readonly"], cast=list)
+
 # Model parameters
 
 DUMMY_PROFESSOR_NAME = config("DUMMY_PROFESSOR", default="DUMMY")
