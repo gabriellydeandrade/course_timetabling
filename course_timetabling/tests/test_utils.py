@@ -635,7 +635,7 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 40,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
-                "gratuation_course": "BCC",
+                "graduation_course": "BCC",
                 "term": 1,
             },
             "OBG-BCC1-2": {
@@ -647,7 +647,7 @@ class TestTreatAndSaveResults(TestCase):
                 "capacity": 30,
                 "responsable_institute": "IC",
                 "classroom_type": "Sala",
-                "gratuation_course": "BCC",
+                "graduation_course": "BCC",
                 "term": 1,
             },
         }

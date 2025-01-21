@@ -80,7 +80,7 @@ def get_required_courses() -> pd.DataFrame:
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
             "Nome disciplina": "course_name",
-            "Curso": "gratuation_course",
+            "Curso": "graduation_course",
             "Qtd de créditos": "credits",
             "Dia da semana": "day",
             "Horário": "time",
@@ -124,7 +124,7 @@ def get_elective_courses():
             "Tipo disciplina": "course_type",
             "Tipo turma": "class_type",
             "Período": "term",
-            "Curso": "gratuation_course"
+            "Curso": "graduation_course"
         },
         inplace=True,
     )
@@ -217,7 +217,7 @@ def get_manual_allocation():
             "Código único turma": "course_class_id",
             "Código disciplina": "course_id",
             "Nome disciplina": "course_name",
-            "Curso": "gratuation_course",
+            "Curso": "graduation_course",
             "Qtd de créditos": "credits",
             "Tipo disciplina": "course_type",
             "Dia da semana": "day",

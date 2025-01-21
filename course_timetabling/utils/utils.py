@@ -259,7 +259,7 @@ def treat_and_save_results(timeschedule: list, courses: dict):
             course_type = courses[course_class_id]["course_type"]
             term = courses[course_class_id]["term"]
             class_type = courses[course_class_id]["class_type"]
-            graduation_course = courses[course_class_id]["gratuation_course"]
+            graduation_course = courses[course_class_id]["graduation_course"]
 
             day = allocation[2]
             time = allocation[3]

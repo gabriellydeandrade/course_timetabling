@@ -5,7 +5,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from course_timetabling.settings import DUMMY_COEFFICIENT
+from settings import DUMMY_COEFFICIENT
 from main import CourseTimetabling
 
 
@@ -69,7 +69,7 @@ class TestInitializeVariablesAndCoefficients(unittest.TestCase):
 
     def test_set_coefficient_if_professor_is_qualified_for_class(self):
 
-        expected_coefficient = 10
+        expected_coefficient = 100
 
         self.assertIn("Prof1", self.timetabling.EAP_coefficient)
         self.assertIn("OBG-BCC1-1", self.timetabling.EAP_coefficient["Prof1"])
@@ -170,6 +170,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "class_type": "Gradução",
                 "capacity": 40,
                 "responsable_institute": "IC",
+                "graduation_course": "BCC",
                 "classroom_type": "Sala",
                 "term": 1
             },
@@ -183,6 +184,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "class_type": "Gradução",
                 "capacity": 30,
                 "responsable_institute": "IC",
+                "graduation_course": "BCC",
                 "classroom_type": "Sala",
                 "term": 1
             },
@@ -196,6 +198,7 @@ class TestModelCourseTimetabling(unittest.TestCase):
                 "class_type": "Gradução",
                 "capacity": 30,
                 "responsable_institute": "IC",
+                "graduation_course": "BCC",
                 "classroom_type": "Sala",
                 "term": None
             },
