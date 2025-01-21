@@ -68,6 +68,28 @@ def read_google_sheet_to_dataframe(spreadsheet_id, range_name):
 
 @cache_to_csv("cache/get_required_courses.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_required_courses() -> pd.DataFrame:
+    """
+    Retrieves required courses from a Google Sheet and returns them as a pandas DataFrame.
+    This function reads data from the "disciplinas_obrigatorias" sheet in the specified Google Sheet.
+    It filters the courses that need to be allocated (where "Alocar" is "TRUE") and selects specific columns.
+    The resulting DataFrame is then renamed and indexed by the unique course class ID.
+    Returns:
+        pd.DataFrame: A DataFrame containing the required courses with the following columns:
+            - course_class_id: Unique class ID
+            - course_id: Course ID
+            - course_name: Course name
+            - graduation_course: Graduation course
+            - credits: Number of credits
+            - day: Day of the week
+            - time: Time
+            - course_type: Type of course
+            - capacity: Number of students
+            - class_type: Type of class
+            - responsable_institute: Responsible institute
+            - classroom_type: Type of classroom
+            - term: Term
+    """
+
     page_name = "disciplinas_obrigatorias!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -113,6 +135,25 @@ def get_required_courses() -> pd.DataFrame:
 
 @cache_to_csv("cache/get_elective_courses.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_elective_courses():
+    """
+    Retrieves elective courses from a Google Sheet and returns them as a DataFrame.
+    This function reads data from the "disciplinas_eletivas" sheet in the Google Spreadsheet
+    specified by `settings.SAMPLE_SPREADSHEET_ID`. It filters the courses that are marked
+    for allocation ("Alocar" == "TRUE") and selects specific columns to be included in the
+    resulting DataFrame. The columns are then renamed to more descriptive names and the
+    DataFrame is indexed by the unique course class ID.
+    Returns:
+        pandas.DataFrame: A DataFrame containing elective courses with the following columns:
+            - course_class_id: Unique identifier for the course class
+            - course_id: Identifier for the course
+            - credits: Number of credits for the course
+            - knowledge_area: Knowledge area or profile of the course
+            - course_type: Type of the course
+            - class_type: Type of the class
+            - term: Term or period of the course
+            - graduation_course: Graduation course to which the course belongs
+    """
+
     page_name = "disciplinas_eletivas!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -148,6 +189,19 @@ def get_elective_courses():
 
 @cache_to_csv("cache/get_substitute_professor.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_substitute_professor():
+    """
+    Retrieves a DataFrame of substitute professors from a Google Sheet.
+    This function reads data from a Google Sheet specified by the SAMPLE_SPREADSHEET_ID
+    in the settings. It filters the data to include only professors who are available
+    for allocation (where the "Alocar" column is "TRUE") and belong to the "PS" category.
+    The relevant columns are renamed for clarity.
+    Returns:
+        pandas.DataFrame: A DataFrame containing the substitute professors with columns:
+        - "qualified_courses": Qualified courses the professor can teach
+        - "expertise": Expertise area of the professor
+        - "category": Category of the professor
+    """
+
     page_name = "professores!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -172,6 +226,18 @@ def get_substitute_professor():
 
 @cache_to_csv("cache/get_permanent_professors.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_permanent_professors():
+    """
+    Retrieves a DataFrame of permanent professors from a Google Sheet.
+    This function reads data from a Google Sheet specified by the SAMPLE_SPREADSHEET_ID
+    in the settings. It filters the data to include only professors who are available
+    for allocation (where the "Alocar" column is "TRUE") and do not belong to the "PS" or "EX" categories.
+    The relevant columns are renamed for clarity.
+    Returns:
+        pandas.DataFrame: A DataFrame containing the permanent professors with columns:
+        - "qualified_courses": Qualified courses the professor can teach
+        - "expertise": Expertise area of the professor
+        - "category": Category of the professor
+    """
     page_name = "professores!A:S"
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
 
@@ -202,6 +268,29 @@ def get_professors():
 
 @cache_to_csv("cache/get_manual_allocation.csv", refresh_time=settings.APP_CACHE_TTL)
 def get_manual_allocation():
+    """
+    Retrieves manual allocation data from a Google Sheet and returns it as a DataFrame.
+    This function reads data from the "alocacao_manual" sheet in the Google Spreadsheet
+    specified by `settings.SAMPLE_SPREADSHEET_ID`. It selects specific columns to be included
+    in the resulting DataFrame. The columns are then renamed to more descriptive names and the
+    DataFrame is indexed by the unique course class ID.
+    Returns:
+        pandas.DataFrame: A DataFrame containing manual allocation data with the following columns:
+            - professor: Name of the professor
+            - course_class_id: Unique identifier for the course class
+            - course_id: Identifier for the course
+            - course_name: Name of the course
+            - graduation_course: Graduation course to which the course belongs
+            - credits: Number of credits for the course
+            - course_type: Type of the course
+            - day: Day of the week
+            - time: Time of the class
+            - capacity: Number of students
+            - class_type: Type of the class
+            - responsable_institute: Responsible institute
+            - classroom_type: Type of classroom
+            - term: Term or period of the course
+    """
     page_name = "alocacao_manual!A:S"
 
     df = read_google_sheet_to_dataframe(settings.SAMPLE_SPREADSHEET_ID, page_name)
