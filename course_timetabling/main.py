@@ -146,7 +146,7 @@ class CourseTimetabling:
             )
 
         # Soft constraints
-        # RNG1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
+        # RNG1: Garante que o professor permanente seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
         for professor in self.permanent_professors:
             self.model.addConstr(
                 gp.quicksum(
@@ -156,24 +156,37 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                == settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
+                >= settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
             )
 
         for professor in self.substitute_professors:
-            # RNG2: Garante que o professor substituto pelo menos dê uma aula
+            # RNG2: Garante que o professor permanente seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][
                         utils.get_course_schedule(self.courses, course)[0]
                     ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                >= settings.MIN_CLASSES_SUBSTITUTE - self.PS_slack_variables[professor]
+                >= settings.MIN_CREDITS_SUBSTITUTE - self.PS_slack_variables[professor]
             )
 
             # Hard constraints
 
-            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor efetivo
+            self.model.addConstr(
+                gp.quicksum(
+                    self.X_variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
+                    for course in self.courses.keys()
+                )
+                <= settings.MAX_CREDITS_PERMANENT
+            )
+
+            # RNP3: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][

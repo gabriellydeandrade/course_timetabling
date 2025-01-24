@@ -18,12 +18,14 @@ DEFAULT_COEFFICIENT = config("DEFAULT_COEFFICIENT", default=100, cast=int)
 SERVICE_COURSE_COEFFICIENT_SP = config("SERVICE_COURSE_COEFFICIENT_SP", default=10, cast=int)
 SERVICE_COURSE_COEFFICIENT_PP = config("SERVICE_COURSE_COEFFICIENT_PP", default=1, cast=int)
 ZERO_COEFFICIENT = config("ZERO_COEFFICIENT", default=0, cast=int)
+
 WEIGHT_FACTOR_PP = config("WEIGHT_FACTOR_PP", default=100, cast=int)
 MIN_CREDITS_PERMANENT = config("MIN_CREDITS_PERMANENT", default=8, cast=int)
+MAX_CREDITS_PERMANENT = config("MAX_CREDITS_PERMANENT", default=12, cast=int)
 
 WEIGHT_FACTOR_PS = config("WEIGHT_FACTOR_PS", default=1000, cast=int)
+MIN_CREDITS_SUBSTITUTE = config("MIN_CREDITS_SUBSTITUTE", default=8, cast=int)
 MAX_CREDITS_SUBSTITUTE = config("MAX_CREDITS_SUBSTITUTE", default=12, cast=int)
-MIN_CLASSES_SUBSTITUTE = config("MIN_CLASSES_SUBSTITUTE", default=1, cast=int)
 
 SVC_MATH_COURSES = config("SVC_MATH_COURSES", default=["ICP231", "MAW123", "ICP478"], cast=list)
 SVC_BASIC_COURSES = config("SVC_BASIC_COURSES", default=["ICP114", "ICP121", "MAW112"], cast=list)
