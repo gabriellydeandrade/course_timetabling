@@ -98,11 +98,12 @@ with st.container(border=True) as general:
     )
 
 with st.container(border=True) as pcb:
+    st.subheader("Professores abaixo da carga horária mínima")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Professores efetivos abaixo da carga horária mínima")
+        st.subheader("Professores efetivos")
         st.text("Professores que estão abaixo da carga horária mínima de 8 créditos. Oportunidade para serem alocados em outras disciplinas, como eletivas.")
 
         st.metric(
@@ -131,8 +132,8 @@ with st.container(border=True) as pcb:
         )
 
     with col2:
-        st.subheader("Professores substitutos sem alocação")
-        st.text("Professores que estão sem alocação em nenhuma disciplina.")
+        st.subheader("Professores substitutos")
+        st.text("Professores que estão abaixo da carga horária mínima de 8 créditos.")
 
         st.metric(
             label="Qtd de professores",

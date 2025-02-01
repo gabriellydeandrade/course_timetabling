@@ -1,4 +1,4 @@
-course_class_id,course_id,course_name,gratuation_course,credits,day,time,course_type,capacity,class_type,responsable_institute,classroom_type,term
+course_class_id,course_id,course_name,graduation_course,credits,day,time,course_type,capacity,class_type,responsable_institute,classroom_type,term
 OBG-BCC1-1,ICP131,Programação de Computadores I,BCC1,4,"SEG,QUA",10:00-12:00,OBG,60,Calouro,IC,"T,P",1
 OBG-BCC1-2,ICP132,Processo de Software,BCC1,4,"TER,QUI",13:00-15:00,OBG,60,Calouro,IC,"T,P",1
 OBG-BCC1-3,ICP133,Fundamentos de Sistemas de Computação,BCC1,4,"TER,QUI",10:00-12:00,OBG,60,Calouro,IC,T,1

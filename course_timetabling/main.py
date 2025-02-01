@@ -34,10 +34,15 @@ class CourseTimetabling:
         self.model = gp.Model(name="CourseTimetabling", env=self.env)
 
     def init_environment(self):
-        env = gp.Env(empty=True)
-        env.setParam("LicenseID", settings.APP_LICENSE_ID)
-        env.setParam("WLSAccessID", settings.APP_WLS_ACCESS_ID)
-        env.setParam("WLSSecret", settings.APP_WS_SECRET)
+        if settings.APP_LICENSE_TYPE == settings.LicenseType.NAMED_USER_ACADEMIC.value:
+            env = gp.Env(empty=False)
+
+        elif settings.APP_LICENSE_TYPE == settings.LicenseType.WSL_ACADEMIC.value:
+            env = gp.Env(empty=True)
+            env.setParam("LicenseID", settings.APP_LICENSE_ID)
+            env.setParam("WLSAccessID", settings.APP_WLS_ACCESS_ID)
+            env.setParam("WLSSecret", settings.APP_WS_SECRET)
+
         env.start()
 
         return env
