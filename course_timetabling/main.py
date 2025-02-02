@@ -306,6 +306,13 @@ class CourseTimetabling:
 
     def generate_results(self):
 
+        if self.model.Status == 2:
+            print(f"Optimal solution found. Model return status={self.model.Status}")
+        else:
+            self.model.computeIIS()
+            self.model.write("model.ilp")
+            raise Exception(f"Model return status={self.model.Status}")
+
         timeschedule = []
         for var in self.model.getVars():
             if var.X > 0:
@@ -315,6 +322,17 @@ class CourseTimetabling:
         model_value = self.model.ObjVal
 
         utils.treat_and_save_results(timeschedule, self.courses)
+
+        print("========= METHOD ==========")
+        print(self.model.getParamInfo("Method"))
+        print(self.model.getParamInfo("ConcurrentMethod"))
+        print(self.model.getParamInfo("ConcurrentMIP"))
+
+        print(f"É MIP: {self.model.getAttr(GRB.Attr.IsMIP)}")
+        print(f"É QP: {self.model.getAttr(GRB.Attr.IsQP)}")
+        print(f"É QCP: {self.model.getAttr(GRB.Attr.IsQCP)}")
+        print(f"É MultiObj: {self.model.getAttr(GRB.Attr.IsMultiObj)}")
+        print("=============================")
 
         print("========= RESULT ==========")
         print("Result was saved in results/*")
