@@ -63,7 +63,7 @@ SVC-IGA-IG1-62,ICP121,Computação I (SV),IGA-IG1,4,"TER,QUI",13:00-15:00,SVC,60
 SVC-IFN-IQQ-66,"ICP121,MAW112","Computação I (SV),Introdução à Computação (SV)","IFN,IQQ",4,QUI,"18:30-20:10,20:10-21:50",SVC,60,Curso externo,IC,N/A,
 SVC-CMT1-65,ICP121,Computação I (SV),CMT1,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
 SVC-CMT2-66,ICP121,Computação I (SV),CMT2,4,QUI,"10:00-12:00,13:00-15:00",SVC,60,Curso externo,IC,N/A,
-SVC-CMT3-67,ICP121,Computação I (SV),CMT3,3,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
+SVC-CMT3-67,ICP121,Computação I (SV),CMT3,4,"TER,QUI",15:00-17:00,SVC,60,Curso externo,IC,N/A,
 SVC-EM1-68,ICP225,Computação II (EP),EM1,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
 SVC-EM2-69,ICP225,Computação II (EP),EM2,4,"TER,QUI",10:00-12:00,SVC,60,Curso externo,IC,N/A,
 SVC-EE1-70,ICP225,Computação II (EP),EE1,4,"TER,QUI",13:00-15:00,SVC,60,Curso externo,IC,N/A,

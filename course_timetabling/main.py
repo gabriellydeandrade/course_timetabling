@@ -161,7 +161,7 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                >= settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
+                == settings.MIN_CREDITS_PERMANENT - self.PP_slack_variables[professor]
             )
 
         for professor in self.substitute_professors:
@@ -174,7 +174,7 @@ class CourseTimetabling:
                     * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                >= settings.MIN_CREDITS_SUBSTITUTE - self.PS_slack_variables[professor]
+                == settings.MIN_CREDITS_SUBSTITUTE - self.PS_slack_variables[professor]
             )
 
             # Hard constraints
