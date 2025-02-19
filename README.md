@@ -114,3 +114,74 @@ course_timetabling/
 ## Mathematical Formulation
 
 See the [course_timetabling.ipynb](course_timetabling.ipynb) file
+
+## Implementation Steps
+
+1. **Model Initialization:** Create an instance of the `CourseTimetabling` class, which takes input data: professors, permanent professors, substitute professors, courses, and manual allocations. These parameters are the sets read from the spreadsheet.
+
+    ```python
+    timetabling = CourseTimetabling(
+        PROFESSORS,
+        PERMANENT_PROFESSORS,
+        SUBSTITUTE_PROFESSORS,
+        COURSES,
+        MANUAL_ALLOCATION,
+    )
+    ```
+
+    During class initialization, the Gurobi environment is configured with student credentials, environment variables, and model definition.
+
+    ```python
+    class CourseTimetabling:
+        def __init__(
+            self,
+            professors,
+            permanent_professors,
+            substitute_professors,
+            courses,
+            manual_allocation,
+        ):
+            # Attribute definitions
+            self.EAP_coefficient = {}
+            self.X_variables = {}
+            self.PP_slack_variables = {}
+            self.PS_slack_variables = {}
+            self.env = self.init_environment()
+            self.model = gp.Model(name="CourseTimetabling", env=self.env)
+        
+        def init_environment(self):
+            # Initialize Gurobi license
+            return env
+            
+        # Remaining code
+    ```
+
+2. **Variable and Coefficient Initialization:** Define decision variables and aptitude coefficients (EAP) using a specific method. The decision variable is binary and represented by an array combining professor, course, day, and time. A separate method initializes slack variables, which correspond to the difference between the minimum required workload and the actual allocated workload for permanent and substitute professors.
+
+    ```python
+    # Decision variable definition
+    self.X_variables[professor][course][day][time] = self.model.addVar(
+        vtype=GRB.BINARY, name=f"{professor}_{course}_{day}_{time}"
+    )
+
+    # Initialize variables and coefficients
+    timetabling.initialize_variables_and_coefficients()
+
+    # Initialize slack variables
+    timetabling.add_credit_slack_variables()
+    ```
+
+3. **Constraints and Objective Function Definition:** Add constraints to the model to ensure valid allocation, such as the constraint that each course must be taught by a single professor. Then, set the objective function to maximize academic performance using the aptitude coefficients (EAP).
+
+    ```python
+    timetabling.add_constraints()
+    timetabling.set_objective()
+    ```
+
+4. **Model Execution, Results, and Finalization:** Run the Gurobi solver to find the optimal solution, considering all decision variables, the objective function, and constraints. Extract and present the model results, including detailed allocation of professors to courses, schedules, and days. Finally, clean up the model to free resources and prepare the environment for future runs.
+
+    ```python
+    timetabling.optimize()
+    timetabling.generate_results()
+    timetabling.clean_model()
+    ```
