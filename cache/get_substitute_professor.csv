@@ -1,12 +1,12 @@
 professor,qualified_courses,expertise,category
-Alan Costa de Souza,,,PS
-Cesar Raitz,,,PS
-Diego Muguet,,,PS
-Evandro Macedo,"ICP362,ICP473,ICP133",,PS
-Francis Spiegel,,,PS
-Larissa Galeno,,,PS
-Luigi Maciel,,,PS
-Luiz Paulo Carvalho,,,PS
-Ronald Chiesse,"ICP131,ICP239,ICP037,ICP241,ICP225",,PS
-Silas Lima,"ICP225,ICP241",,PS
-Simone Ingrid Monteiro Gama,,,PS
+PROFESSOR 35,,,PS
+PROFESSOR 36,"ICP225,ICP241",,PS
+PROFESSOR 37,,,PS
+PROFESSOR 38,"ICP225,ICP241,ICP362,ICP473",,PS
+PROFESSOR 39,,,PS
+PROFESSOR 40,,,PS
+PROFESSOR 41,,,PS
+PROFESSOR 42,"ICP225,ICP241",,PS
+PROFESSOR 43,"ICP131,ICP239,ICP037,ICP241,ICP225,CMT012",,PS
+PROFESSOR 44,"ICP225,ICP241",,PS
+PROFESSOR 45,,,PS

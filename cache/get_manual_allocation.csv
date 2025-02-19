@@ -1,2 +1,2 @@
-course_class_id,professor,course_id,course_name,gratuation_course,credits,course_type,day,time,capacity,class_type,responsable_institute,classroom_type,term
-OPT-BCC1-14,Carolina Marcelino,ICP011,Tóp. Esp. em Ciência de Dados I,BCC1,4,OPT,PREENCHER MANUALMENTE,PREENCHER MANUALMENTE,30,G,IC,,7
+course_class_id,professor,course_id,course_name,graduation_course,credits,course_type,day,time,capacity,class_type,responsable_institute,classroom_type,term
+OPT-BCC1-14,PROFESSOR 7,ICP011,Tóp. Esp. em Ciência de Dados I,BCC1,4,OPT,PREENCHER MANUALMENTE,PREENCHER MANUALMENTE,30,G,IC,,7

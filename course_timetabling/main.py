@@ -34,10 +34,15 @@ class CourseTimetabling:
         self.model = gp.Model(name="CourseTimetabling", env=self.env)
 
     def init_environment(self):
-        env = gp.Env(empty=True)
-        env.setParam("LicenseID", settings.APP_LICENSE_ID)
-        env.setParam("WLSAccessID", settings.APP_WLS_ACCESS_ID)
-        env.setParam("WLSSecret", settings.APP_WS_SECRET)
+        if settings.APP_LICENSE_TYPE == settings.LicenseType.NAMED_USER_ACADEMIC.value:
+            env = gp.Env(empty=False)
+
+        elif settings.APP_LICENSE_TYPE == settings.LicenseType.WSL_ACADEMIC.value:
+            env = gp.Env(empty=True)
+            env.setParam("LicenseID", settings.APP_LICENSE_ID)
+            env.setParam("WLSAccessID", settings.APP_WLS_ACCESS_ID)
+            env.setParam("WLSSecret", settings.APP_WS_SECRET)
+
         env.start()
 
         return env
@@ -146,7 +151,7 @@ class CourseTimetabling:
             )
 
         # Soft constraints
-        # RNG1: Garante que o professor seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
+        # RNG1: Garante que o professor permanente seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
         for professor in self.permanent_professors:
             self.model.addConstr(
                 gp.quicksum(
@@ -160,20 +165,33 @@ class CourseTimetabling:
             )
 
         for professor in self.substitute_professors:
-            # RNG2: Garante que o professor substituto pelo menos dê uma aula
+            # RNG2: Garante que o professor permanente seja alocado com a quantidade de créditos sujerida pela coordenação se possível. Não inviabiliza o modelo caso não seja atingido.
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][
                         utils.get_course_schedule(self.courses, course)[0]
                     ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
                     for course in self.courses.keys()
                 )
-                >= settings.MIN_CLASSES_SUBSTITUTE - self.PS_slack_variables[professor]
+                == settings.MIN_CREDITS_SUBSTITUTE - self.PS_slack_variables[professor]
             )
 
             # Hard constraints
 
-            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
+            # RNP2: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor efetivo
+            self.model.addConstr(
+                gp.quicksum(
+                    self.X_variables[professor][course][
+                        utils.get_course_schedule(self.courses, course)[0]
+                    ][utils.get_course_schedule(self.courses, course)[1]]
+                    * self.courses[course]["credits"]
+                    for course in self.courses.keys()
+                )
+                <= settings.MAX_CREDITS_PERMANENT
+            )
+
+            # RNP3: Regime de trabalho (quantidade de horas) - quantidade de créditos máximo para o professor substituto
             self.model.addConstr(
                 gp.quicksum(
                     self.X_variables[professor][course][
@@ -288,6 +306,13 @@ class CourseTimetabling:
 
     def generate_results(self):
 
+        if self.model.Status == 2:
+            print(f"Optimal solution found. Model return status={self.model.Status}")
+        else:
+            self.model.computeIIS()
+            self.model.write("model.ilp")
+            raise Exception(f"Model return status={self.model.Status}")
+
         timeschedule = []
         for var in self.model.getVars():
             if var.X > 0:
@@ -297,6 +322,17 @@ class CourseTimetabling:
         model_value = self.model.ObjVal
 
         utils.treat_and_save_results(timeschedule, self.courses)
+
+        print("========= METHOD ==========")
+        print(self.model.getParamInfo("Method"))
+        print(self.model.getParamInfo("ConcurrentMethod"))
+        print(self.model.getParamInfo("ConcurrentMIP"))
+
+        print(f"É MIP: {self.model.getAttr(GRB.Attr.IsMIP)}")
+        print(f"É QP: {self.model.getAttr(GRB.Attr.IsQP)}")
+        print(f"É QCP: {self.model.getAttr(GRB.Attr.IsQCP)}")
+        print(f"É MultiObj: {self.model.getAttr(GRB.Attr.IsMultiObj)}")
+        print("=============================")
 
         print("========= RESULT ==========")
         print("Result was saved in results/*")

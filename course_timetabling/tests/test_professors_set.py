@@ -4,7 +4,6 @@ import sys
 import os
 from functools import wraps
 
-
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )  # FIXME quero corrigir de outra forma
@@ -45,9 +44,9 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
             {
                 "Alocar": ["TRUE", "TRUE", "TRUE"],
                 "Nome curto": [
-                    "Adriana Vivacqua",
-                    "Daniel Sadoc",
-                    "Raphael Bernardino",
+                    "Professor 1",
+                    "Professor 2",
+                    "Professor 3",
                 ],
                 "Disciplinas aptas": ["ICP145,ICP616", "", ""],
                 "Área de conhecimento": ["ED,ES,H", "ED,CD", ""],
@@ -62,7 +61,7 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
                 "expertise": ["ED,ES,H", "ED,CD"],
                 "category": ["PP", "PP"],
             },
-            index=["Adriana Vivacqua", "Daniel Sadoc"],
+            index=["Professor 1", "Professor 2"],
         )
         expected_permanent.index.name = "professor"
 
@@ -72,7 +71,7 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
                 "expertise": [""],
                 "category": ["PS"],
             },
-            index=["Raphael Bernardino"],
+            index=["Professor 3"],
         )
         expected_substitute.index.name = "professor"
 
@@ -87,9 +86,9 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
             {
                 "Alocar": ["TRUE", "TRUE", "TRUE", "FALSE"],
                 "Nome curto": [
-                    "Adriana Vivacqua",
-                    "Daniel Sadoc",
-                    "Raphael Bernardino",
+                    "Professor 1",
+                    "Professor 2",
+                    "Professor 3",
                     "FULANO",
                 ],
                 "Disciplinas aptas": ["ICP145,ICP616", "", "", ""],
@@ -106,7 +105,7 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
                 "expertise": ["ED,ES,H", "ED,CD"],
                 "category": ["PP", "PP"],
             },
-            index=["Adriana Vivacqua", "Daniel Sadoc"],
+            index=["Professor 1", "Professor 2"],
         )
         expected_permanent.index.name = "professor"
 
@@ -116,7 +115,7 @@ class TestGetProfessorsFromGoogleSheets(TestCase):
                 "expertise": [""],
                 "category": ["PS"],
             },
-            index=["Raphael Bernardino"],
+            index=["Professor 3"],
         )
         expected_substitute.index.name = "professor"
 
@@ -136,19 +135,19 @@ class TestTransformProfessors(TestCase):
                 "expertise": ["ED,ES,H", "ED,CD"],
                 "category": ["PP", "PP"],
             },
-            index=["Adriana Vivacqua", "Daniel Sadoc"],
+            index=["Professor 1", "Professor 2"],
         )
         permanent_professors.index.name = "professor"
 
         result = transform_professors_to_dict(permanent_professors)
 
         expected_result = {
-            "Adriana Vivacqua": {
+            "Professor 1": {
                 "qualified_courses": ["ICP145", "ICP616"],
                 "expertise": ["ED", "ES", "H"],
                 "category": "PP",
             },
-            "Daniel Sadoc": {
+            "Professor 2": {
                 "qualified_courses": [],
                 "expertise": ["ED", "CD"],
                 "category": "PP",
@@ -166,9 +165,9 @@ class TestGetProfessorsSet(TestCase):
             {
                 "Alocar": ["TRUE", "TRUE", "TRUE"],
                 "Nome curto": [
-                    "Adriana Vivacqua",
-                    "Daniel Sadoc",
-                    "Raphael Bernardino",
+                    "Professor 1",
+                    "Professor 2",
+                    "Professor 3",
                 ],
                 "Disciplinas aptas": ["ICP145,ICP616", "", ""],
                 "Área de conhecimento": ["ED,ES,H", "ED,CD", ""],
@@ -179,7 +178,7 @@ class TestGetProfessorsSet(TestCase):
         result = get_professors_set()
 
         expected_substitute = {
-            "Raphael Bernardino": {
+            "Professor 3": {
                 "qualified_courses": [],
                 "expertise": [],
                 "category": "PS",
@@ -187,12 +186,12 @@ class TestGetProfessorsSet(TestCase):
         }
 
         expected_permanent = {
-            "Adriana Vivacqua": {
+            "Professor 1": {
                 "qualified_courses": ["ICP145", "ICP616"],
                 "expertise": ["ED", "ES", "H"],
                 "category": "PP",
             },
-            "Daniel Sadoc": {
+            "Professor 2": {
                 "qualified_courses": [],
                 "expertise": ["ED", "CD"],
                 "category": "PP",
@@ -206,6 +205,51 @@ class TestGetProfessorsSet(TestCase):
                 "category": "DUMMY",
             }
         }
+
+        expected_result = (expected_permanent, expected_substitute, professor_dummy)
+
+        self.assertEqual(result, expected_result)
+
+    @patch("database.service_google_sheet.read_google_sheet_to_dataframe")
+    def test_if_math_courses_are_added_to_cc_professor_expertise(
+        self, mock_read_google_sheet
+    ):
+        mock_read_google_sheet.return_value = pd.DataFrame(
+            {
+                "Alocar": ["TRUE", "TRUE"],
+                "Nome curto": ["Professor 1", "Professor 4"],
+                "Disciplinas aptas": ["ICP145,ICP616", "ICPXXX"],
+                "Área de conhecimento": ["ED,ES,H", "CC"],
+                "Categoria": ["PP", "PP"],
+            }
+        )
+
+        result = get_professors_set()
+
+        cc_math_courses = ["ICP231", "MAW123", "ICP478"]
+
+        expected_permanent = {
+            "Professor 1": {
+                "qualified_courses": ["ICP145", "ICP616"],
+                "expertise": ["ED", "ES", "H"],
+                "category": "PP",
+            },
+            "Professor 4": {
+                "qualified_courses": ["ICPXXX"] + cc_math_courses,
+                "expertise": ["CC"],
+                "category": "PP",
+            },
+        }
+
+        professor_dummy = {
+            "DUMMY": {
+                "qualified_courses": ["*"],
+                "expertise": ["*"],
+                "category": "DUMMY",
+            }
+        }
+
+        expected_substitute = {}
 
         expected_result = (expected_permanent, expected_substitute, professor_dummy)
 
