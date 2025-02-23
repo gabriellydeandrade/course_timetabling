@@ -48,7 +48,7 @@ with st.container(border=True) as general:
     all_professors = general_without_dummy["professor"].unique().tolist()
     all_professors.insert(0, "Todos")
 
-    options = st.multiselect("Seleciona um docente", all_professors, ["Todos"])
+    options = st.multiselect("Selecione um docente", all_professors, ["Todos"])
 
     if "Todos" in options:
         selected_professors = general_without_dummy["professor"].unique()
@@ -99,12 +99,13 @@ with st.container(border=True) as general:
 
 with st.container(border=True) as pcb:
     st.subheader("Professores abaixo da carga horária mínima")
+    st.text("Oportunidade para serem alocados em outras disciplinas, como eletivas.")
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("Professores efetivos")
-        st.text("Professores que estão abaixo da carga horária mínima de 8 créditos. Oportunidade para serem alocados em outras disciplinas, como eletivas.")
+        st.text("Professores que estão abaixo da carga horária mínima de 8 créditos.")
 
         st.metric(
             label="Qtd de professores",
