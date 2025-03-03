@@ -7,7 +7,7 @@ This project is a course timetabling system that uses a mathematical model to op
 > The latest result of the model, pointing to the main branch, can be viewed at the following URL: [https://course-timetabling-ufrj.streamlit.app](https://course-timetabling-ufrj.streamlit.app)
 
 ### Phase 2: Allocate classrooms to courses
-This project is part 1 of 2. The second phase, which will be released soon, will focus on the allocation of classrooms. This phase will use the results of the current model to continue the optimization process.
+This project is part 1 of 2. The second phase, which is available in [classroom_assignment](https://github.com/gabriellydeandrade/classroom_assignment), will focus on the allocation of classrooms. This phase will use the results of the current model to continue the optimization process.
 
 ### Method
 
@@ -100,8 +100,9 @@ course_timetabling/
 ├── │   ├── transform_data.py
 ├── ├── results/
 ├── │   ├── generate_timetabling.py
-├── │   ├── timeschedule.csv
 ├── │   ├── pcb_professors.csv
+├── │   ├── psb_professors.csv
+├── │   ├── timeschedule.csv
 ├── ├── tests/
 ├── ├── utils/
 ├── ├── main.py
